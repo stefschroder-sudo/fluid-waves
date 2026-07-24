@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fluid Waves — slimme software voor commercie</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tabler-icons/3.7.0/iconfont/tabler-icons.min.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/supabase-config.js"></script>
+<style>
+  * { box-sizing: border-box; }
+  body { margin:0; background:#E7E2D6; color:#2A2A28;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    line-height:1.6; }
+  .wrap { max-width:1080px; margin:0 auto; padding:0 24px; }
+
+  header { background:#1B2C4F; color:#F4F1EA; }
+  .top { display:flex; align-items:center; justify-content:space-between; padding:16px 0; }
+  .brand { display:flex; align-items:center; gap:12px; }
+  .brand .n1 { font-size:16px; font-weight:600; }
+  .brand .n2 { font-size:11px; color:#A9B4C9; }
+  .top nav a { color:#D6DEEC; font-size:13px; text-decoration:none; margin-left:20px; }
+  .top nav a:hover { color:#F4F1EA; }
+
+  .hero { padding:64px 0 56px; position:relative; overflow:hidden; }
+  .hero svg.golf { position:absolute; right:-60px; top:0; height:100%; opacity:.13; }
+  .hero .eyebrow { font-size:12px; letter-spacing:.22em; text-transform:uppercase; color:#C9A227; margin-bottom:16px; }
+  .hero h1 { font-size:38px; font-weight:600; margin:0 0 16px; max-width:16ch; line-height:1.12; }
+  .hero p { font-size:17px; color:#C6D0E0; max-width:52ch; margin:0 0 26px; }
+  .hero .knoppen { display:flex; gap:12px; flex-wrap:wrap; }
+  .btn { display:inline-flex; align-items:center; gap:7px; font-size:14px; padding:11px 20px;
+    border-radius:8px; text-decoration:none; cursor:pointer; border:1px solid transparent; font-family:inherit; }
+  .btn-goud { background:#C9A227; color:#1B2C4F; font-weight:600; }
+  .btn-goud:hover { background:#D9B43A; }
+  .btn-rand { border-color:#3A4E75; color:#F4F1EA; }
+  .btn-rand:hover { background:#22375f; }
+
+  main { background:#F4F1EA; }
+  section { padding:56px 0; }
+  .kop { display:flex; align-items:baseline; gap:14px; margin-bottom:8px; }
+  .kop span { font-size:12px; letter-spacing:.2em; text-transform:uppercase; color:#C9A227; }
+  .kop h2 { font-size:24px; color:#1B2C4F; margin:0; font-weight:600; }
+  .kop-sub { font-size:14px; color:#8A7F63; margin:0 0 30px; }
+
+  .apps { display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:18px; }
+  .app { background:#FBF8F0; border:1px solid #E5DECF; border-radius:14px;
+    padding:22px; display:flex; flex-direction:column; position:relative; overflow:hidden; }
+  .app::before { content:""; position:absolute; top:0; left:0; right:0; height:3px; background:#C9A227; }
+  .app .ikoon { width:42px; height:42px; border-radius:9px; background:#F0EBDF;
+    display:flex; align-items:center; justify-content:center; margin-bottom:14px; }
+  .app .ikoon i { font-size:22px; color:#1B2C4F; }
+  .app h3 { font-size:18px; color:#1B2C4F; margin:0 0 3px; }
+  .app .merk { font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:#C9A227; margin-bottom:9px; }
+  .app p { font-size:13.5px; color:#5F5E5A; flex:1; margin:0 0 16px; }
+  .app .voet { display:flex; align-items:center; justify-content:space-between; gap:10px; }
+  .app .prijs { font-size:13px; color:#8A7F63; }
+  .app .prijs b { color:#1B2C4F; font-size:15px; }
+  .pil { font-size:10.5px; padding:3px 9px; border-radius:5px; }
+  .pil-live { background:#E1F5EE; color:#0F6E56; }
+  .pil-gratis { background:#F1EFE8; color:#5F5E5A; }
+  .pil-bouw { background:#FAEEDA; color:#854F0B; }
+  .app a.open { font-size:13px; color:#1B2C4F; text-decoration:none; font-weight:600;
+    display:inline-flex; align-items:center; gap:5px; }
+  .app a.open:hover { color:#C9A227; }
+
+  .over { background:#EFE9DC; }
+  .over p { font-size:16px; color:#4A4640; max-width:62ch; }
+
+  footer { background:#1B2C4F; color:#A9B4C9; font-size:13px; padding:30px 0; }
+  .foot { display:flex; justify-content:space-between; flex-wrap:wrap; gap:12px; }
+  .foot a { color:#C9A227; text-decoration:none; }
+  .laadmelding, .foutmelding { padding:34px; text-align:center; font-size:14px; color:#8A7F63; }
+  .foutmelding { color:#A32D2D; }
+  @media (max-width:640px){ .hero h1{font-size:30px;} .top nav{display:none;} }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap top">
+    <div class="brand">
+      <svg width="36" height="36" viewBox="0 0 40 40" aria-label="Fluid Waves">
+        <rect x="1" y="1" width="38" height="38" rx="8" fill="#22375f"/>
+        <path d="M7 16 q3.5 -5 7 0 t7 0 t7 0" fill="none" stroke="#C9A227" stroke-width="2.2" stroke-linecap="round"/>
+        <path d="M7 22 q3.5 -5 7 0 t7 0 t7 0" fill="none" stroke="#C9A227" stroke-width="2.2" stroke-linecap="round" opacity=".7"/>
+        <path d="M7 28 q3.5 -5 7 0 t7 0 t7 0" fill="none" stroke="#C9A227" stroke-width="2.2" stroke-linecap="round" opacity=".4"/>
+      </svg>
+      <div>
+        <div class="n1">Fluid Waves</div>
+        <div class="n2">read the mountain · read the vibes</div>
+      </div>
+    </div>
+    <nav>
+      <a href="#apps">Apps</a>
+      <a href="#over">Over</a>
+    </nav>
+  </div>
+
+  <div class="wrap hero">
+    <svg class="golf" viewBox="0 0 300 400" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M0 200 q40 -50 80 0 t80 0 t80 0 t80 0" fill="none" stroke="#C9A227" stroke-width="2"/>
+      <path d="M0 250 q40 -50 80 0 t80 0 t80 0 t80 0" fill="none" stroke="#C9A227" stroke-width="1.5"/>
+      <path d="M0 300 q40 -50 80 0 t80 0 t80 0 t80 0" fill="none" stroke="#C9A227" stroke-width="1"/>
+    </svg>
+    <div class="eyebrow">Slimme software voor commercie</div>
+    <h1>Software die signalen ziet vóór de rest.</h1>
+    <p>Van aanbestedingen tot executive matching — tools die patronen herkennen
+       waar anderen ruis zien. Gebouwd om te gebruiken, niet om indruk te maken.</p>
+    <div class="knoppen">
+      <a href="#apps" class="btn btn-goud">Bekijk de apps<i class="ti ti-arrow-down" aria-hidden="true"></i></a>
+      <a href="#over" class="btn btn-rand">Over Fluid Waves</a>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section id="apps">
+    <div class="wrap">
+      <div class="kop"><span>01</span><h2>De apps</h2></div>
+      <p class="kop-sub">Elk product staat op zichzelf. Kies wat bij je werk past.</p>
+      <div class="apps" id="appLijst">
+        <div class="laadmelding">Apps worden geladen…</div>
+      </div>
+    </div>
+  </section>
+
+  <section id="over" class="over">
+    <div class="wrap">
+      <div class="kop"><span>02</span><h2>Achter Fluid Waves</h2></div>
+      <p>Fluid Waves bundelt de software van Schröder Consult — AI-gedreven tools voor
+         leadgeneratie, aanbestedingsintelligentie en executive matching. Voortgekomen uit
+         25 jaar commerciële leiding, gebouwd op de overtuiging dat de beste kansen zichtbaar
+         zijn voordat ze vanzelfsprekend worden. Elk product is gemaakt om dagelijks te gebruiken:
+         helder, snel, zonder poespas.</p>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap foot">
+    <div>© <span id="jaar"></span> Fluid Waves · Schröder Consult · KvK 87125897</div>
+    <div>Wassenaar, Nederland</div>
+  </div>
+</footer>
+
+<script>
+document.getElementById("jaar").textContent = new Date().getFullYear();
+
+const ikonen = {
+  "job-radar": "ti-radar",
+  "tenderlead": "ti-file-search",
+  "golf-score": "ti-golf",
+  "live-from": "ti-playlist"
+};
+
+function pil(status) {
+  if (status === "live")    return '<span class="pil pil-live">live</span>';
+  if (status === "bouw")    return '<span class="pil pil-bouw">in aanbouw</span>';
+  if (status === "concept") return '<span class="pil pil-bouw">binnenkort</span>';
+  return "";
+}
+
+function kaart(app, prijsregels) {
+  const ik = ikonen[app.id] || "ti-app-window";
+  const merk = app.merknaam ? `<div class="merk">${app.merknaam}</div>` : "";
+
+  // goedkoopste betaalde tier, of "gratis" als die er is
+  let prijs = "";
+  const tiers = (prijsregels || []).filter(t => t.app_id === app.id);
+  const gratis = tiers.find(t => t.prijs_cent === 0);
+  const betaald = tiers.filter(t => t.prijs_cent > 0).sort((a,b) => a.prijs_cent - b.prijs_cent)[0];
+  if (betaald) {
+    const per = betaald.interval === "jaar" ? "jaar" : betaald.interval === "eenmalig" ? "" : "mnd";
+    prijs = `<span class="prijs">vanaf <b>€ ${(betaald.prijs_cent/100).toFixed(0)}</b>${per ? "/"+per : ""}</span>`;
+  } else if (gratis) {
+    prijs = `<span class="prijs"><b>Gratis</b></span>`;
+  }
+
+  // Links de prijs (of gratis, of status), rechts de actie.
+  // Openen kan zodra er een adres is en de app live staat — los van de prijs.
+  const kanOpenen = app.url && app.status === "live";
+  const linksLabel = prijs || pil(app.status);
+  const rechtsActie = kanOpenen
+    ? `<a class="open" href="${app.url}" target="_blank" rel="noopener">Openen<i class="ti ti-arrow-right" aria-hidden="true"></i></a>`
+    : (prijs ? pil(app.status) : "");
+
+  return `
+    <div class="app">
+      <div class="ikoon"><i class="ti ${ik}" aria-hidden="true"></i></div>
+      <h3>${app.naam}</h3>
+      ${merk}
+      <p>${app.omschrijving || ""}</p>
+      <div class="voet">
+        ${linksLabel}
+        ${rechtsActie}
+      </div>
+    </div>`;
+}
+
+async function laadApps() {
+  const doel = document.getElementById("appLijst");
+  const cfg = window.SUPABASE_CONFIG;
+
+  if (!cfg) {
+    doel.innerHTML = '<div class="foutmelding">Configuratie ontbreekt.</div>';
+    return;
+  }
+
+  try {
+    const sb = window.supabase.createClient(cfg.url, cfg.anonKey);
+
+    // catalogus en prijslijst zijn openbaar leesbaar (de views uit fase 1)
+    const [apps, prijzen] = await Promise.all([
+      sb.from("catalogus").select("*").order("volgorde"),
+      sb.from("prijslijst").select("*")
+    ]);
+
+    if (apps.error) throw apps.error;
+
+    const lijst = apps.data || [];
+    if (!lijst.length) {
+      doel.innerHTML = '<div class="laadmelding">Nog geen apps om te tonen.</div>';
+      return;
+    }
+
+    doel.innerHTML = lijst.map(a => kaart(a, prijzen.data)).join("");
+  } catch (e) {
+    console.error("Kon apps niet laden:", e);
+    doel.innerHTML = '<div class="foutmelding">De apps konden niet worden geladen. Probeer het later opnieuw.</div>';
+  }
+}
+
+laadApps();
+</script>
+</body>
+</html>
