@@ -3,233 +3,547 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Fluid Waves — slimme software voor commercie</title>
+<title>Fluid Waves</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tabler-icons/3.7.0/iconfont/tabler-icons.min.css">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="js/supabase-config.js"></script>
+
+<!-- ================================================================
+     TEKSTEN — hier pas je alle losse teksten aan zonder de code te raken.
+     ================================================================ -->
+<script>
+window.FW_TEKST = {
+  hero_eyebrow: "Slimme software voor commercie",
+  hero_titel: "Software die signalen ziet vóór de rest.",
+  hero_onder: "Tools die patronen herkennen waar anderen ruis zien.",
+  apps_kop: "De apps",
+  apps_onder: "Elk product staat op zichzelf.",
+  over_kop: "Fluid Waves",
+  over_tekst: "AI-gedreven software voor commercie, uit 25 jaar praktijk.",
+  voet: "Fluid Waves · Schröder Consult · KvK 87125897"
+};
+</script>
+
 <style>
-  * { box-sizing: border-box; }
-  body { margin:0; background:#E7E2D6; color:#2A2A28;
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { background:#E7E2D6; color:#2A2A28;
     font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
-    line-height:1.6; }
-  .wrap { max-width:1080px; margin:0 auto; padding:0 24px; }
+    line-height:1.55; }
+  .shell { max-width:1120px; margin:24px auto; background:#F4F1EA; border-radius:14px;
+    overflow:hidden; border:1px solid #D8D2C4; box-shadow:0 6px 24px rgba(27,44,79,.10); }
 
-  header { background:#1B2C4F; color:#F4F1EA; }
-  .top { display:flex; align-items:center; justify-content:space-between; padding:16px 0; }
-  .brand { display:flex; align-items:center; gap:12px; }
-  .brand .n1 { font-size:16px; font-weight:600; }
-  .brand .n2 { font-size:11px; color:#A9B4C9; }
-  .top nav a { color:#D6DEEC; font-size:13px; text-decoration:none; margin-left:20px; }
-  .top nav a:hover { color:#F4F1EA; }
+  /* ---- topbalk ---- */
+  .top { display:flex; align-items:center; justify-content:space-between;
+    background:#F4F1EA; padding:12px 20px; border-bottom:1px solid #E0D8C4; }
+  .merk { display:flex; align-items:center; gap:12px; }
+  .merk .n1 { font-size:15px; font-weight:600; color:#1B2C4F; }
+  .merk .n2 { font-size:11px; color:#8A7F63; }
+  .top-rechts { display:flex; align-items:center; gap:12px; }
+  .knop { display:inline-flex; align-items:center; gap:6px; font-size:12.5px; padding:7px 13px;
+    border:1px solid #D8D2C4; border-radius:7px; background:#FBF8F0; color:#1B2C4F;
+    cursor:pointer; font-family:inherit; text-decoration:none; }
+  .knop:hover { background:#F0EBDF; }
+  .knop-navy { background:#1B2C4F; color:#F4F1EA; border-color:#1B2C4F; }
+  .knop-navy:hover { background:#24396a; }
+  .avatar { width:30px; height:30px; border-radius:50%; background:#1B2C4F; color:#F4F1EA;
+    display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:600; }
 
-  .hero { padding:64px 0 56px; position:relative; overflow:hidden; }
-  .hero svg.golf { position:absolute; right:-60px; top:0; height:100%; opacity:.13; }
-  .hero .eyebrow { font-size:12px; letter-spacing:.22em; text-transform:uppercase; color:#C9A227; margin-bottom:16px; }
-  .hero h1 { font-size:38px; font-weight:600; margin:0 0 16px; max-width:16ch; line-height:1.12; }
-  .hero p { font-size:17px; color:#C6D0E0; max-width:52ch; margin:0 0 26px; }
-  .hero .knoppen { display:flex; gap:12px; flex-wrap:wrap; }
-  .btn { display:inline-flex; align-items:center; gap:7px; font-size:14px; padding:11px 20px;
-    border-radius:8px; text-decoration:none; cursor:pointer; border:1px solid transparent; font-family:inherit; }
-  .btn-goud { background:#C9A227; color:#1B2C4F; font-weight:600; }
-  .btn-goud:hover { background:#D9B43A; }
-  .btn-rand { border-color:#3A4E75; color:#F4F1EA; }
-  .btn-rand:hover { background:#22375f; }
+  /* ---- sectiebalk (alleen in beheer) ---- */
+  .secties { display:flex; align-items:center; gap:24px; background:#F0EBDF;
+    padding:9px 20px; border-bottom:1px solid #E0D8C4; font-size:12.5px; color:#3A3524; }
+  .sec { display:flex; align-items:center; gap:6px; cursor:pointer; padding-bottom:3px; margin-bottom:-11px;
+    border-bottom:2px solid transparent; }
+  .sec:hover { color:#1B2C4F; }
+  .sec.actief { color:#1B2C4F; font-weight:600; border-bottom-color:#C9A227; }
+  .sec i { font-size:15px; }
 
-  main { background:#F4F1EA; }
-  section { padding:56px 0; }
-  .kop { display:flex; align-items:baseline; gap:14px; margin-bottom:8px; }
-  .kop span { font-size:12px; letter-spacing:.2em; text-transform:uppercase; color:#C9A227; }
-  .kop h2 { font-size:24px; color:#1B2C4F; margin:0; font-weight:600; }
-  .kop-sub { font-size:14px; color:#8A7F63; margin:0 0 30px; }
+  /* ================= ETALAGE ================= */
+  .etalage { display:block; }
+  .hero { padding:52px 28px 40px; position:relative; overflow:hidden;
+    background:#1B2C4F; color:#F4F1EA; }
+  .hero svg { position:absolute; right:-40px; bottom:-20px; width:340px; opacity:.14; }
+  .hero .eyebrow { font-size:12px; letter-spacing:.2em; text-transform:uppercase; color:#C9A227; margin-bottom:14px; }
+  .hero h1 { font-size:32px; font-weight:600; max-width:15ch; line-height:1.14; margin-bottom:12px; }
+  .hero p { font-size:16px; color:#C6D0E0; max-width:44ch; margin-bottom:22px; }
+  .hero .knoppen { display:flex; gap:11px; flex-wrap:wrap; }
+  .knop-goud { background:#C9A227; color:#1B2C4F; font-weight:600; border-color:#C9A227; }
+  .knop-goud:hover { background:#D9B43A; }
+  .knop-open { border-color:#3A4E75; color:#F4F1EA; background:transparent; }
+  .knop-open:hover { background:#22375f; }
 
-  .apps { display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:18px; }
-  .app { background:#FBF8F0; border:1px solid #E5DECF; border-radius:14px;
-    padding:22px; display:flex; flex-direction:column; position:relative; overflow:hidden; }
+  .blok { padding:40px 28px; }
+  .kop { display:flex; align-items:baseline; gap:12px; margin-bottom:4px; }
+  .kop span { font-size:12px; letter-spacing:.18em; text-transform:uppercase; color:#C9A227; }
+  .kop h2 { font-size:22px; color:#1B2C4F; font-weight:600; }
+  .kop-sub { font-size:13px; color:#8A7F63; margin-bottom:24px; }
+
+  .apps { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:16px; }
+  .app { background:#FBF8F0; border:1px solid #E8E1D2; border-radius:13px; padding:20px;
+    display:flex; flex-direction:column; position:relative; overflow:hidden; }
   .app::before { content:""; position:absolute; top:0; left:0; right:0; height:3px; background:#C9A227; }
-  .app .ikoon { width:42px; height:42px; border-radius:9px; background:#F0EBDF;
-    display:flex; align-items:center; justify-content:center; margin-bottom:14px; }
-  .app .ikoon i { font-size:22px; color:#1B2C4F; }
-  .app h3 { font-size:18px; color:#1B2C4F; margin:0 0 3px; }
-  .app .merk { font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:#C9A227; margin-bottom:9px; }
-  .app p { font-size:13.5px; color:#5F5E5A; flex:1; margin:0 0 16px; }
+  .app .ik { width:40px; height:40px; border-radius:9px; background:#F0EBDF;
+    display:flex; align-items:center; justify-content:center; margin-bottom:13px; }
+  .app .ik i { font-size:21px; color:#1B2C4F; }
+  .app h3 { font-size:17px; color:#1B2C4F; margin-bottom:2px; }
+  .app .merkje { font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; color:#C9A227; margin-bottom:8px; }
+  .app p { font-size:13px; color:#5F5E5A; flex:1; margin-bottom:15px; }
   .app .voet { display:flex; align-items:center; justify-content:space-between; gap:10px; }
   .app .prijs { font-size:13px; color:#8A7F63; }
   .app .prijs b { color:#1B2C4F; font-size:15px; }
-  .pil { font-size:10.5px; padding:3px 9px; border-radius:5px; }
+  .pil { font-size:10.5px; padding:3px 9px; border-radius:5px; white-space:nowrap; }
   .pil-live { background:#E1F5EE; color:#0F6E56; }
   .pil-gratis { background:#F1EFE8; color:#5F5E5A; }
   .pil-bouw { background:#FAEEDA; color:#854F0B; }
   .app a.open { font-size:13px; color:#1B2C4F; text-decoration:none; font-weight:600;
-    display:inline-flex; align-items:center; gap:5px; }
+    display:inline-flex; align-items:center; gap:4px; }
   .app a.open:hover { color:#C9A227; }
 
   .over { background:#EFE9DC; }
-  .over p { font-size:16px; color:#4A4640; max-width:62ch; }
+  .over p { font-size:15px; color:#4A4640; max-width:56ch; }
 
-  footer { background:#1B2C4F; color:#A9B4C9; font-size:13px; padding:30px 0; }
-  .foot { display:flex; justify-content:space-between; flex-wrap:wrap; gap:12px; }
-  .foot a { color:#C9A227; text-decoration:none; }
-  .laadmelding, .foutmelding { padding:34px; text-align:center; font-size:14px; color:#8A7F63; }
-  .foutmelding { color:#A32D2D; }
-  @media (max-width:640px){ .hero h1{font-size:30px;} .top nav{display:none;} }
+  .voetbalk { background:#1B2C4F; color:#A9B4C9; font-size:12.5px; padding:22px 28px;
+    display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px; }
+
+  /* ================= BEHEER ================= */
+  .beheer { display:none; }
+  .beheer-body { display:flex; min-height:520px; }
+  .zij { width:210px; flex:none; background:#F0EBDF; border-right:1px solid #E0D8C4;
+    padding:14px 10px; display:flex; flex-direction:column; transition:width .16s; }
+  .kiezer { position:relative; margin-bottom:14px; }
+  .kiezer-lbl { font-size:10px; color:#8A7F63; text-transform:uppercase; letter-spacing:.1em; margin:0 0 6px 6px; }
+  .kiezer-knop { width:100%; display:flex; align-items:center; gap:8px; background:#FBF8F0;
+    border:1px solid #D8D2C4; border-radius:7px; padding:8px 9px; cursor:pointer; text-align:left; }
+  .kiezer-knop .ini { width:26px; height:26px; flex:none; border-radius:6px; background:#1B2C4F;
+    color:#F4F1EA; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:600; }
+  .kiezer-knop .nm { font-size:12.5px; font-weight:600; color:#1B2C4F; white-space:nowrap;
+    overflow:hidden; text-overflow:ellipsis; }
+  .zij nav { display:flex; flex-direction:column; gap:1px; }
+  .zij-lbl { font-size:10px; color:#8A7F63; text-transform:uppercase; letter-spacing:.1em; margin:8px 0 4px 6px; }
+  .zij nav button { text-align:left; padding:7px 9px; border-radius:6px; font-size:12.5px;
+    display:flex; align-items:center; gap:8px; background:none; border:none; cursor:pointer;
+    font-family:inherit; color:#2A2A28; }
+  .zij nav button:hover { background:#E4DED0; }
+  .zij nav button.actief { background:rgba(201,162,39,.16); color:#1B2C4F; }
+  .zij nav button i { font-size:16px; color:#8A7F63; }
+  .zij-voet { margin-top:auto; }
+
+  .hoofd { flex:1; padding:18px 22px; min-width:0; overflow:auto; }
+  .hoofd-kop { display:flex; align-items:flex-start; justify-content:space-between; gap:16px; margin-bottom:14px; }
+  .hoofd-kop h1 { font-size:19px; color:#1B2C4F; font-weight:600; }
+  .hoofd-kop .datum { font-size:12px; color:#8A7F63; margin-top:2px; }
+
+  .metrics { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:10px; margin-bottom:16px; }
+  .metric { background:#FBF8F0; border:1px solid #E8E1D2; border-radius:9px; padding:11px 13px; }
+  .metric .l { font-size:11px; color:#8A7F63; }
+  .metric .n { font-size:21px; font-weight:600; color:#1B2C4F; margin-top:2px; }
+  .metric .s { font-size:10.5px; color:#A59A82; margin-top:1px; }
+
+  .paneel { background:#FBF8F0; border:1px solid #E8E1D2; border-radius:9px; padding:12px 14px; margin-bottom:16px; }
+  .paneel h2 { font-size:13px; color:#1B2C4F; margin-bottom:9px; }
+  .sig { display:flex; gap:8px; align-items:flex-start; font-size:12px; line-height:1.5; margin-bottom:7px; }
+  .sig:last-child { margin-bottom:0; }
+  .sig i { flex:none; margin-top:1px; font-size:16px; }
+  .sig.urgent i { color:#A32D2D; }
+  .sig.let_op i { color:#854F0B; }
+  .leeg { font-size:12px; color:#8A7F63; font-style:italic; }
+
+  table { width:100%; border-collapse:collapse; background:#FBF8F0; border:1px solid #E8E1D2;
+    border-radius:9px; overflow:hidden; }
+  th { text-align:left; font-size:10.5px; letter-spacing:.06em; text-transform:uppercase;
+    color:#F4F1EA; background:#1B2C4F; padding:9px 11px; font-weight:600; white-space:nowrap; }
+  td { padding:9px 11px; font-size:12.5px; border-bottom:1px solid #EFEADE; vertical-align:middle; }
+  tr:last-child td { border-bottom:none; }
+  tr:hover td { background:#F6F2E8; }
+  .t-naam { font-weight:600; color:#1B2C4F; }
+  .t-sub { font-size:11px; color:#8A7F63; }
+  .p-actief { background:#E1F5EE; color:#0F6E56; }
+  .p-proef { background:#F1EFE8; color:#5F5E5A; }
+  .p-stop { background:#FAE3E3; color:#A32D2D; }
+  .p-let { background:#FAEEDA; color:#854F0B; }
+  .balk { height:5px; background:#EDE7D8; border-radius:3px; overflow:hidden; width:74px; margin-top:3px; }
+  .balk > i { display:block; height:100%; background:#C9A227; }
+  .balk.vol > i { background:#A32D2D; }
+  .num { text-align:right; white-space:nowrap; font-variant-numeric:tabular-nums; }
+
+  /* ---- inlog ---- */
+  .inlogvak { max-width:340px; margin:40px auto; background:#FBF8F0; border:1px solid #E8E1D2;
+    border-radius:12px; padding:24px; }
+  .inlogvak h2 { font-size:16px; color:#1B2C4F; margin-bottom:4px; }
+  .inlogvak p { font-size:12px; color:#8A7F63; margin-bottom:18px; }
+  .inlogvak label { display:block; font-size:11.5px; color:#8A7F63; margin-bottom:5px; }
+  .inlogvak input { width:100%; padding:9px 11px; font-size:13px; font-family:inherit;
+    border:1px solid #D8D2C4; border-radius:6px; background:#FFFDF8; color:#2A2A28; margin-bottom:13px; }
+  .inlogvak input:focus { outline:none; border-color:#C9A227; }
+  .breed { width:100%; justify-content:center; padding:10px; }
+  .inlogfout { margin-top:12px; font-size:12px; color:#A32D2D; background:#FAE3E3;
+    border:1px solid #F0C9C9; border-radius:6px; padding:9px 11px; }
+
+  .melding { padding:30px; text-align:center; font-size:13px; color:#8A7F63; }
+  .verborgen { display:none !important; }
+  @media (max-width:720px){
+    .shell { margin:0; border-radius:0; }
+    .hero h1 { font-size:26px; }
+    .beheer-body { flex-direction:column; }
+    .zij { width:100%; border-right:none; border-bottom:1px solid #E0D8C4; }
+    .zij nav { flex-direction:row; flex-wrap:wrap; }
+  }
 </style>
 </head>
 <body>
 
-<header>
-  <div class="wrap top">
-    <div class="brand">
-      <svg width="36" height="36" viewBox="0 0 40 40" aria-label="Fluid Waves">
-        <rect x="1" y="1" width="38" height="38" rx="8" fill="#22375f"/>
+<div class="shell">
+
+  <!-- ============ TOPBALK (altijd zichtbaar) ============ -->
+  <div class="top">
+    <div class="merk">
+      <svg width="34" height="34" viewBox="0 0 40 40" aria-label="Fluid Waves">
+        <rect x="1" y="1" width="38" height="38" rx="8" fill="#1B2C4F"/>
         <path d="M7 16 q3.5 -5 7 0 t7 0 t7 0" fill="none" stroke="#C9A227" stroke-width="2.2" stroke-linecap="round"/>
         <path d="M7 22 q3.5 -5 7 0 t7 0 t7 0" fill="none" stroke="#C9A227" stroke-width="2.2" stroke-linecap="round" opacity=".7"/>
         <path d="M7 28 q3.5 -5 7 0 t7 0 t7 0" fill="none" stroke="#C9A227" stroke-width="2.2" stroke-linecap="round" opacity=".4"/>
       </svg>
       <div>
         <div class="n1">Fluid Waves</div>
-        <div class="n2">read the mountain · read the vibes</div>
+        <div class="n2" id="merkOnder">read the mountain · read the vibes</div>
       </div>
     </div>
-    <nav>
-      <a href="#apps">Apps</a>
-      <a href="#over">Over</a>
-    </nav>
-  </div>
-
-  <div class="wrap hero">
-    <svg class="golf" viewBox="0 0 300 400" preserveAspectRatio="none" aria-hidden="true">
-      <path d="M0 200 q40 -50 80 0 t80 0 t80 0 t80 0" fill="none" stroke="#C9A227" stroke-width="2"/>
-      <path d="M0 250 q40 -50 80 0 t80 0 t80 0 t80 0" fill="none" stroke="#C9A227" stroke-width="1.5"/>
-      <path d="M0 300 q40 -50 80 0 t80 0 t80 0 t80 0" fill="none" stroke="#C9A227" stroke-width="1"/>
-    </svg>
-    <div class="eyebrow">Slimme software voor commercie</div>
-    <h1>Software die signalen ziet vóór de rest.</h1>
-    <p>Van aanbestedingen tot executive matching — tools die patronen herkennen
-       waar anderen ruis zien. Gebouwd om te gebruiken, niet om indruk te maken.</p>
-    <div class="knoppen">
-      <a href="#apps" class="btn btn-goud">Bekijk de apps<i class="ti ti-arrow-down" aria-hidden="true"></i></a>
-      <a href="#over" class="btn btn-rand">Over Fluid Waves</a>
+    <div class="top-rechts" id="topRechts">
+      <button class="knop" id="beheerKnop" onclick="naarBeheer()"><i class="ti ti-lock" aria-hidden="true"></i>Beheer</button>
     </div>
   </div>
-</header>
 
-<main>
-  <section id="apps">
-    <div class="wrap">
-      <div class="kop"><span>01</span><h2>De apps</h2></div>
-      <p class="kop-sub">Elk product staat op zichzelf. Kies wat bij je werk past.</p>
-      <div class="apps" id="appLijst">
-        <div class="laadmelding">Apps worden geladen…</div>
+  <!-- ============ SECTIEBALK (alleen in beheer) ============ -->
+  <div class="secties verborgen" id="sectiebalk">
+    <div class="sec actief" data-sec="klanten" onclick="beheerSectie('klanten')"><i class="ti ti-users" aria-hidden="true"></i>Klanten</div>
+    <div class="sec" data-sec="prijzen" onclick="beheerSectie('prijzen')"><i class="ti ti-tag" aria-hidden="true"></i>Prijzen</div>
+    <div class="sec" data-sec="apps" onclick="beheerSectie('apps')"><i class="ti ti-apps" aria-hidden="true"></i>Apps</div>
+  </div>
+
+  <!-- ============ ETALAGE ============ -->
+  <div class="etalage" id="etalage">
+    <div class="hero">
+      <svg viewBox="0 0 300 200" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M0 100 q40 -40 80 0 t80 0 t80 0 t80 0" fill="none" stroke="#C9A227" stroke-width="2"/>
+        <path d="M0 130 q40 -40 80 0 t80 0 t80 0 t80 0" fill="none" stroke="#C9A227" stroke-width="1.4"/>
+        <path d="M0 160 q40 -40 80 0 t80 0 t80 0 t80 0" fill="none" stroke="#C9A227" stroke-width="1"/>
+      </svg>
+      <div class="eyebrow" id="heroEyebrow"></div>
+      <h1 id="heroTitel"></h1>
+      <p id="heroOnder"></p>
+      <div class="knoppen">
+        <a href="#apps" class="knop knop-goud">Bekijk de apps<i class="ti ti-arrow-down" aria-hidden="true"></i></a>
+        <a href="#over" class="knop knop-open">Over</a>
       </div>
     </div>
-  </section>
 
-  <section id="over" class="over">
-    <div class="wrap">
-      <div class="kop"><span>02</span><h2>Achter Fluid Waves</h2></div>
-      <p>Fluid Waves bundelt de software van Schröder Consult — AI-gedreven tools voor
-         leadgeneratie, aanbestedingsintelligentie en executive matching. Voortgekomen uit
-         25 jaar commerciële leiding, gebouwd op de overtuiging dat de beste kansen zichtbaar
-         zijn voordat ze vanzelfsprekend worden. Elk product is gemaakt om dagelijks te gebruiken:
-         helder, snel, zonder poespas.</p>
+    <div class="blok" id="apps">
+      <div class="kop"><span>01</span><h2 id="appsKop"></h2></div>
+      <p class="kop-sub" id="appsOnder"></p>
+      <div class="apps" id="appLijst"><div class="melding">Apps laden…</div></div>
     </div>
-  </section>
-</main>
 
-<footer>
-  <div class="wrap foot">
-    <div>© <span id="jaar"></span> Fluid Waves · Schröder Consult · KvK 87125897</div>
-    <div>Wassenaar, Nederland</div>
+    <div class="blok over" id="over">
+      <div class="kop"><span>02</span><h2 id="overKop"></h2></div>
+      <p id="overTekst"></p>
+    </div>
+
+    <div class="voetbalk">
+      <div id="voetTekst"></div>
+      <div>Wassenaar, NL</div>
+    </div>
   </div>
-</footer>
+
+  <!-- ============ BEHEER ============ -->
+  <div class="beheer" id="beheer">
+
+    <!-- inlog -->
+    <div id="inlog">
+      <div class="inlogvak">
+        <h2>Beheer</h2>
+        <p>Log in om klanten, prijzen en gebruik te beheren.</p>
+        <label for="bEmail">E-mail</label>
+        <input id="bEmail" type="email" autocomplete="username" placeholder="naam@voorbeeld.nl">
+        <label for="bWw">Wachtwoord</label>
+        <input id="bWw" type="password" autocomplete="current-password" placeholder="••••••••">
+        <button class="knop knop-navy breed" id="bInlog">Inloggen</button>
+        <div id="inlogFout" class="inlogfout verborgen"></div>
+        <p style="margin-top:14px;"><a href="#" onclick="naarEtalage();return false;" style="color:#8A7F63;font-size:12px;">← terug naar de etalage</a></p>
+      </div>
+    </div>
+
+    <!-- dashboard -->
+    <div class="beheer-body verborgen" id="beheerBody">
+      <aside class="zij">
+        <div class="kiezer">
+          <div class="kiezer-lbl">App in beeld</div>
+          <button class="kiezer-knop" id="appKnop" onclick="toggleAppKiezer(event)">
+            <span class="ini" id="appIni">JR</span>
+            <span class="nm" id="appNaam">Job Radar</span>
+            <i class="ti ti-chevron-down" style="font-size:15px;color:#8A7F63;margin-left:auto;" aria-hidden="true"></i>
+          </button>
+        </div>
+        <div class="zij-lbl">Beheer</div>
+        <nav>
+          <button class="actief" data-v="klanten" onclick="beheerSectie('klanten')"><i class="ti ti-users" aria-hidden="true"></i>Klanten</button>
+          <button data-v="prijzen" onclick="beheerSectie('prijzen')"><i class="ti ti-tag" aria-hidden="true"></i>Prijzen</button>
+          <button data-v="apps" onclick="beheerSectie('apps')"><i class="ti ti-apps" aria-hidden="true"></i>Apps</button>
+        </nav>
+        <div class="zij-voet">
+          <button class="knop breed" onclick="uitloggen()"><i class="ti ti-logout" aria-hidden="true"></i>Uitloggen</button>
+        </div>
+      </aside>
+
+      <main class="hoofd">
+        <div class="hoofd-kop">
+          <div>
+            <h1 id="hoofdTitel">Klanten</h1>
+            <div class="datum" id="hoofdDatum"></div>
+          </div>
+          <button class="knop" onclick="laadBeheer()"><i class="ti ti-refresh" aria-hidden="true"></i>Ververs</button>
+        </div>
+        <div id="hoofdInhoud"><div class="melding">Laden…</div></div>
+      </main>
+    </div>
+  </div>
+</div>
 
 <script>
-document.getElementById("jaar").textContent = new Date().getFullYear();
+const T = window.FW_TEKST;
+const cfg = window.SUPABASE_CONFIG || null;
+let sb = null;
+let beheerToken = null;
+let huidigeApp = "job-radar";
+let laatsteData = null;
 
-const ikonen = {
-  "job-radar": "ti-radar",
-  "tenderlead": "ti-file-search",
-  "golf-score": "ti-golf",
-  "live-from": "ti-playlist"
-};
+// ---- teksten invullen ----
+document.getElementById("heroEyebrow").textContent = T.hero_eyebrow;
+document.getElementById("heroTitel").textContent = T.hero_titel;
+document.getElementById("heroOnder").textContent = T.hero_onder;
+document.getElementById("appsKop").textContent = T.apps_kop;
+document.getElementById("appsOnder").textContent = T.apps_onder;
+document.getElementById("overKop").textContent = T.over_kop;
+document.getElementById("overTekst").textContent = T.over_tekst;
+document.getElementById("voetTekst").textContent = T.voet;
 
-function pil(status) {
-  if (status === "live")    return '<span class="pil pil-live">live</span>';
-  if (status === "bouw")    return '<span class="pil pil-bouw">in aanbouw</span>';
-  if (status === "concept") return '<span class="pil pil-bouw">binnenkort</span>';
-  return "";
+const ikonen = { "job-radar":"ti-radar", "tenderlead":"ti-file-search", "golf-score":"ti-golf", "live-from":"ti-playlist" };
+const euro = c => "€ " + (c/100).toFixed(0);
+const euroF = b => "€ " + Number(b||0).toFixed(2).replace(".",",");
+const datumNL = d => d ? new Date(d).toLocaleDateString("nl-NL",{day:"2-digit",month:"short",year:"numeric"}) : "—";
+
+// ================= OPSLAG =================
+function kiesOpslag() {
+  const werkt = o => { try { o.setItem("__t__","1"); const r=o.getItem("__t__")==="1"; o.removeItem("__t__"); return r; } catch(e){ return false; } };
+  if (window.localStorage && werkt(window.localStorage)) return window.localStorage;
+  if (window.sessionStorage && werkt(window.sessionStorage)) return window.sessionStorage;
+  const m = new Map();
+  return { getItem:k=>m.has(k)?m.get(k):null, setItem:(k,v)=>{m.set(k,String(v));}, removeItem:k=>{m.delete(k);} };
+}
+function maakClient() {
+  if (!cfg) return false;
+  if (!sb) sb = window.supabase.createClient(cfg.url, cfg.anonKey, {
+    auth:{ persistSession:true, autoRefreshToken:true, detectSessionInUrl:false,
+           storage:kiesOpslag(), storageKey:"fluidwaves-beheer" }
+  });
+  return true;
 }
 
-function kaart(app, prijsregels) {
+// ================= NAVIGATIE ETALAGE <-> BEHEER =================
+function naarBeheer() {
+  document.getElementById("etalage").classList.add("verborgen");
+  document.getElementById("beheer").style.display = "block";
+  document.getElementById("beheerKnop").classList.add("verborgen");
+  proefInlog();
+}
+function naarEtalage() {
+  document.getElementById("beheer").style.display = "none";
+  document.getElementById("etalage").classList.remove("verborgen");
+  document.getElementById("sectiebalk").classList.add("verborgen");
+  document.getElementById("beheerKnop").classList.remove("verborgen");
+}
+
+// probeer een bestaande sessie; anders inlogscherm
+async function proefInlog() {
+  if (!maakClient()) { toonInlog(); return; }
+  try {
+    const { data } = await sb.auth.getSession();
+    if (data.session?.access_token) { beheerToken = data.session.access_token; toonDashboard(); return; }
+  } catch(e){}
+  toonInlog();
+}
+function toonInlog() {
+  document.getElementById("inlog").classList.remove("verborgen");
+  document.getElementById("beheerBody").classList.add("verborgen");
+  document.getElementById("sectiebalk").classList.add("verborgen");
+  const e = document.getElementById("bEmail"); if (e && !e.value) e.focus();
+}
+function toonDashboard() {
+  document.getElementById("inlog").classList.add("verborgen");
+  document.getElementById("beheerBody").classList.remove("verborgen");
+  document.getElementById("sectiebalk").classList.remove("verborgen");
+  laadBeheer();
+}
+
+async function inloggen() {
+  const knop = document.getElementById("bInlog");
+  const email = document.getElementById("bEmail").value.trim();
+  const ww = document.getElementById("bWw").value;
+  const fout = document.getElementById("inlogFout");
+  fout.classList.add("verborgen");
+  if (!email || !ww) { fout.textContent="Vul e-mail en wachtwoord in."; fout.classList.remove("verborgen"); return; }
+  if (!maakClient()) return;
+  knop.disabled = true; knop.textContent = "Bezig…";
+  try {
+    const { data, error } = await sb.auth.signInWithPassword({ email, password:ww });
+    if (error || !data.session) {
+      fout.textContent = error?.message==="Invalid login credentials" ? "E-mail of wachtwoord klopt niet." : (error?.message||"Inloggen mislukt.");
+      fout.classList.remove("verborgen"); return;
+    }
+    beheerToken = data.session.access_token;
+    document.getElementById("bWw").value = "";
+    toonDashboard();
+  } catch(e) { fout.textContent="Inloggen mislukt: "+e.message; fout.classList.remove("verborgen"); }
+  finally { knop.disabled=false; knop.textContent="Inloggen"; }
+}
+async function uitloggen() {
+  beheerToken = null;
+  try { if (sb) await sb.auth.signOut(); } catch(e){}
+  naarEtalage();
+}
+
+// ================= ETALAGE: apps laden =================
+function kaart(app, tiers) {
   const ik = ikonen[app.id] || "ti-app-window";
-  const merk = app.merknaam ? `<div class="merk">${app.merknaam}</div>` : "";
-
-  // goedkoopste betaalde tier, of "gratis" als die er is
+  const merk = app.merknaam ? `<div class="merkje">${app.merknaam}</div>` : "";
+  const mijn = (tiers||[]).filter(t => t.app_id === app.id);
+  const gratis = mijn.find(t => t.prijs_cent === 0);
+  const betaald = mijn.filter(t => t.prijs_cent > 0).sort((a,b)=>a.prijs_cent-b.prijs_cent)[0];
   let prijs = "";
-  const tiers = (prijsregels || []).filter(t => t.app_id === app.id);
-  const gratis = tiers.find(t => t.prijs_cent === 0);
-  const betaald = tiers.filter(t => t.prijs_cent > 0).sort((a,b) => a.prijs_cent - b.prijs_cent)[0];
   if (betaald) {
-    const per = betaald.interval === "jaar" ? "jaar" : betaald.interval === "eenmalig" ? "" : "mnd";
-    prijs = `<span class="prijs">vanaf <b>€ ${(betaald.prijs_cent/100).toFixed(0)}</b>${per ? "/"+per : ""}</span>`;
-  } else if (gratis) {
-    prijs = `<span class="prijs"><b>Gratis</b></span>`;
-  }
+    const per = betaald.interval==="jaar"?"jaar":betaald.interval==="eenmalig"?"":"mnd";
+    prijs = `<span class="prijs">vanaf <b>${euro(betaald.prijs_cent)}</b>${per?"/"+per:""}</span>`;
+  } else if (gratis) prijs = `<span class="prijs"><b>Gratis</b></span>`;
 
-  // Links de prijs (of gratis, of status), rechts de actie.
-  // Openen kan zodra er een adres is en de app live staat — los van de prijs.
-  const kanOpenen = app.url && app.status === "live";
-  const linksLabel = prijs || pil(app.status);
-  const rechtsActie = kanOpenen
+  const pilStatus = app.status==="live" ? '<span class="pil pil-live">live</span>'
+                  : '<span class="pil pil-bouw">binnenkort</span>';
+  const links = prijs || pilStatus;
+  const kanOpen = app.url && app.status === "live";
+  const rechts = kanOpen
     ? `<a class="open" href="${app.url}" target="_blank" rel="noopener">Openen<i class="ti ti-arrow-right" aria-hidden="true"></i></a>`
-    : (prijs ? pil(app.status) : "");
+    : (prijs ? pilStatus : "");
 
-  return `
-    <div class="app">
-      <div class="ikoon"><i class="ti ${ik}" aria-hidden="true"></i></div>
-      <h3>${app.naam}</h3>
-      ${merk}
-      <p>${app.omschrijving || ""}</p>
-      <div class="voet">
-        ${linksLabel}
-        ${rechtsActie}
-      </div>
-    </div>`;
+  return `<div class="app"><div class="ik"><i class="ti ${ik}" aria-hidden="true"></i></div>
+    <h3>${app.naam}</h3>${merk}<p>${app.omschrijving||""}</p>
+    <div class="voet">${links}${rechts}</div></div>`;
 }
-
 async function laadApps() {
   const doel = document.getElementById("appLijst");
-  const cfg = window.SUPABASE_CONFIG;
-
-  if (!cfg) {
-    doel.innerHTML = '<div class="foutmelding">Configuratie ontbreekt.</div>';
-    return;
-  }
-
+  if (!cfg) { doel.innerHTML='<div class="melding">Configuratie ontbreekt.</div>'; return; }
   try {
-    const sb = window.supabase.createClient(cfg.url, cfg.anonKey);
-
-    // catalogus en prijslijst zijn openbaar leesbaar (de views uit fase 1)
+    const c = window.supabase.createClient(cfg.url, cfg.anonKey);
     const [apps, prijzen] = await Promise.all([
-      sb.from("catalogus").select("*").order("volgorde"),
-      sb.from("prijslijst").select("*")
+      c.from("catalogus").select("*").order("volgorde"),
+      c.from("prijslijst").select("*")
     ]);
-
     if (apps.error) throw apps.error;
-
     const lijst = apps.data || [];
-    if (!lijst.length) {
-      doel.innerHTML = '<div class="laadmelding">Nog geen apps om te tonen.</div>';
-      return;
-    }
-
-    doel.innerHTML = lijst.map(a => kaart(a, prijzen.data)).join("");
-  } catch (e) {
-    console.error("Kon apps niet laden:", e);
-    doel.innerHTML = '<div class="foutmelding">De apps konden niet worden geladen. Probeer het later opnieuw.</div>';
-  }
+    doel.innerHTML = lijst.length ? lijst.map(a=>kaart(a,prijzen.data)).join("") : '<div class="melding">Nog geen apps.</div>';
+  } catch(e) { console.error(e); doel.innerHTML='<div class="melding">Apps konden niet laden.</div>'; }
 }
 
+// ================= BEHEER: gegevens =================
+async function laadBeheer() {
+  if (!beheerToken) { toonInlog(); return; }
+  document.getElementById("hoofdInhoud").innerHTML = '<div class="melding">Laden…</div>';
+  try {
+    const res = await fetch("/api/beheer", {
+      method:"POST", headers:{"Content-Type":"application/json"},
+      body: JSON.stringify({ accessToken: beheerToken, appId: huidigeApp })
+    });
+    if (res.status===401) { beheerToken=null; try{await sb.auth.signOut();}catch(e){} toonInlog(); return; }
+    if (res.status===403) { beheerToken=null; document.getElementById("hoofdInhoud").innerHTML='<div class="melding">Dit account heeft geen beheerrechten.</div>'; return; }
+    if (!res.ok) { const e=await res.json().catch(()=>({})); document.getElementById("hoofdInhoud").innerHTML=`<div class="melding">Kon niet laden: ${e.error||res.status}</div>`; return; }
+    laatsteData = await res.json();
+    beheerSectie(document.querySelector('.zij nav button.actief')?.dataset.v || "klanten");
+  } catch(e) { document.getElementById("hoofdInhoud").innerHTML=`<div class="melding">Verbinding mislukt.</div>`; }
+}
+
+function beheerSectie(naam) {
+  document.querySelectorAll('.zij nav button, .secties .sec').forEach(b=>{
+    const actief = (b.dataset.v||b.dataset.sec)===naam;
+    b.classList.toggle('actief', actief);
+  });
+  const titels = { klanten:"Klanten", prijzen:"Prijzen en tiers", apps:"Apps" };
+  document.getElementById("hoofdTitel").textContent = titels[naam] || "Beheer";
+  if (!laatsteData) return;
+  if (naam==="klanten") toonKlanten(laatsteData);
+  else if (naam==="prijzen") toonPrijzen(laatsteData);
+  else if (naam==="apps") toonApps(laatsteData);
+}
+
+function toonKlanten(d) {
+  const c = d.cijfers||{}, kl = d.klanten||[], sig = d.signalen||[];
+  document.getElementById("hoofdDatum").textContent =
+    `${kl.length} ${kl.length===1?"klant":"klanten"} · ${c.scans_deze_maand||0} scans deze maand`;
+  const marge = (c.mrr_cent||0)/100 - Number(c.kosten_maand_eur||0);
+
+  const metrics = `<div class="metrics">
+    <div class="metric"><div class="l">Actieve klanten</div><div class="n">${c.klanten_actief||0}</div><div class="s">${c.betalend||0} betalend · ${c.proef||0} proef</div></div>
+    <div class="metric"><div class="l">Terugkerende omzet</div><div class="n">${euro(c.mrr_cent||0)}</div><div class="s">per maand</div></div>
+    <div class="metric"><div class="l">Kosten</div><div class="n">${euroF(c.kosten_maand_eur)}</div><div class="s">marge ${euroF(marge)}</div></div>
+    <div class="metric"><div class="l">Scans deze maand</div><div class="n">${c.scans_deze_maand||0}</div><div class="s">${c.scans_vandaag||0} vandaag</div></div>
+  </div>`;
+
+  const sigBlok = `<div class="paneel"><h2>Vraagt aandacht</h2>${
+    sig.length ? sig.map(s=>`<div class="sig ${s.ernst}"><i class="ti ${s.ernst==="urgent"?"ti-alert-triangle":"ti-info-circle"}" aria-hidden="true"></i><span>${s.tekst}</span></div>`).join("")
+    : '<div class="leeg">Niets bijzonders.</div>'}</div>`;
+
+  const rijen = kl.length ? kl.map(k=>{
+    const over = k.scans_limiet==null?null:Math.max(0,k.scans_limiet-k.scans_gebruikt);
+    const deel = k.scans_limiet?Math.min(100,(k.scans_gebruikt/k.scans_limiet)*100):0;
+    const pil = k.status==="betaling_mislukt"?'<span class="pil p-stop">betaling mislukt</span>'
+      : !k.actief?'<span class="pil p-stop">verlopen</span>'
+      : k.opgezegd?'<span class="pil p-let">opgezegd</span>'
+      : k.status==="proef"?'<span class="pil p-proef">proef</span>':'<span class="pil p-actief">actief</span>';
+    const tegoed = k.scans_limiet==null?'<span class="t-sub">onbeperkt</span>'
+      : `${k.scans_gebruikt} van ${k.scans_limiet}${k.bundel_over>0?` <span class="t-sub">+${k.bundel_over}</span>`:""}
+         <div class="balk${over<=3?" vol":""}"><i style="width:${deel}%"></i></div>`;
+    return `<tr><td><div class="t-naam">${k.naam||"Onbekend"}</div><div class="t-sub">${k.email||(k.app_gebruiker||"").slice(0,8)+"…"}</div></td>
+      <td>${k.tier||"—"}<div class="t-sub">${k.prijs_cent?euro(k.prijs_cent)+"/mnd":"gratis"}</div></td>
+      <td>${pil}</td><td>${tegoed}</td>
+      <td class="num">${euroF(k.kosten_maand)}<div class="t-sub">${euroF(k.kosten_totaal)} totaal</div></td></tr>`;
+  }).join("") : `<tr><td colspan="5" class="melding">Nog geen klanten.</td></tr>`;
+
+  document.getElementById("hoofdInhoud").innerHTML = metrics + sigBlok +
+    `<table><thead><tr><th>Klant</th><th>Tier</th><th>Status</th><th>Tegoed</th><th class="num">Kosten</th></tr></thead><tbody>${rijen}</tbody></table>`;
+}
+
+function toonPrijzen(d) {
+  document.getElementById("hoofdDatum").textContent = "Tarieven per app";
+  const t = (d.tiers||[]);
+  document.getElementById("hoofdInhoud").innerHTML = t.length
+    ? `<table><thead><tr><th>App</th><th>Tier</th><th class="num">Prijs</th><th>Interval</th><th class="num">Scans</th></tr></thead><tbody>${
+        t.map(x=>`<tr><td>${x.app_id}</td><td class="t-naam">${x.naam}</td><td class="num">${x.prijs_cent?euro(x.prijs_cent):"gratis"}</td><td>${x.interval}</td><td class="num">${x.scans_per_periode??x.scans_totaal??"—"}</td></tr>`).join("")
+      }</tbody></table>`
+    : '<div class="paneel"><div class="leeg">De prijslijst komt hier. Nog niet gekoppeld in het beheeroverzicht — te vullen wanneer je tiers gaat aanpassen.</div></div>';
+}
+
+function toonApps(d) {
+  document.getElementById("hoofdDatum").textContent = "Apps in het platform";
+  const a = d.apps || [];
+  document.getElementById("hoofdInhoud").innerHTML = a.length
+    ? `<table><thead><tr><th>App</th><th>Merk</th><th>Status</th><th>URL</th></tr></thead><tbody>${
+        a.map(x=>`<tr><td class="t-naam">${x.naam}</td><td>${x.merknaam||"—"}</td><td>${x.status}</td><td class="t-sub">${x.url||"—"}</td></tr>`).join("")
+      }</tbody></table>`
+    : '<div class="paneel"><div class="leeg">De applijst komt hier.</div></div>';
+}
+
+function toggleAppKiezer(e){ e.stopPropagation(); /* app-kiezer volgt zodra er meer betaalde apps zijn */ }
+
+// ---- inlog-listeners ----
+document.getElementById("bInlog").addEventListener("click", inloggen);
+["bEmail","bWw"].forEach(id=>document.getElementById(id).addEventListener("keydown",e=>{ if(e.key==="Enter") inloggen(); }));
+
+// ---- start ----
 laadApps();
 </script>
 </body>
