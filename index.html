@@ -17,7 +17,7 @@ window.FW_TEKST = {
   hero_titel: "Tools voor MKB-bedrijven en particulieren",
   hero_onder: "",
   apps_kop: "De apps",
-  apps_onder: "Elk product staat op zichzelf.",
+  apps_onder: "Make your own choice",
   over_kop: "Fluid Waves",
   over_tekst: "AI-gedreven software voor commercie, uit 25 jaar praktijk.",
   voet: "Fluid Waves · Schröder Consult · KvK 87125897"
@@ -62,6 +62,7 @@ window.FW_APP_UITLEG = {
   .merk { display:flex; align-items:center; gap:12px; }
   .merk .n1 { font-size:15px; font-weight:600; color:#1B2C4F; }
   .merk .n2 { font-size:11px; color:#8A7F63; }
+  .merk .n2:empty { display:none; }
   .top-rechts { display:flex; align-items:center; gap:12px; }
   .knop { display:inline-flex; align-items:center; gap:6px; font-size:12.5px; padding:7px 13px;
     border:1px solid #D8D2C4; border-radius:7px; background:#FBF8F0; color:#1B2C4F;
@@ -267,7 +268,7 @@ window.FW_APP_UITLEG = {
       </svg>
       <div>
         <div class="n1">Fluid Waves</div>
-        <div class="n2" id="merkOnder">read the mountain · read the vibes</div>
+        <div class="n2" id="merkOnder"></div>
       </div>
     </div>
     <div class="top-rechts" id="topRechts">
@@ -300,7 +301,7 @@ window.FW_APP_UITLEG = {
     </div>
 
     <div class="blok" id="apps">
-      <div class="kop"><span>01</span><h2 id="appsKop"></h2></div>
+      <div class="kop"><h2 id="appsKop"></h2></div>
       <p class="kop-sub" id="appsOnder"></p>
       <div class="app-kiezer" id="appKiezer">
         <div class="app-menu" id="appMenu"><div class="melding">Laden…</div></div>
