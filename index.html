@@ -514,7 +514,24 @@ function toonKlanten(d) {
       <td class="num">${euroF(k.kosten_maand)}<div class="t-sub">${euroF(k.kosten_totaal)} totaal</div></td></tr>`;
   }).join("") : `<tr><td colspan="5" class="melding">Nog geen klanten.</td></tr>`;
 
-  document.getElementById("hoofdInhoud").innerHTML = metrics + sigBlok +
+  // kostprijs per scan, met marge-advies dat live meerekent
+  const kp = c.kostprijs_mediaan;
+  const kostBlok = c.kostprijs_gemeten > 0 ? `<div class="paneel">
+    <h2>Kostprijs per scan <span class="t-sub" style="font-weight:400">· 30 dagen, ${c.kostprijs_gemeten} scans</span></h2>
+    <div class="metrics" style="margin-bottom:11px;">
+      <div class="metric"><div class="l">Mediaan</div><div class="n">${euroF(kp)}</div><div class="s">hierop prijzen</div></div>
+      <div class="metric"><div class="l">Gemiddeld</div><div class="n">${euroF(c.kostprijs_gemiddeld)}</div><div class="s">met uitschieters</div></div>
+      <div class="metric"><div class="l">Zware scan</div><div class="n">${euroF(c.kostprijs_p90)}</div><div class="s">10% zit hoger</div></div>
+    </div>
+    <div style="font-size:12px;line-height:1.6;color:#5F5E5A;border-top:1px solid #EFEADE;padding-top:10px;">
+      Bij ${euroF(kp)} mediaan kost 20 scans u <strong style="color:#1B2C4F;">${euroF(kp*20)}</strong>.
+      Voor 50% marge vraagt u daarvoor <strong style="color:#1B2C4F;">${euroF(kp*40)}</strong>;
+      voor 10 scans <strong style="color:#1B2C4F;">${euroF(kp*20)}</strong> bij ${euroF(kp*10)} kosten.
+    </div></div>`
+  : `<div class="paneel"><h2>Kostprijs per scan</h2>
+     <div class="leeg">Nog geen gemeten scans. Verschijnt zodra er scans zijn met kostenregistratie.</div></div>`;
+
+  document.getElementById("hoofdInhoud").innerHTML = metrics + sigBlok + kostBlok +
     `<table><thead><tr><th>Klant</th><th>Tier</th><th>Status</th><th>Tegoed</th><th class="num">Kosten</th></tr></thead><tbody>${rijen}</tbody></table>`;
 }
 
