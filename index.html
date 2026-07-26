@@ -285,7 +285,7 @@ window.FW_APP_UITLEG = {
     <div class="sec actief" data-sec="klanten" onclick="beheerSectie('klanten')"><i class="ti ti-users" aria-hidden="true"></i>Klanten</div>
     <div class="sec" data-sec="prijzen" onclick="beheerSectie('prijzen')"><i class="ti ti-tag" aria-hidden="true"></i>Prijzen</div>
     <div class="sec" data-sec="apps" onclick="beheerSectie('apps')"><i class="ti ti-apps" aria-hidden="true"></i>Apps</div>
-  </div>
+  <div class="sec" data-sec="tableart" onclick="beheerSectie('tableart')"><i class="ti ti-palette" aria-hidden="true"></i>Table Art</div>
 
   <!-- ============ ETALAGE ============ -->
   <div class="etalage" id="etalage">
@@ -358,7 +358,7 @@ window.FW_APP_UITLEG = {
           <button class="actief" data-v="klanten" onclick="beheerSectie('klanten')"><i class="ti ti-users" aria-hidden="true"></i>Klanten</button>
           <button data-v="prijzen" onclick="beheerSectie('prijzen')"><i class="ti ti-tag" aria-hidden="true"></i>Prijzen</button>
           <button data-v="apps" onclick="beheerSectie('apps')"><i class="ti ti-apps" aria-hidden="true"></i>Apps</button>
-        </nav>
+        <button data-v="tableart" onclick="beheerSectie('tableart')"><i class="ti ti-palette" aria-hidden="true"></i>Table Art</button></nav>
         <div class="zij-voet">
           <button class="knop breed" onclick="uitloggen()"><i class="ti ti-logout" aria-hidden="true"></i>Uitloggen</button>
         </div>
@@ -594,12 +594,13 @@ function beheerSectie(naam) {
     const actief = (b.dataset.v||b.dataset.sec)===naam;
     b.classList.toggle('actief', actief);
   });
-  const titels = { klanten:"Klanten", prijzen:"Prijzen en tiers", apps:"Apps" };
+  const titels = { klanten:"Klanten", prijzen:"Prijzen en tiers", apps:"Apps", tableart:"Table Art" };
   document.getElementById("hoofdTitel").textContent = titels[naam] || "Beheer";
   if (!laatsteData) return;
   if (naam==="klanten") toonKlanten(laatsteData);
   else if (naam==="prijzen") toonPrijzen(laatsteData);
   else if (naam==="apps") toonApps(laatsteData);
+  else if (naam==="tableart") toonTableArt();
 }
 
 function toonKlanten(d) {
@@ -681,6 +682,118 @@ function toggleAppKiezer(e){ e.stopPropagation(); /* app-kiezer volgt zodra er m
 // ---- inlog-listeners ----
 document.getElementById("bInlog").addEventListener("click", inloggen);
 ["bEmail","bWw"].forEach(id=>document.getElementById(id).addEventListener("keydown",e=>{ if(e.key==="Enter") inloggen(); }));
+
+
+// ================= TABLE ART =================
+let tafCollecties = null;
+
+async function tafBeheer(payload) {
+  const res = await fetch("/api/taf-beheer", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ accessToken: beheerToken, ...payload })
+  });
+  if (res.status === 401) { beheerToken = null; try { await sb.auth.signOut(); } catch(e){} toonInlog(); throw new Error("niet ingelogd"); }
+  if (!res.ok) { const e = await res.json().catch(()=>({})); throw new Error(e.error || res.status); }
+  return res.json();
+}
+
+async function toonTableArt() {
+  const doel = document.getElementById("hoofdInhoud");
+  document.getElementById("hoofdDatum").textContent = "Collecties van alle bezoekers";
+  doel.innerHTML = '<div class="melding">Laden…</div>';
+  try {
+    const d = await tafBeheer({ actie: "lijst" });
+    tafCollecties = d.collecties || [];
+    document.getElementById("hoofdDatum").textContent =
+      `${d.aantal} ${d.aantal===1?"collectie":"collecties"}`;
+    if (!tafCollecties.length) { doel.innerHTML = '<div class="paneel"><div class="leeg">Nog geen collecties gemaakt.</div></div>'; return; }
+
+    doel.innerHTML = `<table><thead><tr>
+        <th>Collectie</th><th>Voor</th><th>Input</th><th>Gewijzigd</th><th></th>
+      </tr></thead><tbody>${
+      tafCollecties.map(c => {
+        const thumbs = (c.thumbnails||[]).slice(0,4).map(t =>
+          `<img src="${t}" style="width:26px;height:26px;object-fit:cover;border-radius:4px;border:1px solid #E0D8C4;margin-right:2px;">`).join("");
+        const palet = (c.palet||[]).slice(0,6).map(p =>
+          `<span style="display:inline-block;width:12px;height:12px;background:${p.hex||p};border:1px solid rgba(0,0,0,.1);"></span>`).join("");
+        return `<tr>
+          <td><div class="t-naam">${c.titel||"Naamloos"}</div><div class="t-sub">${palet}</div></td>
+          <td>${c.toepassing||"—"}</td>
+          <td>${thumbs||'<span class="t-sub">—</span>'}</td>
+          <td class="t-sub">${datumNL(c.gewijzigd)}</td>
+          <td class="num">
+            <button class="knop" onclick="tafOpen('${c.id}')"><i class="ti ti-eye"></i>Bekijk</button>
+            <button class="knop" onclick="tafDownload('${c.id}')"><i class="ti ti-download"></i>Zip</button>
+            <button class="knop" onclick="tafVerwijder('${c.id}')"><i class="ti ti-trash"></i></button>
+          </td></tr>`;
+      }).join("")
+    }</tbody></table>
+    <div id="tafDetail" style="margin-top:16px;"></div>`;
+  } catch(e) {
+    doel.innerHTML = `<div class="melding">Kon niet laden: ${e.message}</div>`;
+  }
+}
+
+async function tafOpen(id) {
+  const detail = document.getElementById("tafDetail");
+  detail.innerHTML = '<div class="melding">Collectie laden…</div>';
+  try {
+    const d = await tafBeheer({ actie: "collectie", id });
+    const c = d.collectie;
+    const pats = c.patronen || [];
+    const svg2uri = svg => "url(\"data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg).replace(/'/g,"%27").replace(/"/g,"%22") + "\")";
+    detail.innerHTML = `<div class="paneel">
+      <h2>${c.titel||"Naamloos"} <span class="t-sub" style="font-weight:400">· ${pats.length} dessins</span></h2>
+      ${c.profiel && c.profiel.samenvatting ? `<p style="font-size:12.5px;color:#5F5E5A;margin-bottom:12px;">${c.profiel.samenvatting}</p>` : ""}
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px;">
+        ${pats.map(p => `<div style="border:1px solid #E8E1D2;border-radius:8px;overflow:hidden;background:#FBF8F0;">
+          <div style="aspect-ratio:1;background-repeat:repeat;background-size:70px;${p.svg?`background-image:${svg2uri(p.svg)};`:""}"></div>
+          <div style="padding:6px 8px;font-size:11px;color:#1B2C4F;font-weight:600;">${p.naam||""}</div>
+        </div>`).join("")}
+      </div>
+    </div>`;
+  } catch(e) {
+    detail.innerHTML = `<div class="melding">Kon collectie niet laden: ${e.message}</div>`;
+  }
+}
+
+async function tafDownload(id) {
+  try {
+    const d = await tafBeheer({ actie: "collectie", id });
+    const c = d.collectie;
+    if (!window.JSZip) {
+      await new Promise((ok, mis) => {
+        const s = document.createElement("script");
+        s.src = "https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js";
+        s.onload = ok; s.onerror = () => mis(new Error("JSZip laadt niet"));
+        document.head.appendChild(s);
+      });
+    }
+    const zip = new JSZip();
+    const veilig = (c.titel||"collectie").toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"");
+    (c.patronen||[]).forEach((p, i) => {
+      if (p.svg) zip.file(`${String(i+1).padStart(2,"0")}-${(p.naam||"dessin").toLowerCase().replace(/[^a-z0-9]+/g,"-")}.svg`, p.svg);
+    });
+    zip.file("collectie.json", JSON.stringify({ titel:c.titel, profiel:c.profiel, patronen:(c.patronen||[]).map(p=>({naam:p.naam,soort:p.soort,beschrijving:p.beschrijving,herkomst:p.herkomst,palet:p.palet,toepassing:p.toepassing,schaal:p.schaal})) }, null, 2));
+    const blob = await zip.generateAsync({ type:"blob" });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob); a.download = veilig + ".zip"; a.click();
+    setTimeout(()=>URL.revokeObjectURL(a.href), 4000);
+  } catch(e) {
+    alert("Downloaden mislukt: " + e.message);
+  }
+}
+
+async function tafVerwijder(id) {
+  if (!confirm("Deze collectie verwijderen? Dit kan niet ongedaan worden gemaakt.")) return;
+  try {
+    await tafBeheer({ actie: "verwijder", id });
+    toonTableArt();
+  } catch(e) {
+    alert("Verwijderen mislukt: " + e.message);
+  }
+}
 
 // ---- start ----
 laadApps();
