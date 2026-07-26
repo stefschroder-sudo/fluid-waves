@@ -248,6 +248,22 @@ window.FW_APP_UITLEG = {
 
   .melding { padding:30px; text-align:center; font-size:13px; color:#8A7F63; }
   .verborgen { display:none !important; }
+
+  /* app-kiezer uitklap */
+  .kiezer-lijst { position:absolute; left:0; right:0; top:calc(100% + 4px); z-index:20;
+    background:#FBF8F0; border:1px solid #D8D2C4; border-radius:8px; overflow:hidden;
+    box-shadow:0 6px 20px rgba(27,44,79,.14); display:none; }
+  .kiezer-lijst.open { display:block; }
+  .kiezer-optie { display:flex; align-items:center; gap:8px; padding:9px 10px; cursor:pointer;
+    font-size:12.5px; color:#1B2C4F; background:none; border:none; width:100%; text-align:left;
+    font-family:inherit; }
+  .kiezer-optie:hover { background:#F0EBDF; }
+  .kiezer-optie .ini { width:24px; height:24px; flex:none; border-radius:6px; background:#1B2C4F;
+    color:#F4F1EA; display:flex; align-items:center; justify-content:center; font-size:10.5px; font-weight:600; }
+  .kiezer-optie.actief { background:rgba(201,162,39,.16); }
+  .kiezer-knop .ti-chevron-down { transition:transform .15s; }
+  .kiezer-knop.open-knop .ti-chevron-down { transform:rotate(180deg); }
+
   @media (max-width:720px){
     .shell { margin:0; border-radius:0; }
     .hero h1 { font-size:26px; }
@@ -281,14 +297,9 @@ window.FW_APP_UITLEG = {
   </div>
 
   <!-- ============ SECTIEBALK (alleen in beheer) ============ -->
-  <div class="secties verborgen" id="sectiebalk">
-    <div class="sec actief" data-sec="klanten" onclick="beheerSectie('klanten')"><i class="ti ti-users" aria-hidden="true"></i>Klanten</div>
-    <div class="sec" data-sec="prijzen" onclick="beheerSectie('prijzen')"><i class="ti ti-tag" aria-hidden="true"></i>Prijzen</div>
-    <div class="sec" data-sec="apps" onclick="beheerSectie('apps')"><i class="ti ti-apps" aria-hidden="true"></i>Apps</div>
-  <div class="sec" data-sec="tableart" onclick="beheerSectie('tableart')"><i class="ti ti-palette" aria-hidden="true"></i>Table Art</div>
-    </div>
+  <div class="secties verborgen" id="sectiebalk"></div>
 
-  <!-- ============ ETALAGE ============ -->
+    <!-- ============ ETALAGE ============ -->
   <div class="etalage" id="etalage">
     <div class="hero">
       <svg viewBox="0 0 300 200" preserveAspectRatio="none" aria-hidden="true">
@@ -353,13 +364,10 @@ window.FW_APP_UITLEG = {
             <span class="nm" id="appNaam">Job Radar</span>
             <i class="ti ti-chevron-down" style="font-size:15px;color:#8A7F63;margin-left:auto;" aria-hidden="true"></i>
           </button>
+          <div class="kiezer-lijst" id="appLijst"></div>
         </div>
         <div class="zij-lbl">Beheer</div>
-        <nav>
-          <button class="actief" data-v="klanten" onclick="beheerSectie('klanten')"><i class="ti ti-users" aria-hidden="true"></i>Klanten</button>
-          <button data-v="prijzen" onclick="beheerSectie('prijzen')"><i class="ti ti-tag" aria-hidden="true"></i>Prijzen</button>
-          <button data-v="apps" onclick="beheerSectie('apps')"><i class="ti ti-apps" aria-hidden="true"></i>Apps</button>
-        <button data-v="tableart" onclick="beheerSectie('tableart')"><i class="ti ti-palette" aria-hidden="true"></i>Table Art</button></nav>
+        <nav id="zijNav"></nav>
         <div class="zij-voet">
           <button class="knop breed" onclick="uitloggen()"><i class="ti ti-logout" aria-hidden="true"></i>Uitloggen</button>
         </div>
@@ -452,7 +460,10 @@ function toonDashboard() {
   document.getElementById("inlog").classList.add("verborgen");
   document.getElementById("beheerBody").classList.remove("verborgen");
   document.getElementById("sectiebalk").classList.remove("verborgen");
-  laadBeheer();
+  bouwAppLijst();
+  bouwSecties();
+  const a = BEHEER_APPS[huidigeApp] || BEHEER_APPS["job-radar"];
+  beheerSectie(a.standaard);
 }
 
 async function inloggen() {
@@ -586,22 +597,26 @@ async function laadBeheer() {
     if (res.status===403) { beheerToken=null; document.getElementById("hoofdInhoud").innerHTML='<div class="melding">Dit account heeft geen beheerrechten.</div>'; return; }
     if (!res.ok) { const e=await res.json().catch(()=>({})); document.getElementById("hoofdInhoud").innerHTML=`<div class="melding">Kon niet laden: ${e.error||res.status}</div>`; return; }
     laatsteData = await res.json();
-    beheerSectie(document.querySelector('.zij nav button.actief')?.dataset.v || "klanten");
+    beheerSectie(document.querySelector('#zijNav button.actief')?.dataset.v || BEHEER_APPS[huidigeApp]?.standaard || "klanten");
   } catch(e) { document.getElementById("hoofdInhoud").innerHTML=`<div class="melding">Verbinding mislukt.</div>`; }
 }
 
 function beheerSectie(naam) {
-  document.querySelectorAll('.zij nav button, .secties .sec').forEach(b=>{
+  document.querySelectorAll('.secties .sec, #zijNav button').forEach(b=>{
     const actief = (b.dataset.v||b.dataset.sec)===naam;
     b.classList.toggle('actief', actief);
   });
   const titels = { klanten:"Klanten", prijzen:"Prijzen en tiers", apps:"Apps", tableart:"Table Art" };
   document.getElementById("hoofdTitel").textContent = titels[naam] || "Beheer";
-  if (!laatsteData) return;
+
+  // TAF haalt zijn eigen gegevens op via /api/taf-beheer.
+  if (naam==="tableart") { toonTableArt(); return; }
+
+  // Job Radar-secties leunen op de gedeelde laatsteData van /api/beheer.
+  if (!laatsteData) { laadBeheer(); return; }
   if (naam==="klanten") toonKlanten(laatsteData);
   else if (naam==="prijzen") toonPrijzen(laatsteData);
   else if (naam==="apps") toonApps(laatsteData);
-  else if (naam==="tableart") toonTableArt();
 }
 
 function toonKlanten(d) {
@@ -678,7 +693,70 @@ function toonApps(d) {
     : '<div class="paneel"><div class="leeg">De applijst komt hier.</div></div>';
 }
 
-function toggleAppKiezer(e){ e.stopPropagation(); /* app-kiezer volgt zodra er meer betaalde apps zijn */ }
+// ===== App-kiezer links + functies per app in de bovenbalk =====
+// Alleen apps met een echt beheerdashboard.
+const BEHEER_APPS = {
+  "job-radar": {
+    ini: "JR", naam: "Job Radar",
+    secties: [
+      { v:"klanten", label:"Klanten", icoon:"ti-users" },
+      { v:"prijzen", label:"Prijzen", icoon:"ti-tag" },
+      { v:"apps",    label:"Apps",    icoon:"ti-apps" }
+    ],
+    standaard: "klanten"
+  },
+  "table-art": {
+    ini: "TA", naam: "Table Art",
+    secties: [
+      { v:"tableart", label:"Collecties", icoon:"ti-palette" }
+    ],
+    standaard: "tableart"
+  }
+};
+
+function bouwAppLijst() {
+  const lijst = document.getElementById("appLijst");
+  lijst.innerHTML = Object.entries(BEHEER_APPS).map(([id, a]) =>
+    `<button class="kiezer-optie${id===huidigeApp?" actief":""}" onclick="kiesBeheerApp('${id}')">
+       <span class="ini">${a.ini}</span>${a.naam}
+     </button>`).join("");
+}
+
+function toggleAppKiezer(e){
+  e.stopPropagation();
+  document.getElementById("appLijst").classList.toggle("open");
+  document.getElementById("appKnop").classList.toggle("open-knop");
+}
+// buiten de kiezer klikken sluit de lijst
+document.addEventListener("click", (e) => {
+  if (!e.target.closest(".kiezer")) {
+    document.getElementById("appLijst")?.classList.remove("open");
+    document.getElementById("appKnop")?.classList.remove("open-knop");
+  }
+});
+
+function kiesBeheerApp(id) {
+  const a = BEHEER_APPS[id]; if (!a) return;
+  huidigeApp = id;
+  document.getElementById("appIni").textContent = a.ini;
+  document.getElementById("appNaam").textContent = a.naam;
+  document.getElementById("appLijst").classList.remove("open");
+  document.getElementById("appKnop").classList.remove("open-knop");
+  bouwAppLijst();
+  bouwSecties();                       // bovenbalk + zijmenu opnieuw voor deze app
+  beheerSectie(a.standaard);           // open de eerste functie van de app
+}
+
+// De functie-knoppen (bovenbalk én zij-nav) opbouwen voor de gekozen app.
+function bouwSecties() {
+  const a = BEHEER_APPS[huidigeApp]; if (!a) return;
+  const boven = document.getElementById("sectiebalk");
+  const zij = document.getElementById("zijNav");
+  const maakKnop = (s, klasse) =>
+    `<${klasse==="sec"?"div":"button"} class="${klasse}" data-${klasse==="sec"?"sec":"v"}="${s.v}" onclick="beheerSectie('${s.v}')"><i class="ti ${s.icoon}" aria-hidden="true"></i>${s.label}</${klasse==="sec"?"div":"button"}>`;
+  if (boven) boven.innerHTML = a.secties.map(s => maakKnop(s, "sec")).join("");
+  if (zij)   zij.innerHTML   = a.secties.map(s => maakKnop(s, "v")).join("");
+}
 
 // ---- inlog-listeners ----
 document.getElementById("bInlog").addEventListener("click", inloggen);
