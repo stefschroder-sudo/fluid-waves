@@ -58,223 +58,201 @@ window.FW_APP_UITLEG = {
 </script>
 
 <style>
+  :root {
+    --navy:#1B2C4F; --goud:#C9A227; --papier:#F4F1EA; --wit:#FBF8F0;
+    --rand:#E0D8C4; --inkt:#2A2A28; --grijs:#8A7F63; --golfblauw:#9BB0C9;
+    --groen:#0F6E56; --rood:#B4341E;
+  }
   * { box-sizing:border-box; margin:0; padding:0; }
-  body { background:#E7E2D6; color:#2A2A28;
+  body { background:#E7E2D6; color:var(--inkt);
     font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
-    line-height:1.55; }
-  .shell { max-width:1120px; margin:24px auto; background:#F4F1EA; border-radius:14px;
-    overflow:hidden; border:1px solid #D8D2C4; box-shadow:0 6px 24px rgba(27,44,79,.10); }
+    line-height:1.5; }
+  .shell { max-width:1120px; margin:22px auto; background:var(--papier); border-radius:14px;
+    overflow:hidden; border:1px solid var(--rand); box-shadow:0 6px 24px rgba(27,44,79,.10); }
 
-  /* ---- topbalk ---- */
-  .top { display:flex; align-items:center; justify-content:space-between;
-    background:#F4F1EA; padding:12px 20px; border-bottom:1px solid #E0D8C4; }
-  .merk { display:flex; align-items:center; gap:12px; }
-  .merk .n1 { font-size:15px; font-weight:600; color:#1B2C4F; }
-  .merk .n2 { font-size:11px; color:#8A7F63; }
-  .merk .n2:empty { display:none; }
-  .top-rechts { display:flex; align-items:center; gap:12px; }
+  /* ============ TOPBALK (navy, Clever App Factory) ============ */
+  .topbar { display:flex; align-items:center; justify-content:space-between;
+    background:var(--navy); padding:12px 20px; border-bottom:2px solid var(--goud); }
+  .tb-merk { display:flex; align-items:center; gap:14px; }
+  .tb-merk .n1 { font-size:16px; font-weight:700; color:#FFFFFF; letter-spacing:.01em; line-height:1.1; }
+  .tb-merk .n2 { font-size:9.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--goud); font-weight:700; margin-top:1px; }
+  .tb-rechts { display:flex; align-items:center; gap:12px; }
   .knop { display:inline-flex; align-items:center; gap:6px; font-size:12.5px; padding:7px 13px;
-    border:1px solid #D8D2C4; border-radius:7px; background:#FBF8F0; color:#1B2C4F;
+    border:1px solid var(--rand); border-radius:7px; background:var(--wit); color:var(--navy);
     cursor:pointer; font-family:inherit; text-decoration:none; }
   .knop:hover { background:#F0EBDF; }
-  .knop-navy { background:#1B2C4F; color:#F4F1EA; border-color:#1B2C4F; }
+  .knop-navy { background:var(--navy); color:var(--papier); border-color:var(--navy); }
   .knop-navy:hover { background:#24396a; }
-  .avatar { width:30px; height:30px; border-radius:50%; background:#1B2C4F; color:#F4F1EA;
-    display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:600; }
+  .knop-licht { background:transparent; border-color:rgba(255,255,255,.28); color:#FFFFFF; }
+  .knop-licht:hover { background:rgba(255,255,255,.10); }
+  .avatar { width:30px; height:30px; border-radius:50%; background:var(--goud); color:var(--navy);
+    display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700; }
 
-  /* ---- sectiebalk (alleen in beheer) ---- */
-  .secties { display:flex; align-items:center; gap:24px; background:#F0EBDF;
-    padding:9px 20px; border-bottom:1px solid #E0D8C4; font-size:12.5px; color:#3A3524; }
-  .sec { display:flex; align-items:center; gap:6px; cursor:pointer; padding-bottom:3px; margin-bottom:-11px;
-    border-bottom:2px solid transparent; }
-  .sec:hover { color:#1B2C4F; }
-  .sec.actief { color:#1B2C4F; font-weight:600; border-bottom-color:#C9A227; }
-  .sec i { font-size:15px; }
+  /* ============ HORIZONTALE MENUBALK ============ */
+  .menubar { display:flex; gap:2px; background:var(--wit); padding:0 12px;
+    border-bottom:1px solid var(--rand); flex-wrap:wrap; }
+  .mtab { display:flex; align-items:center; gap:6px; padding:10px 14px; font-size:12px;
+    color:var(--grijs); border-bottom:2px solid transparent; cursor:pointer; user-select:none;
+    font-weight:600; white-space:nowrap; }
+  .mtab:hover { color:var(--navy); }
+  .mtab.actief { color:var(--navy); border-bottom-color:var(--goud); background:#FFFFFF; margin-bottom:-1px; }
+  .mtab i { font-size:15px; }
 
-  /* ================= ETALAGE ================= */
-  .etalage { display:block; }
-  .hero { padding:26px 28px 24px; position:relative; overflow:hidden;
-    background:#1B2C4F; color:#F4F1EA; }
-  .hero svg { position:absolute; right:-40px; bottom:-30px; width:260px; opacity:.13; }
-  .hero .eyebrow { font-size:11.5px; letter-spacing:.2em; text-transform:uppercase; color:#C9A227; margin-bottom:8px; }
-  .hero h1 { font-size:24px; font-weight:600; max-width:24ch; line-height:1.15; margin-bottom:6px; }
-  .hero p { font-size:14px; color:#C6D0E0; max-width:44ch; margin-bottom:16px; }
-  .hero p:empty { display:none; margin:0; }
-  .hero .knoppen { display:flex; gap:11px; flex-wrap:wrap; margin-top:14px; }
-  .knop-goud { background:#C9A227; color:#1B2C4F; font-weight:600; border-color:#C9A227; }
-  .knop-goud:hover { background:#D9B43A; }
-  .knop-open { border-color:#3A4E75; color:#F4F1EA; background:transparent; }
-  .knop-open:hover { background:#22375f; }
+  /* ============ WERKVLAK: sidebar links + hoofd rechts ============ */
+  .werk { display:flex; min-height:560px; }
+  .zij { width:220px; flex:none; background:var(--papier); border-right:1px solid var(--rand);
+    padding:14px 10px; display:flex; flex-direction:column; }
+  .zij-lbl { font-size:9.5px; color:var(--grijs); text-transform:uppercase; letter-spacing:.1em; margin:4px 0 8px 6px; font-weight:700; }
+  .zij-nav { display:flex; flex-direction:column; gap:3px; }
+  .zij-voet { margin-top:auto; padding-top:12px; }
 
-  .blok { padding:40px 28px; }
-  .kop { display:flex; align-items:baseline; gap:12px; margin-bottom:4px; }
-  .kop span { font-size:12px; letter-spacing:.18em; text-transform:uppercase; color:#C9A227; }
-  .kop h2 { font-size:22px; color:#1B2C4F; font-weight:600; }
-  .kop-sub { font-size:13px; color:#8A7F63; margin-bottom:24px; }
-
-  .apps { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:16px; }
-
-  /* ---- app-kiezer: menu links, detail rechts ---- */
-  .app-kiezer { display:grid; grid-template-columns:200px 1fr; gap:20px; align-items:start; }
-  .app-menu { display:flex; flex-direction:column; gap:8px; }
-  .app-blok { display:flex; align-items:center; gap:10px; background:#FBF8F0; border:1px solid #E8E1D2;
-    border-radius:10px; padding:11px 12px; cursor:pointer; text-align:left; font-family:inherit;
-    transition:.14s; position:relative; }
+  /* app-blok in de sidebar (etalage) */
+  .app-blok { display:flex; align-items:center; gap:10px; background:var(--wit); border:1px solid #E8E1D2;
+    border-radius:10px; padding:10px 11px; cursor:pointer; text-align:left; font-family:inherit;
+    transition:.14s; position:relative; width:100%; }
   .app-blok:hover { background:#F0EBDF; }
-  .app-blok.actief { border-color:#C9A227; background:#FBF8F0; }
+  .app-blok.actief { border-color:var(--goud); }
   .app-blok.actief::before { content:""; position:absolute; left:0; top:8px; bottom:8px; width:3px;
-    background:#C9A227; border-radius:0 2px 2px 0; }
-  .app-blok .bi { width:32px; height:32px; flex:none; border-radius:8px; background:#F0EBDF;
+    background:var(--goud); border-radius:0 2px 2px 0; }
+  .app-blok .bi { width:30px; height:30px; flex:none; border-radius:8px; background:#F0EBDF;
     display:flex; align-items:center; justify-content:center; }
-  .app-blok.actief .bi { background:#1B2C4F; }
-  .app-blok .bi i { font-size:17px; color:#1B2C4F; }
-  .app-blok.actief .bi i { color:#C9A227; }
-  .app-blok .bn { font-size:13px; font-weight:600; color:#1B2C4F; line-height:1.2; }
-  .app-blok .bs { font-size:10.5px; color:#8A7F63; }
+  .app-blok.actief .bi { background:var(--navy); }
+  .app-blok .bi i { font-size:16px; color:var(--navy); }
+  .app-blok.actief .bi i { color:var(--goud); }
+  .app-blok .bn { font-size:12.5px; font-weight:600; color:var(--navy); line-height:1.2; }
+  .app-blok .bs { font-size:10px; color:var(--grijs); }
 
-  .app-detail { background:#FBF8F0; border:1px solid #E8E1D2; border-radius:13px; padding:26px;
-    position:relative; overflow:hidden; min-height:220px; }
-  .app-detail::before { content:""; position:absolute; top:0; left:0; right:0; height:3px; background:#C9A227; }
-  .app-detail .d-ik { width:48px; height:48px; border-radius:11px; background:#F0EBDF;
+  /* beheer-navigatieknop in de sidebar */
+  .zij-nav button.navknop { text-align:left; padding:8px 10px; border-radius:7px; font-size:12.5px;
+    display:flex; align-items:center; gap:9px; background:none; border:none; cursor:pointer;
+    font-family:inherit; color:var(--inkt); width:100%; }
+  .zij-nav button.navknop:hover { background:#E4DED0; }
+  .zij-nav button.navknop.actief { background:rgba(201,162,39,.16); color:var(--navy); font-weight:600; }
+  .zij-nav button.navknop i { font-size:16px; color:var(--grijs); }
+  .zij-nav button.navknop.actief i { color:var(--navy); }
+
+  /* app-kiezer (welke beheer-app) bovenin de sidebar */
+  .kiezer { position:relative; margin-bottom:14px; }
+  .kiezer-lbl { font-size:9.5px; color:var(--grijs); text-transform:uppercase; letter-spacing:.1em; margin:0 0 6px 6px; font-weight:700; }
+  .kiezer-knop { width:100%; display:flex; align-items:center; gap:8px; background:var(--wit);
+    border:1px solid var(--rand); border-radius:7px; padding:8px 9px; cursor:pointer; text-align:left; }
+  .kiezer-knop .ini { width:26px; height:26px; flex:none; border-radius:6px; background:var(--navy);
+    color:var(--papier); display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700; }
+  .kiezer-knop .nm { font-size:12.5px; font-weight:600; color:var(--navy); white-space:nowrap;
+    overflow:hidden; text-overflow:ellipsis; }
+  .kiezer-lijst { position:absolute; left:0; right:0; top:calc(100% + 4px); z-index:20;
+    background:var(--wit); border:1px solid var(--rand); border-radius:8px; overflow:hidden;
+    box-shadow:0 6px 20px rgba(27,44,79,.14); display:none; }
+  .kiezer-lijst.open { display:block; }
+  .kiezer-optie { display:flex; align-items:center; gap:8px; padding:9px 10px; cursor:pointer;
+    font-size:12.5px; color:var(--navy); background:none; border:none; width:100%; text-align:left; font-family:inherit; }
+  .kiezer-optie:hover { background:#F0EBDF; }
+  .kiezer-optie .ini { width:24px; height:24px; flex:none; border-radius:6px; background:var(--navy);
+    color:var(--papier); display:flex; align-items:center; justify-content:center; font-size:10.5px; font-weight:700; }
+  .kiezer-optie.actief { background:rgba(201,162,39,.16); }
+  .kiezer-knop .ti-chevron-down { transition:transform .15s; margin-left:auto; }
+  .kiezer-knop.open-knop .ti-chevron-down { transform:rotate(180deg); }
+
+  /* ============ HOOFDVLAK ============ */
+  .hoofd { flex:1; padding:20px 24px; min-width:0; overflow:auto; }
+  .hoofd-kop { display:flex; align-items:flex-start; justify-content:space-between; gap:16px; margin-bottom:16px; }
+  .hoofd-kop h1 { font-size:20px; color:var(--navy); font-weight:700; }
+  .hoofd-kop .datum { font-size:12px; color:var(--grijs); margin-top:2px; }
+
+  /* --- welkomstblok (etalage, vóór app-keuze) --- */
+  .welkom { background:var(--navy); color:var(--papier); border-radius:13px; padding:34px 30px;
+    position:relative; overflow:hidden; }
+  .welkom svg.golf { position:absolute; right:-30px; bottom:-24px; width:280px; opacity:.14; }
+  .welkom .eyebrow { font-size:11.5px; letter-spacing:.2em; text-transform:uppercase; color:var(--goud);
+    font-weight:700; margin-bottom:10px; }
+  .welkom h2 { font-size:28px; font-weight:700; line-height:1.14; margin-bottom:10px; max-width:20ch; }
+  .welkom p { font-size:15px; color:#C6D0E0; max-width:46ch; margin-bottom:8px; }
+  .welkom .hint { font-size:12.5px; color:var(--goud); margin-top:16px; display:flex; align-items:center; gap:6px; }
+
+  /* --- app-detail (etalage, na app-keuze) --- */
+  .app-detail { background:var(--wit); border:1px solid #E8E1D2; border-radius:13px; padding:28px;
+    position:relative; overflow:hidden; min-height:260px; }
+  .app-detail::before { content:""; position:absolute; top:0; left:0; right:0; height:3px; background:var(--goud); }
+  .app-detail .d-ik { width:52px; height:52px; border-radius:12px; background:#F0EBDF;
     display:flex; align-items:center; justify-content:center; margin-bottom:16px; }
-  .app-detail .d-ik i { font-size:26px; color:#1B2C4F; }
-  .app-detail .d-merk { font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:#C9A227; margin-bottom:4px; }
-  .app-detail h3 { font-size:22px; color:#1B2C4F; margin-bottom:6px; }
-  .app-detail .d-kop { font-size:15px; color:#1B2C4F; font-weight:600; margin-bottom:10px; }
-  .app-detail .d-tekst { font-size:14px; color:#5F5E5A; line-height:1.65; margin-bottom:18px; max-width:52ch; }
-  .app-detail .d-voor { font-size:12px; color:#8A7F63; margin-bottom:20px; }
-  .app-detail .d-onder { display:flex; align-items:center; gap:20px; flex-wrap:wrap;
-    border-top:1px solid #EFEADE; padding-top:18px; }
-  .app-detail .d-prijs { font-size:13px; color:#8A7F63; }
-  .app-detail .d-prijs b { color:#1B2C4F; font-size:19px; }
-  .app-detail .d-prijs .per { font-size:13px; font-weight:400; color:#8A7F63; }
-  .app-detail .d-tiers { font-size:11.5px; color:#8A7F63; margin-top:3px; }
-  @media (max-width:640px){ .app-kiezer { grid-template-columns:1fr; }
-    .app-menu { flex-direction:row; overflow-x:auto; } .app-blok { flex:none; } }
-  .app { background:#FBF8F0; border:1px solid #E8E1D2; border-radius:13px; padding:20px;
-    display:flex; flex-direction:column; position:relative; overflow:hidden; }
-  .app::before { content:""; position:absolute; top:0; left:0; right:0; height:3px; background:#C9A227; }
-  .app .ik { width:40px; height:40px; border-radius:9px; background:#F0EBDF;
-    display:flex; align-items:center; justify-content:center; margin-bottom:13px; }
-  .app .ik i { font-size:21px; color:#1B2C4F; }
-  .app h3 { font-size:17px; color:#1B2C4F; margin-bottom:2px; }
-  .app .merkje { font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; color:#C9A227; margin-bottom:8px; }
-  .app p { font-size:13px; color:#5F5E5A; flex:1; margin-bottom:15px; }
-  .app .voet { display:flex; align-items:center; justify-content:space-between; gap:10px; }
-  .app .prijs { font-size:13px; color:#8A7F63; }
-  .app .prijs b { color:#1B2C4F; font-size:15px; }
+  .app-detail .d-ik i { font-size:28px; color:var(--navy); }
+  .app-detail .d-merk { font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--goud); margin-bottom:4px; font-weight:700; }
+  .app-detail h3 { font-size:24px; color:var(--navy); margin-bottom:8px; font-weight:700; }
+  .app-detail .d-kop { font-size:15px; color:var(--navy); font-weight:600; margin-bottom:12px; }
+  .app-detail .d-tekst { font-size:14px; color:#5F5E5A; line-height:1.7; margin-bottom:18px; max-width:56ch; }
+  .app-detail .d-voor { font-size:12px; color:var(--grijs); margin-bottom:22px; }
+  .app-detail .d-onder { display:flex; align-items:center; gap:22px; flex-wrap:wrap;
+    border-top:1px solid #EFEADE; padding-top:20px; }
+  .app-detail .d-prijs { font-size:13px; color:var(--grijs); }
+  .app-detail .d-prijs b { color:var(--navy); font-size:20px; }
+  .app-detail .d-prijs .per { font-size:13px; font-weight:400; color:var(--grijs); }
+  .app-detail .d-tiers { font-size:11.5px; color:var(--grijs); margin-top:3px; }
+
   .pil { font-size:10.5px; padding:3px 9px; border-radius:5px; white-space:nowrap; }
   .pil-live { background:#E1F5EE; color:#0F6E56; }
-  .pil-gratis { background:#F1EFE8; color:#5F5E5A; }
   .pil-bouw { background:#FAEEDA; color:#854F0B; }
-  .app a.open { font-size:13px; color:#1B2C4F; text-decoration:none; font-weight:600;
-    display:inline-flex; align-items:center; gap:4px; }
-  .app a.open:hover { color:#C9A227; }
 
-  .over { background:#EFE9DC; }
-  .over p { font-size:15px; color:#4A4640; max-width:56ch; }
+  /* --- over --- */
+  .over-blok { background:var(--wit); border:1px solid #E8E1D2; border-radius:13px; padding:28px; }
+  .over-blok h3 { font-size:20px; color:var(--navy); margin-bottom:10px; font-weight:700; }
+  .over-blok p { font-size:14.5px; color:#4A4640; max-width:60ch; line-height:1.7; }
 
-  .voetbalk { background:#1B2C4F; color:#A9B4C9; font-size:12.5px; padding:22px 28px;
-    display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px; }
-
-  /* ================= BEHEER ================= */
-  .beheer { display:none; }
-  .beheer-body { display:flex; min-height:520px; }
-  .zij { width:210px; flex:none; background:#F0EBDF; border-right:1px solid #E0D8C4;
-    padding:14px 10px; display:flex; flex-direction:column; transition:width .16s; }
-  .kiezer { position:relative; margin-bottom:14px; }
-  .kiezer-lbl { font-size:10px; color:#8A7F63; text-transform:uppercase; letter-spacing:.1em; margin:0 0 6px 6px; }
-  .kiezer-knop { width:100%; display:flex; align-items:center; gap:8px; background:#FBF8F0;
-    border:1px solid #D8D2C4; border-radius:7px; padding:8px 9px; cursor:pointer; text-align:left; }
-  .kiezer-knop .ini { width:26px; height:26px; flex:none; border-radius:6px; background:#1B2C4F;
-    color:#F4F1EA; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:600; }
-  .kiezer-knop .nm { font-size:12.5px; font-weight:600; color:#1B2C4F; white-space:nowrap;
-    overflow:hidden; text-overflow:ellipsis; }
-  .zij nav { display:flex; flex-direction:column; gap:1px; }
-  .zij-lbl { font-size:10px; color:#8A7F63; text-transform:uppercase; letter-spacing:.1em; margin:8px 0 4px 6px; }
-  .zij nav button { text-align:left; padding:7px 9px; border-radius:6px; font-size:12.5px;
-    display:flex; align-items:center; gap:8px; background:none; border:none; cursor:pointer;
-    font-family:inherit; color:#2A2A28; }
-  .zij nav button:hover { background:#E4DED0; }
-  .zij nav button.actief { background:rgba(201,162,39,.16); color:#1B2C4F; }
-  .zij nav button i { font-size:16px; color:#8A7F63; }
-  .zij-voet { margin-top:auto; }
-
-  .hoofd { flex:1; padding:18px 22px; min-width:0; overflow:auto; }
-  .hoofd-kop { display:flex; align-items:flex-start; justify-content:space-between; gap:16px; margin-bottom:14px; }
-  .hoofd-kop h1 { font-size:19px; color:#1B2C4F; font-weight:600; }
-  .hoofd-kop .datum { font-size:12px; color:#8A7F63; margin-top:2px; }
-
+  /* ============ BEHEER-onderdelen ============ */
   .metrics { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:10px; margin-bottom:16px; }
-  .metric { background:#FBF8F0; border:1px solid #E8E1D2; border-radius:9px; padding:11px 13px; }
-  .metric .l { font-size:11px; color:#8A7F63; }
-  .metric .n { font-size:21px; font-weight:600; color:#1B2C4F; margin-top:2px; }
+  .metric { background:var(--wit); border:1px solid #E8E1D2; border-radius:9px; padding:11px 13px; }
+  .metric .l { font-size:11px; color:var(--grijs); }
+  .metric .n { font-size:21px; font-weight:700; color:var(--navy); margin-top:2px; }
   .metric .s { font-size:10.5px; color:#A59A82; margin-top:1px; }
 
-  .paneel { background:#FBF8F0; border:1px solid #E8E1D2; border-radius:9px; padding:12px 14px; margin-bottom:16px; }
-  .paneel h2 { font-size:13px; color:#1B2C4F; margin-bottom:9px; }
+  .paneel { background:var(--wit); border:1px solid #E8E1D2; border-radius:9px; padding:12px 14px; margin-bottom:16px; }
+  .paneel h2 { font-size:13px; color:var(--navy); margin-bottom:9px; }
   .sig { display:flex; gap:8px; align-items:flex-start; font-size:12px; line-height:1.5; margin-bottom:7px; }
   .sig:last-child { margin-bottom:0; }
   .sig i { flex:none; margin-top:1px; font-size:16px; }
   .sig.urgent i { color:#A32D2D; }
   .sig.let_op i { color:#854F0B; }
-  .leeg { font-size:12px; color:#8A7F63; font-style:italic; }
+  .leeg { font-size:12px; color:var(--grijs); font-style:italic; }
 
-  table { width:100%; border-collapse:collapse; background:#FBF8F0; border:1px solid #E8E1D2;
+  table { width:100%; border-collapse:collapse; background:var(--wit); border:1px solid #E8E1D2;
     border-radius:9px; overflow:hidden; }
   th { text-align:left; font-size:10.5px; letter-spacing:.06em; text-transform:uppercase;
-    color:#F4F1EA; background:#1B2C4F; padding:9px 11px; font-weight:600; white-space:nowrap; }
+    color:var(--papier); background:var(--navy); padding:9px 11px; font-weight:600; white-space:nowrap; }
   td { padding:9px 11px; font-size:12.5px; border-bottom:1px solid #EFEADE; vertical-align:middle; }
   tr:last-child td { border-bottom:none; }
   tr:hover td { background:#F6F2E8; }
-  .t-naam { font-weight:600; color:#1B2C4F; }
-  .t-sub { font-size:11px; color:#8A7F63; }
+  .t-naam { font-weight:600; color:var(--navy); }
+  .t-sub { font-size:11px; color:var(--grijs); }
   .p-actief { background:#E1F5EE; color:#0F6E56; }
   .p-proef { background:#F1EFE8; color:#5F5E5A; }
   .p-stop { background:#FAE3E3; color:#A32D2D; }
   .p-let { background:#FAEEDA; color:#854F0B; }
   .balk { height:5px; background:#EDE7D8; border-radius:3px; overflow:hidden; width:74px; margin-top:3px; }
-  .balk > i { display:block; height:100%; background:#C9A227; }
+  .balk > i { display:block; height:100%; background:var(--goud); }
   .balk.vol > i { background:#A32D2D; }
   .num { text-align:right; white-space:nowrap; font-variant-numeric:tabular-nums; }
 
-  /* ---- inlog ---- */
-  .inlogvak { max-width:340px; margin:40px auto; background:#FBF8F0; border:1px solid #E8E1D2;
-    border-radius:12px; padding:24px; }
-  .inlogvak h2 { font-size:16px; color:#1B2C4F; margin-bottom:4px; }
-  .inlogvak p { font-size:12px; color:#8A7F63; margin-bottom:18px; }
-  .inlogvak label { display:block; font-size:11.5px; color:#8A7F63; margin-bottom:5px; }
+  /* --- inlog --- */
+  .inlogvak { max-width:340px; margin:50px auto; background:var(--wit); border:1px solid #E8E1D2;
+    border-radius:12px; padding:26px; }
+  .inlogvak h2 { font-size:17px; color:var(--navy); margin-bottom:4px; }
+  .inlogvak p { font-size:12px; color:var(--grijs); margin-bottom:18px; }
+  .inlogvak label { display:block; font-size:11.5px; color:var(--grijs); margin-bottom:5px; }
   .inlogvak input { width:100%; padding:9px 11px; font-size:13px; font-family:inherit;
-    border:1px solid #D8D2C4; border-radius:6px; background:#FFFDF8; color:#2A2A28; margin-bottom:13px; }
-  .inlogvak input:focus { outline:none; border-color:#C9A227; }
+    border:1px solid var(--rand); border-radius:6px; background:#FFFDF8; color:var(--inkt); margin-bottom:13px; }
+  .inlogvak input:focus { outline:none; border-color:var(--goud); }
   .breed { width:100%; justify-content:center; padding:10px; }
   .inlogfout { margin-top:12px; font-size:12px; color:#A32D2D; background:#FAE3E3;
     border:1px solid #F0C9C9; border-radius:6px; padding:9px 11px; }
 
-  .melding { padding:30px; text-align:center; font-size:13px; color:#8A7F63; }
+  .melding { padding:30px; text-align:center; font-size:13px; color:var(--grijs); }
   .verborgen { display:none !important; }
-
-  /* app-kiezer uitklap */
-  .kiezer-lijst { position:absolute; left:0; right:0; top:calc(100% + 4px); z-index:20;
-    background:#FBF8F0; border:1px solid #D8D2C4; border-radius:8px; overflow:hidden;
-    box-shadow:0 6px 20px rgba(27,44,79,.14); display:none; }
-  .kiezer-lijst.open { display:block; }
-  .kiezer-optie { display:flex; align-items:center; gap:8px; padding:9px 10px; cursor:pointer;
-    font-size:12.5px; color:#1B2C4F; background:none; border:none; width:100%; text-align:left;
-    font-family:inherit; }
-  .kiezer-optie:hover { background:#F0EBDF; }
-  .kiezer-optie .ini { width:24px; height:24px; flex:none; border-radius:6px; background:#1B2C4F;
-    color:#F4F1EA; display:flex; align-items:center; justify-content:center; font-size:10.5px; font-weight:600; }
-  .kiezer-optie.actief { background:rgba(201,162,39,.16); }
-  .kiezer-knop .ti-chevron-down { transition:transform .15s; }
-  .kiezer-knop.open-knop .ti-chevron-down { transform:rotate(180deg); }
 
   @media (max-width:720px){
     .shell { margin:0; border-radius:0; }
-    .hero h1 { font-size:26px; }
-    .beheer-body { flex-direction:column; }
-    .zij { width:100%; border-right:none; border-bottom:1px solid #E0D8C4; }
-    .zij nav { flex-direction:row; flex-wrap:wrap; }
+    .werk { flex-direction:column; }
+    .zij { width:100%; border-right:none; border-bottom:1px solid var(--rand); }
+    .zij-nav { flex-direction:row; flex-wrap:wrap; }
+    .welkom h2 { font-size:22px; }
   }
 </style>
 </head>
@@ -282,116 +260,128 @@ window.FW_APP_UITLEG = {
 
 <div class="shell">
 
-  <!-- ============ TOPBALK (altijd zichtbaar) ============ -->
-  <div class="top">
-    <div class="merk">
-      <svg width="34" height="34" viewBox="0 0 40 40" aria-label="Fluid Waves">
-        <rect x="1" y="1" width="38" height="38" rx="8" fill="#1B2C4F"/>
-        <path d="M7 16 q3.5 -5 7 0 t7 0 t7 0" fill="none" stroke="#C9A227" stroke-width="2.2" stroke-linecap="round"/>
-        <path d="M7 22 q3.5 -5 7 0 t7 0 t7 0" fill="none" stroke="#C9A227" stroke-width="2.2" stroke-linecap="round" opacity=".7"/>
-        <path d="M7 28 q3.5 -5 7 0 t7 0 t7 0" fill="none" stroke="#C9A227" stroke-width="2.2" stroke-linecap="round" opacity=".4"/>
+  <!-- ============ TOPBALK ============ -->
+  <div class="topbar">
+    <div class="tb-merk">
+      <svg width="40" height="40" viewBox="0 0 40 40" aria-label="Fluid Waves" role="img">
+        <rect width="40" height="40" rx="9" fill="#FBF8F0"/>
+        <path d="M6 17 Q12 11 20 17 T34 17" fill="none" stroke="#9BB0C9" stroke-width="2.6" stroke-linecap="round"/>
+        <path d="M6 23 Q12 17 20 23 T34 23" fill="none" stroke="#C9A227" stroke-width="2.6" stroke-linecap="round"/>
       </svg>
       <div>
         <div class="n1">Fluid Waves</div>
-        <div class="n2" id="merkOnder"></div>
+        <div class="n2">The Clever App Factory</div>
       </div>
     </div>
-    <div class="top-rechts" id="topRechts">
-      <button class="knop" id="beheerKnop" onclick="naarBeheer()"><i class="ti ti-lock" aria-hidden="true"></i>Beheer</button>
+    <div class="tb-rechts" id="topRechts">
+      <button class="knop knop-licht" id="beheerKnop" onclick="naarBeheer()"><i class="ti ti-lock" aria-hidden="true"></i>Beheer</button>
     </div>
   </div>
 
-  <!-- ============ SECTIEBALK (alleen in beheer) ============ -->
-  <div class="secties verborgen" id="sectiebalk"></div>
-
-    <!-- ============ ETALAGE ============ -->
-  <div class="etalage" id="etalage">
-    <div class="hero">
-      <svg viewBox="0 0 300 200" preserveAspectRatio="none" aria-hidden="true">
-        <path d="M0 100 q40 -40 80 0 t80 0 t80 0 t80 0" fill="none" stroke="#C9A227" stroke-width="2"/>
-        <path d="M0 130 q40 -40 80 0 t80 0 t80 0 t80 0" fill="none" stroke="#C9A227" stroke-width="1.4"/>
-        <path d="M0 160 q40 -40 80 0 t80 0 t80 0 t80 0" fill="none" stroke="#C9A227" stroke-width="1"/>
-      </svg>
-      <div class="eyebrow" id="heroEyebrow"></div>
-      <h1 id="heroTitel"></h1>
-      <p id="heroOnder"></p>
-      <div class="knoppen">
-        <a href="#apps" class="knop knop-goud">Bekijk de apps<i class="ti ti-arrow-down" aria-hidden="true"></i></a>
-        <a href="#over" class="knop knop-open">Over</a>
-      </div>
-    </div>
-
-    <div class="blok" id="apps">
-      <div class="kop"><h2 id="appsKop"></h2></div>
-      <p class="kop-sub" id="appsOnder"></p>
-      <div class="app-kiezer" id="appKiezer">
-        <div class="app-menu" id="appMenu"><div class="melding">Laden…</div></div>
-        <div class="app-detail" id="appDetail"></div>
-      </div>
-    </div>
-
-    <div class="blok over" id="over">
-      <div class="kop"><span>02</span><h2 id="overKop"></h2></div>
-      <p id="overTekst"></p>
-    </div>
-
-    <div class="voetbalk">
-      <div id="voetTekst"></div>
-      <div>Wassenaar, NL</div>
-    </div>
+  <!-- ============ HORIZONTALE MENUBALK ============ -->
+  <div class="menubar" id="menubar">
+    <div class="mtab actief" data-tab="apps" onclick="kiesTab('apps')"><i class="ti ti-apps" aria-hidden="true"></i>Apps</div>
+    <div class="mtab" data-tab="over" onclick="kiesTab('over')"><i class="ti ti-info-circle" aria-hidden="true"></i>Over</div>
+    <div class="mtab" data-tab="beheer" onclick="kiesTab('beheer')"><i class="ti ti-lock" aria-hidden="true"></i>Beheer</div>
   </div>
 
-  <!-- ============ BEHEER ============ -->
-  <div class="beheer" id="beheer">
+  <!-- ============ WERKVLAK ============ -->
+  <div class="werk">
 
-    <!-- inlog -->
-    <div id="inlog">
-      <div class="inlogvak">
-        <h2>Beheer</h2>
-        <p>Log in om klanten, prijzen en gebruik te beheren.</p>
-        <label for="bEmail">E-mail</label>
-        <input id="bEmail" type="email" autocomplete="username" placeholder="naam@voorbeeld.nl">
-        <label for="bWw">Wachtwoord</label>
-        <input id="bWw" type="password" autocomplete="current-password" placeholder="••••••••">
-        <button class="knop knop-navy breed" id="bInlog">Inloggen</button>
-        <div id="inlogFout" class="inlogfout verborgen"></div>
-        <p style="margin-top:14px;"><a href="#" onclick="naarEtalage();return false;" style="color:#8A7F63;font-size:12px;">← terug naar de etalage</a></p>
+    <!-- LINKER SIDEBAR — inhoud wisselt per tab -->
+    <aside class="zij" id="zij">
+      <!-- etalage: apps als menu -->
+      <div id="zijApps">
+        <div class="zij-lbl">Apps</div>
+        <div class="zij-nav" id="appMenu"><div class="melding">Laden…</div></div>
       </div>
-    </div>
 
-    <!-- dashboard -->
-    <div class="beheer-body verborgen" id="beheerBody">
-      <aside class="zij">
+      <!-- beheer: app-kiezer + functies -->
+      <div id="zijBeheer" class="verborgen">
         <div class="kiezer">
-          <div class="kiezer-lbl">App in beeld</div>
+          <div class="kiezer-lbl">App in beheer</div>
           <button class="kiezer-knop" id="appKnop" onclick="toggleAppKiezer(event)">
             <span class="ini" id="appIni">JR</span>
             <span class="nm" id="appNaam">Job Radar</span>
-            <i class="ti ti-chevron-down" style="font-size:15px;color:#8A7F63;margin-left:auto;" aria-hidden="true"></i>
+            <i class="ti ti-chevron-down" aria-hidden="true"></i>
           </button>
           <div class="kiezer-lijst" id="appLijst"></div>
         </div>
         <div class="zij-lbl">Beheer</div>
-        <nav id="zijNav"></nav>
+        <div class="zij-nav" id="zijNav"></div>
         <div class="zij-voet">
           <button class="knop breed" onclick="uitloggen()"><i class="ti ti-logout" aria-hidden="true"></i>Uitloggen</button>
         </div>
-      </aside>
+      </div>
+    </aside>
 
-      <main class="hoofd">
+    <!-- HOOFDVLAK -->
+    <main class="hoofd">
+
+      <!-- TAB: APPS -->
+      <div id="paneelApps">
         <div class="hoofd-kop">
           <div>
-            <h1 id="hoofdTitel">Klanten</h1>
-            <div class="datum" id="hoofdDatum"></div>
+            <h1 id="appsKop">De apps</h1>
+            <div class="datum" id="appsOnder">Make your own choice</div>
           </div>
-          <button class="knop" onclick="laadBeheer()"><i class="ti ti-refresh" aria-hidden="true"></i>Ververs</button>
         </div>
-        <div id="hoofdInhoud"><div class="melding">Laden…</div></div>
-      </main>
-    </div>
+        <div id="appDetail">
+          <!-- welkomstblok bij openen -->
+          <div class="welkom" id="welkomBlok">
+            <svg class="golf" viewBox="0 0 300 200" preserveAspectRatio="none" aria-hidden="true">
+              <path d="M0 90 q40 -40 80 0 t80 0 t80 0 t80 0" fill="none" stroke="#C9A227" stroke-width="2.4"/>
+              <path d="M0 120 q40 -40 80 0 t80 0 t80 0 t80 0" fill="none" stroke="#9BB0C9" stroke-width="1.8"/>
+              <path d="M0 150 q40 -40 80 0 t80 0 t80 0 t80 0" fill="none" stroke="#C9A227" stroke-width="1.2"/>
+            </svg>
+            <div class="eyebrow" id="welkomEyebrow"></div>
+            <h2 id="welkomTitel"></h2>
+            <p id="welkomOnder"></p>
+            <div class="hint"><i class="ti ti-arrow-left" aria-hidden="true"></i>Kies links een app om te beginnen</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB: OVER -->
+      <div id="paneelOver" class="verborgen">
+        <div class="hoofd-kop"><div><h1 id="overKop">Fluid Waves</h1></div></div>
+        <div class="over-blok">
+          <h3>The Clever App Factory</h3>
+          <p id="overTekst"></p>
+        </div>
+      </div>
+
+      <!-- TAB: BEHEER -->
+      <div id="paneelBeheer" class="verborgen">
+        <!-- inlog -->
+        <div id="inlog">
+          <div class="inlogvak">
+            <h2>Beheer</h2>
+            <p>Log in om klanten, prijzen en gebruik te beheren.</p>
+            <label for="bEmail">E-mail</label>
+            <input id="bEmail" type="email" autocomplete="username" placeholder="naam@voorbeeld.nl">
+            <label for="bWw">Wachtwoord</label>
+            <input id="bWw" type="password" autocomplete="current-password" placeholder="••••••••">
+            <button class="knop knop-navy breed" id="bInlog">Inloggen</button>
+            <div id="inlogFout" class="inlogfout verborgen"></div>
+          </div>
+        </div>
+        <!-- dashboard -->
+        <div id="beheerBody" class="verborgen">
+          <div class="hoofd-kop">
+            <div>
+              <h1 id="hoofdTitel">Klanten</h1>
+              <div class="datum" id="hoofdDatum"></div>
+            </div>
+            <button class="knop" onclick="laadBeheer()"><i class="ti ti-refresh" aria-hidden="true"></i>Ververs</button>
+          </div>
+          <div id="hoofdInhoud"><div class="melding">Laden…</div></div>
+        </div>
+      </div>
+
+    </main>
   </div>
 </div>
-
 <script>
 const T = window.FW_TEKST;
 const cfg = window.SUPABASE_CONFIG || null;
@@ -401,14 +391,14 @@ let huidigeApp = "job-radar";
 let laatsteData = null;
 
 // ---- teksten invullen ----
-document.getElementById("heroEyebrow").textContent = T.hero_eyebrow;
-document.getElementById("heroTitel").textContent = T.hero_titel;
-document.getElementById("heroOnder").textContent = T.hero_onder;
 document.getElementById("appsKop").textContent = T.apps_kop;
 document.getElementById("appsOnder").textContent = T.apps_onder;
 document.getElementById("overKop").textContent = T.over_kop;
 document.getElementById("overTekst").textContent = T.over_tekst;
-document.getElementById("voetTekst").textContent = T.voet;
+// welkomstblok
+document.getElementById("welkomEyebrow").textContent = T.hero_eyebrow || "Smart Apps™ in een Smart Dashboard™";
+document.getElementById("welkomTitel").textContent = T.hero_titel || "Slimme AI-toepassingen voor ondernemers";
+document.getElementById("welkomOnder").textContent = T.hero_onder || "Kies een app uit het menu om te zien wat hij doet, wat hij kost, en om hem te starten.";
 
 const ikonen = { "job-radar":"ti-radar", "tenderlead":"ti-file-search", "golf-score":"ti-golf", "live-from":"ti-playlist", "smart-events":"ti-calendar-event" };
 const euro = c => "€ " + (c/100).toFixed(0);
@@ -432,19 +422,40 @@ function maakClient() {
   return true;
 }
 
-// ================= NAVIGATIE ETALAGE <-> BEHEER =================
-function naarBeheer() {
-  document.getElementById("etalage").classList.add("verborgen");
-  document.getElementById("beheer").style.display = "block";
-  document.getElementById("beheerKnop").classList.add("verborgen");
-  proefInlog();
+// ================= TAB-NAVIGATIE =================
+// De horizontale menubalk stuurt drie tabs: apps, over, beheer.
+// De sidebar en het hoofdvlak wisselen mee.
+let huidigeTab = "apps";
+
+function kiesTab(tab) {
+  huidigeTab = tab;
+  document.querySelectorAll(".mtab").forEach(t => t.classList.toggle("actief", t.dataset.tab === tab));
+
+  // hoofdvlak-panelen
+  document.getElementById("paneelApps").classList.toggle("verborgen", tab !== "apps");
+  document.getElementById("paneelOver").classList.toggle("verborgen", tab !== "over");
+  document.getElementById("paneelBeheer").classList.toggle("verborgen", tab !== "beheer");
+
+  // sidebar-inhoud
+  const zijApps = document.getElementById("zijApps");
+  const zijBeheer = document.getElementById("zijBeheer");
+  if (tab === "apps") {
+    zijApps.classList.remove("verborgen");
+    zijBeheer.classList.add("verborgen");
+  } else if (tab === "beheer") {
+    zijApps.classList.add("verborgen");
+    // beheer-sidebar pas tonen als er is ingelogd
+  } else { // over
+    zijApps.classList.add("verborgen");
+    zijBeheer.classList.add("verborgen");
+  }
+
+  if (tab === "beheer") proefInlog();
 }
-function naarEtalage() {
-  document.getElementById("beheer").style.display = "none";
-  document.getElementById("etalage").classList.remove("verborgen");
-  document.getElementById("sectiebalk").classList.add("verborgen");
-  document.getElementById("beheerKnop").classList.remove("verborgen");
-}
+
+// "Beheer"-knop rechtsboven doet hetzelfde als de tab.
+function naarBeheer() { kiesTab("beheer"); }
+function naarEtalage() { kiesTab("apps"); }
 
 // probeer een bestaande sessie; anders inlogscherm
 async function proefInlog() {
@@ -458,13 +469,13 @@ async function proefInlog() {
 function toonInlog() {
   document.getElementById("inlog").classList.remove("verborgen");
   document.getElementById("beheerBody").classList.add("verborgen");
-  document.getElementById("sectiebalk").classList.add("verborgen");
+  document.getElementById("zijBeheer").classList.add("verborgen");
   const e = document.getElementById("bEmail"); if (e && !e.value) e.focus();
 }
 function toonDashboard() {
   document.getElementById("inlog").classList.add("verborgen");
   document.getElementById("beheerBody").classList.remove("verborgen");
-  document.getElementById("sectiebalk").classList.remove("verborgen");
+  document.getElementById("zijBeheer").classList.remove("verborgen");
   bouwAppLijst();
   bouwSecties();
   const a = BEHEER_APPS[huidigeApp] || BEHEER_APPS["job-radar"];
@@ -495,7 +506,10 @@ async function inloggen() {
 async function uitloggen() {
   beheerToken = null;
   try { if (sb) await sb.auth.signOut(); } catch(e){}
-  naarEtalage();
+  document.getElementById("beheerBody").classList.add("verborgen");
+  document.getElementById("zijBeheer").classList.add("verborgen");
+  document.getElementById("inlog").classList.remove("verborgen");
+  kiesTab("apps");
 }
 
 // ================= ETALAGE: apps laden =================
@@ -560,14 +574,16 @@ function kiesApp(id) {
     : `<span class="pil pil-bouw">binnenkort beschikbaar</span>`;
 
   document.getElementById("appDetail").innerHTML = `
-    <div class="d-ik"><i class="ti ${ik}" aria-hidden="true"></i></div>
-    ${merk}<h3>${app.naam}</h3>
-    ${uit.kop ? `<div class="d-kop">${uit.kop}</div>` : ""}
-    <div class="d-tekst">${uit.tekst || app.omschrijving || ""}</div>
-    ${uit.voor ? `<div class="d-voor">${uit.voor}</div>` : ""}
-    <div class="d-onder">
-      ${p.groot ? `<div><div class="d-prijs">${p.groot}</div>${tiersRegel}</div>` : ""}
-      ${startKnop}
+    <div class="app-detail">
+      <div class="d-ik"><i class="ti ${ik}" aria-hidden="true"></i></div>
+      ${merk}<h3>${app.naam}</h3>
+      ${uit.kop ? `<div class="d-kop">${uit.kop}</div>` : ""}
+      <div class="d-tekst">${uit.tekst || app.omschrijving || ""}</div>
+      ${uit.voor ? `<div class="d-voor">${uit.voor}</div>` : ""}
+      <div class="d-onder">
+        ${p.groot ? `<div><div class="d-prijs">${p.groot}</div>${tiersRegel}</div>` : ""}
+        ${startKnop}
+      </div>
     </div>`;
 }
 
@@ -585,7 +601,7 @@ async function laadApps() {
     etalagePrijzen = prijzen.data || [];
     if (!etalageApps.length) { menu.innerHTML='<div class="melding">Nog geen apps.</div>'; return; }
     bouwMenu();
-    kiesApp(etalageApps[0].id);
+    // Geen app vooraf openen: het welkomstblok blijft staan tot de bezoeker kiest.
   } catch(e) { console.error(e); menu.innerHTML='<div class="melding">Apps konden niet laden.</div>'; }
 }
 
@@ -607,9 +623,8 @@ async function laadBeheer() {
 }
 
 function beheerSectie(naam) {
-  document.querySelectorAll('.secties .sec, #zijNav button').forEach(b=>{
-    const actief = (b.dataset.v||b.dataset.sec)===naam;
-    b.classList.toggle('actief', actief);
+  document.querySelectorAll('#zijNav button').forEach(b=>{
+    b.classList.toggle('actief', b.dataset.v===naam);
   });
   const titels = { klanten:"Klanten", prijzen:"Prijzen en tiers", apps:"Apps", tableart:"Table Art" };
   document.getElementById("hoofdTitel").textContent = titels[naam] || "Beheer";
@@ -755,12 +770,10 @@ function kiesBeheerApp(id) {
 // De functie-knoppen (bovenbalk én zij-nav) opbouwen voor de gekozen app.
 function bouwSecties() {
   const a = BEHEER_APPS[huidigeApp]; if (!a) return;
-  const boven = document.getElementById("sectiebalk");
   const zij = document.getElementById("zijNav");
-  const maakKnop = (s, klasse) =>
-    `<${klasse==="sec"?"div":"button"} class="${klasse}" data-${klasse==="sec"?"sec":"v"}="${s.v}" onclick="beheerSectie('${s.v}')"><i class="ti ${s.icoon}" aria-hidden="true"></i>${s.label}</${klasse==="sec"?"div":"button"}>`;
-  if (boven) boven.innerHTML = a.secties.map(s => maakKnop(s, "sec")).join("");
-  if (zij)   zij.innerHTML   = a.secties.map(s => maakKnop(s, "v")).join("");
+  if (zij) zij.innerHTML = a.secties.map(s =>
+    `<button class="navknop" data-v="${s.v}" onclick="beheerSectie('${s.v}')"><i class="ti ${s.icoon}" aria-hidden="true"></i>${s.label}</button>`
+  ).join("");
 }
 
 // ---- inlog-listeners ----
