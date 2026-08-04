@@ -273,10 +273,15 @@ window.FW_APP_UITLEG = {
   <!-- ============ TOPBALK ============ -->
   <div class="topbar">
     <div class="tb-merk">
-      <svg width="40" height="40" viewBox="0 0 40 40" aria-label="Fluid Waves" role="img">
-        <rect width="40" height="40" rx="9" fill="#FBF8F0"/>
-        <path d="M6 17 Q12 11 20 17 T34 17" fill="none" stroke="#9BB0C9" stroke-width="2.6" stroke-linecap="round"/>
-        <path d="M6 23 Q12 17 20 23 T34 23" fill="none" stroke="#C9A227" stroke-width="2.6" stroke-linecap="round"/>
+      <!-- Golfsymbool exact volgens brandbook: één sinusgolf (periode 100,
+           amplitude 10, lijndikte 8, ronde uiteinden), driemaal op y = -15,5 / 0 / +15,5.
+           Volgorde boven→onder: Signal Slate · Goud · Sea Mist. -->
+      <svg class="fw-golf" width="54" height="40" viewBox="0 5 108 59" aria-label="Fluid Waves" role="img">
+        <g fill="none" stroke-width="8" stroke-linecap="round">
+          <path d="M4,14.5 c12.5,-13.33 37.5,-13.33 50,0 c12.5,13.33 37.5,13.33 50,0" stroke="#8D96A6"/>
+          <path d="M4,30   c12.5,-13.33 37.5,-13.33 50,0 c12.5,13.33 37.5,13.33 50,0" stroke="#C9A227"/>
+          <path d="M4,45.5 c12.5,-13.33 37.5,-13.33 50,0 c12.5,13.33 37.5,13.33 50,0" stroke="#DCE3EA"/>
+        </g>
       </svg>
       <div>
         <div class="n1">Fluid Waves</div>
