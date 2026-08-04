@@ -40,6 +40,11 @@ window.FW_APP_UITLEG = {
     tekst: "Van Stableford tot strokeplay, van Texas Scramble tot een volledig toernooi met flights. Officiële WHS-handicapberekening, per-hole scorekaarten en een toernooimodule die alles bijhoudt. Werkt op je telefoon, ook zonder bereik op de baan.",
     voor: "Gratis · voor golfers en clubs"
   },
+  "smart-events": {
+    kop: "Eén link, en je hele evenement staat online.",
+    tekst: "De Smart Events App maakt van elk evenement een deelbare pagina: programma, een aanmeldlijst met velden die je zelf samenstelt, en kosten met een betaalknop. Deel de link via WhatsApp of mail; deelnemers vullen in, jij ziet de resultaten binnenkomen, houdt betalingen bij en exporteert naar Excel of PDF. Van golfdag tot teamuitje.",
+    voor: "Voor organisatoren van besloten evenementen"
+  },
   "live-from": {
     kop: "Themalijsten uit een archief van duizenden releases.",
     tekst: "Een muziekplatform dat je collectie ontsluit op stemming, genre, periode en gelegenheid. Nog in ontwikkeling.",
@@ -405,7 +410,7 @@ document.getElementById("overKop").textContent = T.over_kop;
 document.getElementById("overTekst").textContent = T.over_tekst;
 document.getElementById("voetTekst").textContent = T.voet;
 
-const ikonen = { "job-radar":"ti-radar", "tenderlead":"ti-file-search", "golf-score":"ti-golf", "live-from":"ti-playlist" };
+const ikonen = { "job-radar":"ti-radar", "tenderlead":"ti-file-search", "golf-score":"ti-golf", "live-from":"ti-playlist", "smart-events":"ti-calendar-event" };
 const euro = c => "€ " + (c/100).toFixed(0);
 const euroF = b => "€ " + Number(b||0).toFixed(2).replace(".",",");
 const datumNL = d => d ? new Date(d).toLocaleDateString("nl-NL",{day:"2-digit",month:"short",year:"numeric"}) : "—";
