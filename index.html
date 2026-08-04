@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Fluid Waves</title>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tabler-icons/3.7.0/iconfont/tabler-icons.min.css">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="js/supabase-config.js"></script>
 
@@ -67,6 +66,17 @@ window.FW_APP_UITLEG = {
   body { background:#E7E2D6; color:var(--inkt);
     font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
     line-height:1.5; }
+  /* ingebouwde SVG-iconen */
+  .ic { width:1em; height:1em; display:inline-block; vertical-align:-0.15em; flex:none; }
+  .knop .ic { width:15px; height:15px; }
+  .mtab .ic { width:15px; height:15px; }
+  .app-blok .bi .ic { width:16px; height:16px; }
+  .app-detail .d-ik .ic { width:28px; height:28px; }
+  .zij-nav button.navknop .ic { width:16px; height:16px; }
+  .sig .ic { width:16px; height:16px; margin-top:1px; }
+  .hint .ic { width:14px; height:14px; }
+  .kiezer-knop .ic.ti-chevron-down { width:15px; height:15px; margin-left:auto; color:var(--grijs); }
+
   .shell { max-width:1120px; margin:22px auto; background:var(--papier); border-radius:14px;
     overflow:hidden; border:1px solid var(--rand); box-shadow:0 6px 24px rgba(27,44,79,.10); }
 
@@ -96,7 +106,7 @@ window.FW_APP_UITLEG = {
     font-weight:600; white-space:nowrap; }
   .mtab:hover { color:var(--navy); }
   .mtab.actief { color:var(--navy); border-bottom-color:var(--goud); background:#FFFFFF; margin-bottom:-1px; }
-  .mtab i { font-size:15px; }
+  .mtab .ic { color:currentColor; }
 
   /* ============ WERKVLAK: sidebar links + hoofd rechts ============ */
   .werk { display:flex; min-height:560px; }
@@ -117,8 +127,8 @@ window.FW_APP_UITLEG = {
   .app-blok .bi { width:30px; height:30px; flex:none; border-radius:8px; background:#F0EBDF;
     display:flex; align-items:center; justify-content:center; }
   .app-blok.actief .bi { background:var(--navy); }
-  .app-blok .bi i { font-size:16px; color:var(--navy); }
-  .app-blok.actief .bi i { color:var(--goud); }
+  .app-blok .bi .ic { color:var(--navy); }
+  .app-blok.actief .bi .ic { color:var(--goud); }
   .app-blok .bn { font-size:12.5px; font-weight:600; color:var(--navy); line-height:1.2; }
   .app-blok .bs { font-size:10px; color:var(--grijs); }
 
@@ -128,8 +138,8 @@ window.FW_APP_UITLEG = {
     font-family:inherit; color:var(--inkt); width:100%; }
   .zij-nav button.navknop:hover { background:#E4DED0; }
   .zij-nav button.navknop.actief { background:rgba(201,162,39,.16); color:var(--navy); font-weight:600; }
-  .zij-nav button.navknop i { font-size:16px; color:var(--grijs); }
-  .zij-nav button.navknop.actief i { color:var(--navy); }
+  .zij-nav button.navknop .ic { color:var(--grijs); }
+  .zij-nav button.navknop.actief .ic { color:var(--navy); }
 
   /* app-kiezer (welke beheer-app) bovenin de sidebar */
   .kiezer { position:relative; margin-bottom:14px; }
@@ -175,7 +185,7 @@ window.FW_APP_UITLEG = {
   .app-detail::before { content:""; position:absolute; top:0; left:0; right:0; height:3px; background:var(--goud); }
   .app-detail .d-ik { width:52px; height:52px; border-radius:12px; background:#F0EBDF;
     display:flex; align-items:center; justify-content:center; margin-bottom:16px; }
-  .app-detail .d-ik i { font-size:28px; color:var(--navy); }
+  .app-detail .d-ik .ic { color:var(--navy); }
   .app-detail .d-merk { font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--goud); margin-bottom:4px; font-weight:700; }
   .app-detail h3 { font-size:24px; color:var(--navy); margin-bottom:8px; font-weight:700; }
   .app-detail .d-kop { font-size:15px; color:var(--navy); font-weight:600; margin-bottom:12px; }
@@ -209,8 +219,8 @@ window.FW_APP_UITLEG = {
   .sig { display:flex; gap:8px; align-items:flex-start; font-size:12px; line-height:1.5; margin-bottom:7px; }
   .sig:last-child { margin-bottom:0; }
   .sig i { flex:none; margin-top:1px; font-size:16px; }
-  .sig.urgent i { color:#A32D2D; }
-  .sig.let_op i { color:#854F0B; }
+  .sig.urgent .ic { color:#A32D2D; }
+  .sig.let_op .ic { color:#854F0B; }
   .leeg { font-size:12px; color:var(--grijs); font-style:italic; }
 
   table { width:100%; border-collapse:collapse; background:var(--wit); border:1px solid #E8E1D2;
@@ -274,15 +284,15 @@ window.FW_APP_UITLEG = {
       </div>
     </div>
     <div class="tb-rechts" id="topRechts">
-      <button class="knop knop-licht" id="beheerKnop" onclick="naarBeheer()"><i class="ti ti-lock" aria-hidden="true"></i>Beheer</button>
+      <button class="knop knop-licht" id="beheerKnop" onclick="naarBeheer()"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/><circle cx="12" cy="15.5" r="1"/></svg>Beheer</button>
     </div>
   </div>
 
   <!-- ============ HORIZONTALE MENUBALK ============ -->
   <div class="menubar" id="menubar">
-    <div class="mtab actief" data-tab="apps" onclick="kiesTab('apps')"><i class="ti ti-apps" aria-hidden="true"></i>Apps</div>
-    <div class="mtab" data-tab="over" onclick="kiesTab('over')"><i class="ti ti-info-circle" aria-hidden="true"></i>Over</div>
-    <div class="mtab" data-tab="beheer" onclick="kiesTab('beheer')"><i class="ti ti-lock" aria-hidden="true"></i>Beheer</div>
+    <div class="mtab actief" data-tab="apps" onclick="kiesTab('apps')"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/></svg>Apps</div>
+    <div class="mtab" data-tab="over" onclick="kiesTab('over')"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></svg>Over</div>
+    <div class="mtab" data-tab="beheer" onclick="kiesTab('beheer')"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/><circle cx="12" cy="15.5" r="1"/></svg>Beheer</div>
   </div>
 
   <!-- ============ WERKVLAK ============ -->
@@ -303,14 +313,14 @@ window.FW_APP_UITLEG = {
           <button class="kiezer-knop" id="appKnop" onclick="toggleAppKiezer(event)">
             <span class="ini" id="appIni">JR</span>
             <span class="nm" id="appNaam">Job Radar</span>
-            <i class="ti ti-chevron-down" aria-hidden="true"></i>
+            <svg class="ic ti-chevron-down" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
           </button>
           <div class="kiezer-lijst" id="appLijst"></div>
         </div>
         <div class="zij-lbl">Beheer</div>
         <div class="zij-nav" id="zijNav"></div>
         <div class="zij-voet">
-          <button class="knop breed" onclick="uitloggen()"><i class="ti ti-logout" aria-hidden="true"></i>Uitloggen</button>
+          <button class="knop breed" onclick="uitloggen()"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>Uitloggen</button>
         </div>
       </div>
     </aside>
@@ -337,7 +347,7 @@ window.FW_APP_UITLEG = {
             <div class="eyebrow" id="welkomEyebrow"></div>
             <h2 id="welkomTitel"></h2>
             <p id="welkomOnder"></p>
-            <div class="hint"><i class="ti ti-arrow-left" aria-hidden="true"></i>Kies links een app om te beginnen</div>
+            <div class="hint"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 18l-6-6 6-6"/></svg>Kies links een app om te beginnen</div>
           </div>
         </div>
       </div>
@@ -373,7 +383,7 @@ window.FW_APP_UITLEG = {
               <h1 id="hoofdTitel">Klanten</h1>
               <div class="datum" id="hoofdDatum"></div>
             </div>
-            <button class="knop" onclick="laadBeheer()"><i class="ti ti-refresh" aria-hidden="true"></i>Ververs</button>
+            <button class="knop" onclick="laadBeheer()"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/></svg>Ververs</button>
           </div>
           <div id="hoofdInhoud"><div class="melding">Laden…</div></div>
         </div>
@@ -383,6 +393,41 @@ window.FW_APP_UITLEG = {
   </div>
 </div>
 <script>
+// ================= INGEBOUWDE SVG-ICONEN =================
+// Zelfstandige iconen in het bestand — geen afhankelijkheid van een CDN-lettertype.
+// Elk pad tekent op een 24x24 raster, in de lijnstijl van de huisstijl.
+const ICOON_PAD = {
+  // app-iconen
+  "radar":        '<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/><path d="M12 12l6-4"/>',
+  "file-search":  '<path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7l5 5v3"/><circle cx="16" cy="17" r="2.5"/><path d="M18.5 19.5L21 22"/>',
+  "golf":         '<path d="M11 3v15"/><path d="M11 5l7 3-7 3"/><circle cx="11" cy="20" r="2"/><path d="M6 21h10"/>',
+  "playlist":     '<path d="M4 6h11M4 11h11M4 16h7"/><circle cx="18" cy="16" r="3"/><path d="M21 16V9"/>',
+  "calendar":     '<rect x="4" y="5" width="16" height="16" rx="2"/><path d="M4 9h16M8 3v4M16 3v4"/><path d="M9 14l2 2 4-4"/>',
+  "app":          '<rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/>',
+  // UI-iconen
+  "lock":         '<rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/><circle cx="12" cy="15.5" r="1"/>',
+  "info":         '<circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/>',
+  "apps":         '<rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/>',
+  "arrow-left":   '<path d="M19 12H5M11 18l-6-6 6-6"/>',
+  "chevron-down": '<path d="M6 9l6 6 6-6"/>',
+  "play":         '<path d="M7 5v14l11-7z"/>',
+  "refresh":      '<path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/>',
+  "logout":       '<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/>',
+  "users":        '<circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><path d="M16 4.5a3.2 3.2 0 0 1 0 6.5M21 20c0-2.5-1.5-4.7-3.7-5.6"/>',
+  "tag":          '<path d="M11 3H5a2 2 0 0 0-2 2v6l9 9a2 2 0 0 0 2.8 0l5-5a2 2 0 0 0 0-2.8z"/><circle cx="8" cy="8" r="1.3"/>',
+  "palette":      '<path d="M12 3a9 9 0 0 0 0 18c1.1 0 1.7-1 1.2-2-.5-1 .1-2 1.3-2H17a4 4 0 0 0 4-4c0-5-4-8-9-8z"/><circle cx="8" cy="10" r="1"/><circle cx="12" cy="7.5" r="1"/><circle cx="16" cy="10" r="1"/>',
+  "eye":          '<path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/>',
+  "download":     '<path d="M12 3v12M8 11l4 4 4-4"/><path d="M5 19h14"/>',
+  "trash":        '<path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/>',
+  "alert":        '<path d="M12 3l9 16H3z"/><path d="M12 10v4M12 17h.01"/>'
+};
+function svgIcoon(naam, klasse) {
+  const p = ICOON_PAD[naam];
+  if (!p) return "";
+  return '<svg class="ic ' + (klasse||"") + '" viewBox="0 0 24 24" fill="none" stroke="currentColor" ' +
+         'stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + p + '</svg>';
+}
+
 const T = window.FW_TEKST;
 const cfg = window.SUPABASE_CONFIG || null;
 let sb = null;
@@ -400,7 +445,7 @@ document.getElementById("welkomEyebrow").textContent = T.hero_eyebrow || "Smart 
 document.getElementById("welkomTitel").textContent = T.hero_titel || "Slimme AI-toepassingen voor ondernemers";
 document.getElementById("welkomOnder").textContent = T.hero_onder || "Kies een app uit het menu om te zien wat hij doet, wat hij kost, en om hem te starten.";
 
-const ikonen = { "job-radar":"ti-radar", "tenderlead":"ti-file-search", "golf-score":"ti-golf", "live-from":"ti-playlist", "smart-events":"ti-calendar-event" };
+const ikonen = { "job-radar":"radar", "tenderlead":"file-search", "golf-score":"golf", "live-from":"playlist", "smart-events":"calendar", "table-art":"palette" };
 const euro = c => "€ " + (c/100).toFixed(0);
 const euroF = b => "€ " + Number(b||0).toFixed(2).replace(".",",");
 const datumNL = d => d ? new Date(d).toLocaleDateString("nl-NL",{day:"2-digit",month:"short",year:"numeric"}) : "—";
@@ -538,7 +583,7 @@ function bouwMenu() {
     const ik = ikonen[a.id] || "ti-app-window";
     const p = appPrijs(a);
     return `<button class="app-blok" data-app="${a.id}" onclick="kiesApp('${a.id}')">
-      <span class="bi"><i class="ti ${ik}" aria-hidden="true"></i></span>
+      <span class="bi">${svgIcoon(ik)}</span>
       <span><span class="bn">${a.naam}</span><br><span class="bs">${p.kort}</span></span>
     </button>`;
   }).join("");
@@ -570,12 +615,12 @@ function kiesApp(id) {
 
   const kanOpen = app.url && app.status === "live";
   const startKnop = kanOpen
-    ? `<a href="${app.url}" target="_blank" rel="noopener" class="knop knop-navy"><i class="ti ti-player-play" aria-hidden="true"></i>Start deze app</a>`
+    ? `<a href="${app.url}" target="_blank" rel="noopener" class="knop knop-navy">${svgIcoon("play")}Start deze app</a>`
     : `<span class="pil pil-bouw">binnenkort beschikbaar</span>`;
 
   document.getElementById("appDetail").innerHTML = `
     <div class="app-detail">
-      <div class="d-ik"><i class="ti ${ik}" aria-hidden="true"></i></div>
+      <div class="d-ik">${svgIcoon(ik)}</div>
       ${merk}<h3>${app.naam}</h3>
       ${uit.kop ? `<div class="d-kop">${uit.kop}</div>` : ""}
       <div class="d-tekst">${uit.tekst || app.omschrijving || ""}</div>
@@ -653,7 +698,7 @@ function toonKlanten(d) {
   </div>`;
 
   const sigBlok = `<div class="paneel"><h2>Vraagt aandacht</h2>${
-    sig.length ? sig.map(s=>`<div class="sig ${s.ernst}"><i class="ti ${s.ernst==="urgent"?"ti-alert-triangle":"ti-info-circle"}" aria-hidden="true"></i><span>${s.tekst}</span></div>`).join("")
+    sig.length ? sig.map(s=>`<div class="sig ${s.ernst}">${svgIcoon(s.ernst==="urgent"?"alert":"info")}<span>${s.tekst}</span></div>`).join("")
     : '<div class="leeg">Niets bijzonders.</div>'}</div>`;
 
   const rijen = kl.length ? kl.map(k=>{
@@ -719,16 +764,16 @@ const BEHEER_APPS = {
   "job-radar": {
     ini: "JR", naam: "Job Radar",
     secties: [
-      { v:"klanten", label:"Klanten", icoon:"ti-users" },
-      { v:"prijzen", label:"Prijzen", icoon:"ti-tag" },
-      { v:"apps",    label:"Apps",    icoon:"ti-apps" }
+      { v:"klanten", label:"Klanten", icoon:"users" },
+      { v:"prijzen", label:"Prijzen", icoon:"tag" },
+      { v:"apps",    label:"Apps",    icoon:"apps" }
     ],
     standaard: "klanten"
   },
   "table-art": {
     ini: "TA", naam: "Table Art",
     secties: [
-      { v:"tableart", label:"Collecties", icoon:"ti-palette" }
+      { v:"tableart", label:"Collecties", icoon:"palette" }
     ],
     standaard: "tableart"
   }
@@ -772,7 +817,7 @@ function bouwSecties() {
   const a = BEHEER_APPS[huidigeApp]; if (!a) return;
   const zij = document.getElementById("zijNav");
   if (zij) zij.innerHTML = a.secties.map(s =>
-    `<button class="navknop" data-v="${s.v}" onclick="beheerSectie('${s.v}')"><i class="ti ${s.icoon}" aria-hidden="true"></i>${s.label}</button>`
+    `<button class="navknop" data-v="${s.v}" onclick="beheerSectie('${s.v}')">${svgIcoon(s.icoon)}${s.label}</button>`
   ).join("");
 }
 
@@ -820,9 +865,9 @@ async function toonTableArt() {
           <td>${thumbs||'<span class="t-sub">—</span>'}</td>
           <td class="t-sub">${datumNL(c.gewijzigd)}</td>
           <td class="num">
-            <button class="knop" onclick="tafOpen('${c.id}')"><i class="ti ti-eye"></i>Bekijk</button>
-            <button class="knop" onclick="tafDownload('${c.id}')"><i class="ti ti-download"></i>Zip</button>
-            <button class="knop" onclick="tafVerwijder('${c.id}')"><i class="ti ti-trash"></i></button>
+            <button class="knop" onclick="tafOpen('${c.id}')">${svgIcoon("eye")}Bekijk</button>
+            <button class="knop" onclick="tafDownload('${c.id}')">${svgIcoon("download")}Zip</button>
+            <button class="knop" onclick="tafVerwijder('${c.id}')">${svgIcoon("trash")}</button>
           </td></tr>`;
       }).join("")
     }</tbody></table>
