@@ -2,12 +2,14 @@
 //
 // Verwerkt Stripe-gebeurtenissen en schrijft naar het Fluid Waves platform.
 //
-// WIJZIGING T.O.V. DE VORIGE VERSIE
-//   * schrijft naar het platformschema (abonnementen, bundels) in plaats van
-//     naar usage_meter — dat was de reden dat bijgekochte scans niet aankwamen
-//   * controleert de Stripe-handtekening. Dat gebeurde niet: iedereen die de
-//     URL kende, kon zichzelf een abonnement geven met één opdracht.
-//   * herkent dubbele gebeurtenissen (Stripe stuurt soms opnieuw)
+// WIJZIGINGEN T.O.V. DE VORIGE VERSIE
+//   * schrijft naar het platformschema (abonnementen, bundels) i.p.v. usage_meter
+//   * controleert de Stripe-handtekening (verplicht — zie hieronder)
+//   * FIX: ontbrekend STRIPE_WEBHOOK_SECRET wordt nu geweigerd i.p.v. doorgelaten
+//   * FIX: current_period_end wordt uit de subscription-ITEMS gelezen (Stripe
+//     Basil/Dahlia haalde dit veld van het subscription-object af)
+//   * FIX: robuuste raw-body-lezing met timeout en foutafhandeling
+//   * herkent dubbele gebeurtenissen (afgevangen in de platform-RPC's)
 //
 // Vereist:
 //   STRIPE_SECRET_KEY
@@ -60,6 +62,39 @@ function handtekeningGeldig(rawBody, header, secret, toleranceSec = 300) {
   });
 }
 
+// Leest de ruwe body als string. Met timeout en foutafhandeling, zodat de
+// functie niet blijft hangen als de stream al beëindigd of afgebroken is.
+function leesRuweBody(req, timeoutMs = 10000) {
+  return new Promise((resolve, reject) => {
+    // Als een body-parser tóch heeft gedraaid, is de ruwe tekst niet meer
+    // betrouwbaar te reconstrueren — dan faalt de handtekening bewust.
+    let data = "";
+    let klaar = false;
+
+    const timer = setTimeout(() => {
+      if (klaar) return;
+      klaar = true;
+      reject(new Error("timeout bij lezen van request body"));
+    }, timeoutMs);
+
+    req.on("data", (chunk) => {
+      data += chunk;
+    });
+    req.on("end", () => {
+      if (klaar) return;
+      klaar = true;
+      clearTimeout(timer);
+      resolve(data);
+    });
+    req.on("error", (err) => {
+      if (klaar) return;
+      klaar = true;
+      clearTimeout(timer);
+      reject(err);
+    });
+  });
+}
+
 module.exports = async function handler(req, res) {
   if (req.method !== "POST") {
     res.status(405).json({ error: "Method not allowed" });
@@ -71,25 +106,31 @@ module.exports = async function handler(req, res) {
   const appSleutel = process.env.FLUIDWAVES_APP_KEY;
   const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
 
-  // Ruwe body lezen.
-  let rawBody = "";
-  await new Promise((resolve) => {
-    req.on("data", (chunk) => (rawBody += chunk));
-    req.on("end", resolve);
-  });
+  // FIX: zonder geheim kan de herkomst niet worden vastgesteld. Vroeger werd
+  // het verzoek dan alsnog verwerkt — dat is precies het gat dat deze webhook
+  // moest dichten. Nu hard weigeren en luid loggen.
+  if (!webhookSecret) {
+    console.error("WEBHOOK: STRIPE_WEBHOOK_SECRET ontbreekt — verzoek geweigerd. Zet de env var in Vercel en redeploy.");
+    res.status(500).json({ error: "Webhook secret not configured" });
+    return;
+  }
+
+  // Ruwe body lezen (met timeout/foutafhandeling).
+  let rawBody;
+  try {
+    rawBody = await leesRuweBody(req);
+  } catch (e) {
+    console.error("WEBHOOK: kon request body niet lezen:", e.message);
+    res.status(400).json({ error: "Could not read body" });
+    return;
+  }
 
   // Handtekening controleren. Zonder geldige handtekening niets verwerken.
-  if (webhookSecret) {
-    const sig = req.headers["stripe-signature"];
-    if (!handtekeningGeldig(rawBody, sig, webhookSecret)) {
-      console.error("WEBHOOK: ongeldige handtekening — verzoek geweigerd");
-      res.status(400).json({ error: "Invalid signature" });
-      return;
-    }
-  } else {
-    // Zonder geheim kan niet worden vastgesteld dat het verzoek van Stripe komt.
-    // Wel loggen, zodat dit niet stilzwijgend zo blijft staan.
-    console.error("WEBHOOK: STRIPE_WEBHOOK_SECRET ontbreekt — handtekening niet gecontroleerd");
+  const sig = req.headers["stripe-signature"];
+  if (!handtekeningGeldig(rawBody, sig, webhookSecret)) {
+    console.error("WEBHOOK: ongeldige handtekening — verzoek geweigerd");
+    res.status(400).json({ error: "Invalid signature" });
+    return;
   }
 
   let event;
@@ -154,8 +195,21 @@ module.exports = async function handler(req, res) {
                 { headers: { Authorization: `Bearer ${process.env.STRIPE_SECRET_KEY}` } }
               );
               const sub = await s.json();
-              if (sub && sub.current_period_end) {
-                eind = new Date(sub.current_period_end * 1000).toISOString();
+              // FIX: current_period_end staat sinds Stripe Basil (2025-03-31) niet
+              // meer op het subscription-object maar op de subscription-items.
+              // Fallback op het oude veld voor het geval een oudere API-versie draait.
+              const periodeEind =
+                (sub &&
+                  sub.items &&
+                  sub.items.data &&
+                  sub.items.data[0] &&
+                  sub.items.data[0].current_period_end) ||
+                (sub && sub.current_period_end) ||
+                null;
+              if (periodeEind) {
+                eind = new Date(periodeEind * 1000).toISOString();
+              } else {
+                console.warn("WEBHOOK: geen current_period_end gevonden op abonnement", obj.subscription);
               }
             } catch (e) {
               console.error("WEBHOOK: kon abonnementsdatum niet ophalen", e.message);
@@ -163,7 +217,6 @@ module.exports = async function handler(req, res) {
           }
 
           // Tier uit de metadata van de betaling (door start-checkout meegegeven).
-          // De app volgt uit de tier — geen app-sleutel nodig (zet_abonnement).
           const tierUitMeta = (obj.metadata && obj.metadata.tier_id) || null;
           const tierVoorAbo = tierUitMeta || TIER_SUBSCRIPTION;
 
