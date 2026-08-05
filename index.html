@@ -640,7 +640,7 @@ function appPrijs(app) {
   if (betaald.length) {
     const b = betaald[0];
     const per = b.interval==="jaar"?"jaar":b.interval==="eenmalig"?"":"mnd";
-    return { kort: `vanaf ${euro(b.prijs_cent)}`, groot:`<b>${euro(b.prijs_cent)}</b>${per?`<span class="per">/${per}</span>`:""}`,
+    return { kort: `vanaf ${euro(b.prijs_cent)}`, groot:`<b>${euro(b.prijs_cent)}</b><span class="per">${per?`/${per}`:""} · ex btw</span>`,
              tiers: mijn };
   }
   if (gratis) return { kort:"Gratis", groot:"<b>Gratis</b>", tiers: mijn };
@@ -678,7 +678,7 @@ function kiesApp(id) {
       .sort((a,b)=>a.prijs_cent-b.prijs_cent)
       .map(t => {
         const per = t.interval==="jaar"?"/jaar":t.interval==="eenmalig"?"":t.interval==="gratis"?"":"/mnd";
-        const prijs = t.prijs_cent===0 ? "gratis" : euro(t.prijs_cent)+per;
+        const prijs = t.prijs_cent===0 ? "gratis" : euro(t.prijs_cent)+per+" ex btw";
         const scans = t.scans_per_periode ?? t.scans_totaal;
         return `${t.naam}: ${prijs}${scans?` · ${scans} scans`:""}`;
       }).join(" &nbsp;·&nbsp; ") + `</div>`;
@@ -701,7 +701,7 @@ function kiesApp(id) {
         const scans = t.scans_per_periode ?? t.scans_totaal;
         return `<div class="tierkaart">
           <div class="tk-naam">${t.naam}</div>
-          <div class="tk-prijs">${euro(t.prijs_cent)}<span class="per">${per}</span></div>
+          <div class="tk-prijs">${euro(t.prijs_cent)}<span class="per">${per} · ex btw</span></div>
           <div class="tk-oms">${t.omschrijving || (scans ? scans + " scans per periode" : "")}</div>
           <button class="knop knop-navy" data-tier="${t.id}" onclick="koopTier('${t.id}', this)">Abonneer</button>
         </div>`;
