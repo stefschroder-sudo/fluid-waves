@@ -24,6 +24,11 @@ window.FW_TEKST = {
 
 // Uitleg per app voor de detailweergave in de etalage. Aanpasbaar zonder de code te raken.
 window.FW_APP_UITLEG = {
+  "smart-admin": {
+    kop: "Je hele administratie op één plek, zonder boekhouder.",
+    tekst: "Smart Admin houdt de administratie van je onderneming bij: facturen en creditfacturen maken en versturen, btw netjes per regel gesplitst, je banksaldo en openstaande posten in één oogopslag, plus afschrijvingen, leningen en investeringen. Geen ingewikkelde boekhoudsoftware — alles wat een ondernemer echt nodig heeft, helder en direct.",
+    voor: "Voor ondernemers en zzp'ers"
+  },
   "job-radar": {
     kop: "Vind de juiste executive-rol voordat een ander hem ziet.",
     tekst: "Job Radar scant de markt op senior commerciële posities — CCO, CEO, GM, CFO — en matcht ze tegen je profiel. Geen ruis, geen verzonnen vacatures: alleen echte rollen, met een score die zegt waarom ze passen. Voor wie actief zoekt of een interim-opdracht wil.",
@@ -403,6 +408,7 @@ window.FW_APP_UITLEG = {
 // Elk pad tekent op een 24x24 raster, in de lijnstijl van de huisstijl.
 const ICOON_PAD = {
   // app-iconen
+  "receipt":      '<path d="M5 3v18l2-1.2 2 1.2 2-1.2 2 1.2 2-1.2 2 1.2V3l-2 1.2-2-1.2-2 1.2-2-1.2-2 1.2z"/><path d="M9 8h6M9 12h6"/>',
   "radar":        '<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/><path d="M12 12l6-4"/>',
   "file-search":  '<path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7l5 5v3"/><circle cx="16" cy="17" r="2.5"/><path d="M18.5 19.5L21 22"/>',
   "golf":         '<path d="M11 3v15"/><path d="M11 5l7 3-7 3"/><circle cx="11" cy="20" r="2"/><path d="M6 21h10"/>',
@@ -450,8 +456,8 @@ document.getElementById("welkomEyebrow").textContent = T.hero_eyebrow || "Smart 
 document.getElementById("welkomTitel").textContent = T.hero_titel || "Slimme AI-toepassingen voor ondernemers";
 document.getElementById("welkomOnder").textContent = T.hero_onder || "Kies een app uit het menu om te zien wat hij doet, wat hij kost, en om hem te starten.";
 
-const ikonen = { "job-radar":"radar", "tenderlead":"file-search", "golf-score":"golf", "live-from":"playlist", "smart-events":"calendar", "table-art":"palette" };
-const euro = c => "€ " + (c/100).toFixed(0);
+const ikonen = { "smart-admin":"receipt", "job-radar":"radar", "tenderlead":"file-search", "golf-score":"golf", "live-from":"playlist", "smart-events":"calendar", "table-art":"palette" };
+const euro = c => { const v=c/100; return "€ " + (Number.isInteger(v) ? v.toFixed(0) : v.toFixed(2).replace(".",",")); };
 const euroF = b => "€ " + Number(b||0).toFixed(2).replace(".",",");
 const datumNL = d => d ? new Date(d).toLocaleDateString("nl-NL",{day:"2-digit",month:"short",year:"numeric"}) : "—";
 
