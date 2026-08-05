@@ -503,7 +503,7 @@ const T = window.FW_TEKST;
 const cfg = window.SUPABASE_CONFIG || null;
 let sb = null;
 let beheerToken = null;
-let huidigeApp = "job-radar";
+let huidigeApp = "platform";
 let laatsteData = null;
 
 // ---- teksten invullen ----
@@ -763,8 +763,11 @@ function beheerSectie(naam) {
   document.querySelectorAll('#zijNav button').forEach(b=>{
     b.classList.toggle('actief', b.dataset.v===naam);
   });
-  const titels = { klanten:"Klanten", prijzen:"Prijzen en tiers", apps:"Apps", tableart:"Table Art" };
+  const titels = { klanten:"Klanten", prijzen:"Prijzen en tiers", apps:"Apps", tableart:"Table Art", platform:"Fluid Waves platform" };
   document.getElementById("hoofdTitel").textContent = titels[naam] || "Beheer";
+
+  // Het platformoverzicht haalt zijn eigen gegevens op via /api/platform-beheer.
+  if (naam==="platform") { toonPlatform(); return; }
 
   // TAF haalt zijn eigen gegevens op via /api/taf-beheer.
   if (naam==="tableart") { toonTableArt(); return; }
@@ -850,9 +853,82 @@ function toonApps(d) {
     : '<div class="paneel"><div class="leeg">De applijst komt hier.</div></div>';
 }
 
+// ================= PLATFORMBEHEER =================
+// Alle gebruikers over alle apps: abonnement, betaalperiode en API-kosten.
+let platformData = null;
+
+async function toonPlatform() {
+  const doel = document.getElementById("hoofdInhoud");
+  document.getElementById("hoofdDatum").textContent = "Alle apps · alle gebruikers";
+  doel.innerHTML = '<div class="melding">Laden…</div>';
+  try {
+    const res = await fetch("/api/platform-beheer", {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ accessToken: beheerToken })
+    });
+    if (res.status === 401) { beheerToken = null; try { await sb.auth.signOut(); } catch(e){} toonInlog(); return; }
+    if (res.status === 403) { doel.innerHTML = '<div class="melding">Dit account heeft geen beheerrechten.</div>'; return; }
+    if (!res.ok) { const e = await res.json().catch(()=>({})); doel.innerHTML = `<div class="melding">Kon niet laden: ${e.error||res.status}</div>`; return; }
+    platformData = await res.json();
+  } catch(e) { doel.innerHTML = '<div class="melding">Verbinding mislukt.</div>'; return; }
+
+  const c = platformData.cijfers || {};
+  const perApp = platformData.per_app || [];
+  const g = platformData.gebruikers || [];
+  document.getElementById("hoofdDatum").textContent =
+    `${c.klanten_totaal||0} ${c.klanten_totaal===1?"gebruiker":"gebruikers"} over ${perApp.length} apps`;
+
+  const metrics = `<div class="metrics">
+    <div class="metric"><div class="l">Gebruikers</div><div class="n">${c.klanten_totaal||0}</div><div class="s">${c.betalend||0} betalend · ${c.opgezegd||0} opgezegd</div></div>
+    <div class="metric"><div class="l">Terugkerende omzet</div><div class="n">${euro(c.mrr_cent||0)}</div><div class="s">per maand · ex btw</div></div>
+    <div class="metric"><div class="l">API-kosten deze maand</div><div class="n">${euroF(c.kosten_maand_eur)}</div><div class="s">${euroF(c.kosten_totaal_eur)} totaal</div></div>
+    <div class="metric"><div class="l">Marge per maand</div><div class="n">${euroF(c.marge_maand_eur)}</div><div class="s">omzet − API-kosten</div></div>
+  </div>`;
+
+  const appRijen = perApp.map(a => `<tr>
+    <td class="t-naam">${a.app_naam}</td>
+    <td class="num">${a.klanten}</td>
+    <td class="num">${a.betalend}</td>
+    <td class="num">${euro(a.mrr_cent)}</td>
+    <td class="num">${euroF(a.kosten_maand)}</td>
+  </tr>`).join("");
+  const appBlok = perApp.length ? `<div class="paneel"><h2>Per app</h2>
+    <table><thead><tr><th>App</th><th class="num">Gebruikers</th><th class="num">Betalend</th><th class="num">Omzet/mnd</th><th class="num">API-kosten/mnd</th></tr></thead>
+    <tbody>${appRijen}</tbody></table></div>` : "";
+
+  const rijen = g.length ? g.map(k => {
+    const pil = k.status==="betaling_mislukt" ? '<span class="pil p-stop">betaling mislukt</span>'
+      : k.status==="geen abonnement" ? '<span class="pil p-proef">proef</span>'
+      : !k.actief ? '<span class="pil p-stop">verlopen</span>'
+      : k.opgezegd ? '<span class="pil p-let">opgezegd</span>'
+      : k.betaalt ? '<span class="pil p-actief">actief</span>' : '<span class="pil p-proef">' + k.status + '</span>';
+    const betaalt = k.prijs_cent > 0 && k.actief
+      ? `${euro(k.prijs_cent)}/mnd <span class="t-sub">ex btw</span>`
+      : (k.bundel_omzet_cent > 0 ? `<span class="t-sub">${euro(k.bundel_omzet_cent)} aan bundels</span>` : '<span class="t-sub">—</span>');
+    const tot = k.periode_eind ? datumNL(k.periode_eind) : "—";
+    return `<tr>
+      <td><div class="t-naam">${k.naam || "Onbekend"}</div><div class="t-sub">${k.email || (k.gebruiker||"").slice(0,8)+"…"}</div></td>
+      <td>${k.app_naam}<div class="t-sub">${k.tier || "—"}</div></td>
+      <td>${pil}</td>
+      <td>${betaalt}<div class="t-sub">tot ${tot}</div></td>
+      <td class="num">${euroF(k.kosten_maand)}<div class="t-sub">${euroF(k.kosten_totaal)} totaal</div></td>
+    </tr>`;
+  }).join("") : `<tr><td colspan="5" class="melding">Nog geen gebruikers.</td></tr>`;
+
+  doel.innerHTML = metrics + appBlok +
+    `<table><thead><tr><th>Gebruiker</th><th>App · tier</th><th>Status</th><th>Betaalt</th><th class="num">API-kosten</th></tr></thead><tbody>${rijen}</tbody></table>`;
+}
+
 // ===== App-kiezer links + functies per app in de bovenbalk =====
 // Alleen apps met een echt beheerdashboard.
 const BEHEER_APPS = {
+  "platform": {
+    ini: "FW", naam: "Fluid Waves platform",
+    secties: [
+      { v:"platform", label:"Gebruikers & kosten", icoon:"users" }
+    ],
+    standaard: "platform"
+  },
   "job-radar": {
     ini: "JR", naam: "Job Radar",
     secties: [
