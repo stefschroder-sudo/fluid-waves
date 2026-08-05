@@ -9,6 +9,12 @@
 //   SUPABASE_URL                   — project-URL
 //   SUPABASE_SERVICE_ROLE_KEY      — service-role sleutel (leest platform.tiers)
 //   FLUIDWAVES_APP_ID              — optioneel, standaard 'smart-admin'
+//   FW_CHECKOUT_ORIGINS            — optioneel: extra toegestane herkomsten
+//                                    (kommagescheiden), naast de standaardlijst
+//   FW_INTRO_COUPON                — optioneel: Stripe-coupon-id voor de
+//                                    introductiekorting (eerste maanden goedkoper)
+//   FW_INTRO_TIER                  — optioneel: tier waarvoor de introkorting
+//                                    geldt (standaard smart-admin-vast)
 //
 // De app stuurt in de body: { tier_id, gebruiker, email, terug_url }
 //   tier_id   : 'smart-admin-tryout' of 'smart-admin-vast'
@@ -16,7 +22,36 @@
 //   email     : e-mailadres van de gebruiker (optioneel, voor Stripe)
 //   terug_url : basis-URL waar de klant naartoe keert na betalen
 
+// CORS: de apps (eigen domeinen) mogen deze API aanroepen vanuit de browser.
+// De etalage zelf zit op hetzelfde domein en heeft dit niet nodig.
+const STANDAARD_HERKOMST = [
+  "https://fluid-waves.vercel.app",
+  "https://fluid-waves-admin.vercel.app"
+];
+const TOEGESTANE_HERKOMST = STANDAARD_HERKOMST.concat(
+  (process.env.FW_CHECKOUT_ORIGINS || "").split(",").map(s => s.trim()).filter(Boolean)
+);
+
+function zetCors(req, res) {
+  const herkomst = req.headers.origin;
+  if (herkomst && TOEGESTANE_HERKOMST.includes(herkomst)) {
+    res.setHeader("Access-Control-Allow-Origin", herkomst);
+    res.setHeader("Vary", "Origin");
+    res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
+    res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+    res.setHeader("Access-Control-Max-Age", "86400");
+  }
+}
+
 module.exports = async function handler(req, res) {
+  zetCors(req, res);
+
+  // Preflight van de browser (gaat vooraf aan de echte POST).
+  if (req.method === "OPTIONS") {
+    res.status(204).end();
+    return;
+  }
+
   if (req.method !== "POST") {
     res.status(405).json({ error: "Method not allowed" });
     return;
@@ -91,7 +126,19 @@ module.exports = async function handler(req, res) {
     params.append("subscription_data[metadata][user_id]", gebruiker);
     params.append("success_url", `${terugUrl}?betaald=1`);
     params.append("cancel_url", `${terugUrl}?betaald=0`);
-    params.append("allow_promotion_codes", "true");
+
+    // Introductiekorting: nieuwe abonnees betalen de eerste maanden minder.
+    // FW_INTRO_COUPON = Stripe-coupon-id (bijv. €9,95 korting, 2 maanden).
+    // FW_INTRO_TIER   = tier waarvoor de korting geldt (standaard smart-admin-vast).
+    // Stripe staat 'discounts' en 'allow_promotion_codes' niet samen toe.
+    const introCoupon = process.env.FW_INTRO_COUPON || null;
+    const introTier = process.env.FW_INTRO_TIER || "smart-admin-vast";
+    if (introCoupon && tier.id === introTier) {
+      params.append("discounts[0][coupon]", introCoupon);
+    } else {
+      params.append("allow_promotion_codes", "true");
+    }
+
     if (email) params.append("customer_email", email);
 
     const s = await fetch("https://api.stripe.com/v1/checkout/sessions", {
