@@ -246,6 +246,48 @@ window.FW_APP_UITLEG = {
   .balk.vol > i { background:#A32D2D; }
   .num { text-align:right; white-space:nowrap; font-variant-numeric:tabular-nums; }
 
+  /* --- koopflow: tier-knoppen in app-detail --- */
+  .d-koop { border-top:1px solid #EFEADE; padding-top:18px; margin-top:18px; }
+  .d-koop .k-lbl { font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--grijs); font-weight:700; margin-bottom:10px; }
+  .tierkaarten { display:flex; gap:10px; flex-wrap:wrap; }
+  .tierkaart { flex:1 1 180px; max-width:240px; background:var(--papier); border:1px solid var(--rand);
+    border-radius:10px; padding:13px 14px; display:flex; flex-direction:column; gap:6px; }
+  .tierkaart .tk-naam { font-size:13px; font-weight:700; color:var(--navy); }
+  .tierkaart .tk-prijs { font-size:18px; font-weight:700; color:var(--navy); }
+  .tierkaart .tk-prijs .per { font-size:12px; font-weight:400; color:var(--grijs); }
+  .tierkaart .tk-oms { font-size:11.5px; color:var(--grijs); line-height:1.45; flex:1; }
+  .tierkaart .knop { justify-content:center; margin-top:6px; }
+  .koopfout { margin-top:12px; font-size:12px; color:#A32D2D; background:#FAE3E3;
+    border:1px solid #F0C9C9; border-radius:6px; padding:9px 11px; }
+
+  /* --- koopflow: klant-login-modal --- */
+  .k-overlay { position:fixed; inset:0; background:rgba(27,44,79,.45); z-index:60;
+    display:none; align-items:flex-start; justify-content:center; padding:40px 16px; overflow:auto; }
+  .k-overlay.open { display:flex; }
+  .k-vak { width:100%; max-width:360px; background:var(--wit); border:1px solid #E8E1D2;
+    border-radius:12px; padding:24px; position:relative; }
+  .k-vak h2 { font-size:17px; color:var(--navy); margin-bottom:4px; }
+  .k-vak .k-sub { font-size:12px; color:var(--grijs); margin-bottom:16px; }
+  .k-vak label { display:block; font-size:11.5px; color:var(--grijs); margin-bottom:5px; }
+  .k-vak input { width:100%; padding:9px 11px; font-size:13px; font-family:inherit;
+    border:1px solid var(--rand); border-radius:6px; background:#FFFDF8; color:var(--inkt); margin-bottom:13px; }
+  .k-vak input:focus { outline:none; border-color:var(--goud); }
+  .k-sluit { position:absolute; top:10px; right:10px; background:none; border:none; cursor:pointer;
+    font-size:18px; color:var(--grijs); line-height:1; padding:4px 8px; }
+  .k-sluit:hover { color:var(--navy); }
+  .k-wissel { margin-top:14px; font-size:12px; color:var(--grijs); text-align:center; }
+  .k-wissel a { color:var(--navy); font-weight:600; cursor:pointer; text-decoration:underline; }
+  .k-info { margin-top:12px; font-size:12px; color:#0F6E56; background:#E1F5EE;
+    border:1px solid #BFE5D6; border-radius:6px; padding:9px 11px; }
+
+  /* --- koopflow: banner na terugkeer van Stripe --- */
+  .betaalbanner { display:flex; align-items:flex-start; gap:10px; border-radius:10px;
+    padding:13px 15px; font-size:13px; margin-bottom:16px; line-height:1.5; }
+  .betaalbanner.goed { background:#E1F5EE; border:1px solid #BFE5D6; color:#0F6E56; }
+  .betaalbanner.slecht { background:#FAEEDA; border:1px solid #EED9AE; color:#854F0B; }
+  .betaalbanner b { display:block; margin-bottom:2px; }
+  .betaalbanner .ic { flex:none; margin-top:2px; }
+
   /* --- inlog --- */
   .inlogvak { max-width:340px; margin:50px auto; background:var(--wit); border:1px solid #E8E1D2;
     border-radius:12px; padding:26px; }
@@ -340,6 +382,7 @@ window.FW_APP_UITLEG = {
 
       <!-- TAB: APPS -->
       <div id="paneelApps">
+        <div id="betaalBanner"></div>
         <div class="hoofd-kop">
           <div>
             <h1 id="appsKop">De apps</h1>
@@ -400,6 +443,23 @@ window.FW_APP_UITLEG = {
       </div>
 
     </main>
+  </div>
+</div>
+
+<!-- ============ KLANT-LOGIN (koopflow) ============ -->
+<div class="k-overlay" id="kOverlay">
+  <div class="k-vak">
+    <button class="k-sluit" onclick="sluitKlantModal()" aria-label="Sluiten">&times;</button>
+    <h2 id="kTitel">Inloggen om af te rekenen</h2>
+    <p class="k-sub" id="kSub">Met je account koppel je het abonnement aan jouw omgeving.</p>
+    <label for="kEmail">E-mail</label>
+    <input id="kEmail" type="email" autocomplete="username" placeholder="naam@voorbeeld.nl">
+    <label for="kWw">Wachtwoord</label>
+    <input id="kWw" type="password" autocomplete="current-password" placeholder="••••••••">
+    <button class="knop knop-navy breed" id="kActieKnop" onclick="klantActie()">Inloggen en doorgaan</button>
+    <div id="kFout" class="inlogfout verborgen"></div>
+    <div id="kInfo" class="k-info verborgen"></div>
+    <div class="k-wissel" id="kWissel">Nog geen account? <a onclick="wisselKlantModus()">Registreren</a></div>
   </div>
 </div>
 <script>
@@ -629,6 +689,26 @@ function kiesApp(id) {
     ? `<a href="${app.url}" target="_blank" rel="noopener" class="knop knop-navy">${svgIcoon("play")}Start deze app</a>`
     : `<span class="pil pil-bouw">binnenkort beschikbaar</span>`;
 
+  // koopblok: betaalde tiers als kaarten met een abonneer-knop
+  const koopTiers = kanOpen
+    ? p.tiers.filter(t => t.prijs_cent > 0).sort((a,b)=>a.prijs_cent-b.prijs_cent)
+    : [];
+  const koopBlok = koopTiers.length ? `
+    <div class="d-koop">
+      <div class="k-lbl">Abonneren</div>
+      <div class="tierkaarten">${koopTiers.map(t => {
+        const per = t.interval==="jaar" ? "/jaar" : t.interval==="eenmalig" ? "" : "/mnd";
+        const scans = t.scans_per_periode ?? t.scans_totaal;
+        return `<div class="tierkaart">
+          <div class="tk-naam">${t.naam}</div>
+          <div class="tk-prijs">${euro(t.prijs_cent)}<span class="per">${per}</span></div>
+          <div class="tk-oms">${t.omschrijving || (scans ? scans + " scans per periode" : "")}</div>
+          <button class="knop knop-navy" data-tier="${t.id}" onclick="koopTier('${t.id}', this)">Abonneer</button>
+        </div>`;
+      }).join("")}</div>
+      <div id="koopFout"></div>
+    </div>` : "";
+
   document.getElementById("appDetail").innerHTML = `
     <div class="app-detail">
       <div class="d-ik">${svgIcoon(ik)}</div>
@@ -640,6 +720,7 @@ function kiesApp(id) {
         ${p.groot ? `<div><div class="d-prijs">${p.groot}</div>${tiersRegel}</div>` : ""}
         ${startKnop}
       </div>
+      ${koopBlok}
     </div>`;
 }
 
@@ -947,6 +1028,158 @@ async function tafVerwijder(id) {
     alert("Verwijderen mislukt: " + e.message);
   }
 }
+// ================= KOOPFLOW =================
+// Klanten loggen in met een eigen sessie (los van de beheer-sessie),
+// zodat een klant-login de beheeromgeving niet overschrijft.
+let klantSb = null;
+let gekozenTier = null;      // tier die de bezoeker wil kopen, wacht op login
+let klantModus = "inloggen"; // of "registreren"
+
+function maakKlantClient() {
+  if (!cfg) return null;
+  if (!klantSb) klantSb = window.supabase.createClient(cfg.url, cfg.anonKey, {
+    auth:{ persistSession:true, autoRefreshToken:true, detectSessionInUrl:false,
+           storage:kiesOpslag(), storageKey:"fluidwaves-klant" }
+  });
+  return klantSb;
+}
+
+function toonKoopFout(tekst) {
+  const el = document.getElementById("koopFout");
+  if (el) el.innerHTML = tekst ? `<div class="koopfout">${tekst}</div>` : "";
+}
+
+// Klik op een Abonneer-knop: sessie? direct afrekenen. Anders eerst inloggen.
+async function koopTier(tierId, knop) {
+  toonKoopFout("");
+  const c = maakKlantClient();
+  if (!c) { toonKoopFout("Configuratie ontbreekt."); return; }
+  try {
+    const { data } = await c.auth.getSession();
+    if (data.session) { naarCheckout(tierId, data.session, knop); return; }
+  } catch(e){}
+  gekozenTier = tierId;
+  openKlantModal();
+}
+
+// Checkout-sessie aanvragen en doorsturen naar Stripe.
+async function naarCheckout(tierId, sessie, knop) {
+  const alle = document.querySelectorAll(".tierkaart .knop");
+  alle.forEach(b => b.disabled = true);
+  if (knop) knop.textContent = "Bezig…";
+  try {
+    const res = await fetch("/api/start-checkout", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        tier_id: tierId,
+        gebruiker: sessie.user.id,
+        email: sessie.user.email || null,
+        terug_url: location.origin + location.pathname
+      })
+    });
+    const d = await res.json().catch(() => ({}));
+    if (!res.ok || !d.url) {
+      toonKoopFout(d.error || "Kon de betaalsessie niet starten. Probeer het opnieuw.");
+      alle.forEach(b => { b.disabled = false; b.textContent = "Abonneer"; });
+      return;
+    }
+    location.href = d.url; // naar Stripe Checkout
+  } catch(e) {
+    toonKoopFout("Verbinding mislukt. Probeer het opnieuw.");
+    alle.forEach(b => { b.disabled = false; b.textContent = "Abonneer"; });
+  }
+}
+
+// ---- klant-modal ----
+function openKlantModal() {
+  klantModus = "inloggen";
+  zetKlantModus();
+  document.getElementById("kFout").classList.add("verborgen");
+  document.getElementById("kInfo").classList.add("verborgen");
+  document.getElementById("kOverlay").classList.add("open");
+  const e = document.getElementById("kEmail"); if (e && !e.value) e.focus();
+}
+function sluitKlantModal() {
+  document.getElementById("kOverlay").classList.remove("open");
+  gekozenTier = null;
+}
+function wisselKlantModus() {
+  klantModus = klantModus === "inloggen" ? "registreren" : "inloggen";
+  zetKlantModus();
+}
+function zetKlantModus() {
+  const reg = klantModus === "registreren";
+  document.getElementById("kTitel").textContent = reg ? "Account aanmaken" : "Inloggen om af te rekenen";
+  document.getElementById("kSub").textContent = reg
+    ? "Je account koppelt het abonnement aan jouw omgeving."
+    : "Met je account koppel je het abonnement aan jouw omgeving.";
+  document.getElementById("kActieKnop").textContent = reg ? "Registreren en doorgaan" : "Inloggen en doorgaan";
+  document.getElementById("kWissel").innerHTML = reg
+    ? `Al een account? <a onclick="wisselKlantModus()">Inloggen</a>`
+    : `Nog geen account? <a onclick="wisselKlantModus()">Registreren</a>`;
+  document.getElementById("kWw").autocomplete = reg ? "new-password" : "current-password";
+}
+
+async function klantActie() {
+  const knop = document.getElementById("kActieKnop");
+  const email = document.getElementById("kEmail").value.trim();
+  const ww = document.getElementById("kWw").value;
+  const fout = document.getElementById("kFout");
+  const info = document.getElementById("kInfo");
+  fout.classList.add("verborgen"); info.classList.add("verborgen");
+  if (!email || !ww) { fout.textContent = "Vul e-mail en wachtwoord in."; fout.classList.remove("verborgen"); return; }
+  const c = maakKlantClient();
+  if (!c) { fout.textContent = "Configuratie ontbreekt."; fout.classList.remove("verborgen"); return; }
+  knop.disabled = true; knop.textContent = "Bezig…";
+  try {
+    let sessie = null;
+    if (klantModus === "registreren") {
+      const { data, error } = await c.auth.signUp({ email, password: ww });
+      if (error) { fout.textContent = error.message || "Registreren mislukt."; fout.classList.remove("verborgen"); return; }
+      if (!data.session) {
+        // e-mailbevestiging vereist: eerst de mail, daarna terugkomen en inloggen
+        info.textContent = "Bijna klaar — bevestig je e-mailadres via de link in je inbox en log daarna hier in.";
+        info.classList.remove("verborgen");
+        klantModus = "inloggen"; zetKlantModus();
+        return;
+      }
+      sessie = data.session;
+    } else {
+      const { data, error } = await c.auth.signInWithPassword({ email, password: ww });
+      if (error || !data.session) {
+        fout.textContent = error?.message === "Invalid login credentials" ? "E-mail of wachtwoord klopt niet." : (error?.message || "Inloggen mislukt.");
+        fout.classList.remove("verborgen"); return;
+      }
+      sessie = data.session;
+    }
+    document.getElementById("kWw").value = "";
+    document.getElementById("kOverlay").classList.remove("open");
+    if (gekozenTier) { const t = gekozenTier; gekozenTier = null; naarCheckout(t, sessie, null); }
+  } catch(e) {
+    fout.textContent = "Er ging iets mis: " + e.message; fout.classList.remove("verborgen");
+  } finally {
+    knop.disabled = false; zetKlantModus();
+  }
+}
+["kEmail","kWw"].forEach(id => document.getElementById(id).addEventListener("keydown", e => { if (e.key === "Enter") klantActie(); }));
+document.getElementById("kOverlay").addEventListener("click", e => { if (e.target === e.currentTarget) sluitKlantModal(); });
+
+// ---- terugkeer van Stripe (?betaald=1 of ?betaald=0) ----
+(function verwerkTerugkeer() {
+  const qs = new URLSearchParams(location.search);
+  if (!qs.has("betaald")) return;
+  const gelukt = qs.get("betaald") === "1";
+  const el = document.getElementById("betaalBanner");
+  if (el) el.innerHTML = gelukt
+    ? `<div class="betaalbanner goed">${svgIcoon("info")}<span><b>Betaling gelukt — welkom!</b>
+       Je abonnement wordt binnen enkele seconden geactiveerd. Open de app en log in met het account
+       waarmee je zojuist hebt afgerekend.</span></div>`
+    : `<div class="betaalbanner slecht">${svgIcoon("alert")}<span><b>Betaling niet afgerond.</b>
+       Er is niets afgeschreven. Je kunt het opnieuw proberen wanneer je wilt.</span></div>`;
+  history.replaceState({}, "", location.pathname);
+})();
+
 // ---- start ----
 laadApps();
 </script>
