@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Fluid Waves</title>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tabler-icons/3.7.0/iconfont/tabler-icons.min.css">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="js/supabase-config.js"></script>
 
@@ -13,179 +12,304 @@
      ================================================================ -->
 <script>
 window.FW_TEKST = {
-  hero_eyebrow: "Slimme software voor commercie",
-  hero_titel: "Software die signalen ziet vóór de rest.",
-  hero_onder: "Tools die patronen herkennen waar anderen ruis zien.",
+  hero_eyebrow: "Smart apps voor iedereen",
+  hero_titel: "Tools voor MKB-bedrijven en particulieren",
+  hero_onder: "",
   apps_kop: "De apps",
-  apps_onder: "Elk product staat op zichzelf.",
+  apps_onder: "Make your own choice",
   over_kop: "Fluid Waves",
   over_tekst: "AI-gedreven software voor commercie, uit 25 jaar praktijk.",
   voet: "Fluid Waves · Schröder Consult · KvK 87125897"
 };
+
+// Uitleg per app voor de detailweergave in de etalage. Aanpasbaar zonder de code te raken.
+window.FW_APP_UITLEG = {
+  "smart-admin": {
+    kop: "Je hele administratie op één plek, zonder boekhouder.",
+    tekst: "Smart Admin houdt de administratie van je onderneming bij: facturen en creditfacturen maken en versturen, btw netjes per regel gesplitst, je banksaldo en openstaande posten in één oogopslag, plus afschrijvingen, leningen en investeringen. Geen ingewikkelde boekhoudsoftware — alles wat een ondernemer echt nodig heeft, helder en direct.",
+    voor: "Voor ondernemers en zzp'ers"
+  },
+  "job-radar": {
+    kop: "Vind de juiste executive-rol voordat een ander hem ziet.",
+    tekst: "Job Radar scant de markt op senior commerciële posities — CCO, CEO, GM, CFO — en matcht ze tegen je profiel. Geen ruis, geen verzonnen vacatures: alleen echte rollen, met een score die zegt waarom ze passen. Voor wie actief zoekt of een interim-opdracht wil.",
+    voor: "Voor executives en interim-managers"
+  },
+  "tenderlead": {
+    kop: "Aanbestedingen uit vijf landen, uit de officiële bron.",
+    tekst: "TenderLead haalt aanbestedingen rechtstreeks uit de officiële registers van Nederland, België, het VK, Duitsland en Frankrijk. Geen scraping, geen AI-verzinsels — alleen wat echt is gepubliceerd, dagelijks ververst. Zoek op je eigen markt of draai het om: van bedrijf naar de tenders die het won.",
+    voor: "Voor bid-managers en commerciële teams"
+  },
+  "golf-score": {
+    kop: "Een complete scorekaart die alle spelvormen kent.",
+    tekst: "Van Stableford tot strokeplay, van Texas Scramble tot een volledig toernooi met flights. Officiële WHS-handicapberekening, per-hole scorekaarten en een toernooimodule die alles bijhoudt. Werkt op je telefoon, ook zonder bereik op de baan.",
+    voor: "Gratis · voor golfers en clubs"
+  },
+  "smart-events": {
+    kop: "Eén link, en je hele evenement staat online.",
+    tekst: "De Smart Events App maakt van elk evenement een deelbare pagina: programma, een aanmeldlijst met velden die je zelf samenstelt, en kosten met een betaalknop. Deel de link via WhatsApp of mail; deelnemers vullen in, jij ziet de resultaten binnenkomen, houdt betalingen bij en exporteert naar Excel of PDF. Van golfdag tot teamuitje.",
+    voor: "Voor organisatoren van besloten evenementen"
+  },
+  "live-from": {
+    kop: "Themalijsten uit een archief van duizenden releases.",
+    tekst: "Een muziekplatform dat je collectie ontsluit op stemming, genre, periode en gelegenheid. Nog in ontwikkeling.",
+    voor: "Binnenkort"
+  },"table-art": {
+    kop: "Van een gedekte tafel naar tien nieuwe dessins.",
+    tekst: "TAF leest de sfeer van je foto's — palet, motief, materiaal — en ontwerpt daarin tien nieuwe naadloze patroonrapporten voor servies, tafellinnen, placemats en interieur. Reageer op elk dessin om het bij te sturen, dek de tafel als voorproef, en download alles als SVG en PNG.",
+    voor: "Voor table-art en interieurontwerpers"
+  }
+};
 </script>
 
 <style>
+  :root {
+    --navy:#1B2C4F; --goud:#C9A227; --papier:#F4F1EA; --wit:#FBF8F0;
+    --rand:#E0D8C4; --inkt:#2A2A28; --grijs:#8A7F63; --golfblauw:#9BB0C9;
+    --groen:#0F6E56; --rood:#B4341E;
+  }
   * { box-sizing:border-box; margin:0; padding:0; }
-  body { background:#E7E2D6; color:#2A2A28;
+  body { background:#E7E2D6; color:var(--inkt);
     font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
-    line-height:1.55; }
-  .shell { max-width:1120px; margin:24px auto; background:#F4F1EA; border-radius:14px;
-    overflow:hidden; border:1px solid #D8D2C4; box-shadow:0 6px 24px rgba(27,44,79,.10); }
+    line-height:1.5; }
+  /* ingebouwde SVG-iconen */
+  .ic { width:1em; height:1em; display:inline-block; vertical-align:-0.15em; flex:none; }
+  .knop .ic { width:15px; height:15px; }
+  .mtab .ic { width:15px; height:15px; }
+  .app-blok .bi .ic { width:16px; height:16px; }
+  .app-detail .d-ik .ic { width:28px; height:28px; }
+  .zij-nav button.navknop .ic { width:16px; height:16px; }
+  .sig .ic { width:16px; height:16px; margin-top:1px; }
+  .hint .ic { width:14px; height:14px; }
+  .kiezer-knop .ic.ti-chevron-down { width:15px; height:15px; margin-left:auto; color:var(--grijs); }
 
-  /* ---- topbalk ---- */
-  .top { display:flex; align-items:center; justify-content:space-between;
-    background:#F4F1EA; padding:12px 20px; border-bottom:1px solid #E0D8C4; }
-  .merk { display:flex; align-items:center; gap:12px; }
-  .merk .n1 { font-size:15px; font-weight:600; color:#1B2C4F; }
-  .merk .n2 { font-size:11px; color:#8A7F63; }
-  .top-rechts { display:flex; align-items:center; gap:12px; }
+  .shell { max-width:1120px; margin:22px auto; background:var(--papier); border-radius:14px;
+    overflow:hidden; border:1px solid var(--rand); box-shadow:0 6px 24px rgba(27,44,79,.10); }
+
+  /* ============ TOPBALK (navy, Clever App Factory) ============ */
+  .topbar { display:flex; align-items:center; justify-content:space-between;
+    background:var(--navy); padding:12px 20px; border-bottom:2px solid var(--goud); }
+  .tb-merk { display:flex; align-items:center; gap:14px; }
+  .tb-merk .n1 { font-size:16px; font-weight:700; color:#FFFFFF; letter-spacing:.01em; line-height:1.1; }
+  .tb-merk .n2 { font-size:9.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--goud); font-weight:700; margin-top:1px; }
+  .tb-rechts { display:flex; align-items:center; gap:12px; }
   .knop { display:inline-flex; align-items:center; gap:6px; font-size:12.5px; padding:7px 13px;
-    border:1px solid #D8D2C4; border-radius:7px; background:#FBF8F0; color:#1B2C4F;
+    border:1px solid var(--rand); border-radius:7px; background:var(--wit); color:var(--navy);
     cursor:pointer; font-family:inherit; text-decoration:none; }
   .knop:hover { background:#F0EBDF; }
-  .knop-navy { background:#1B2C4F; color:#F4F1EA; border-color:#1B2C4F; }
+  .knop-navy { background:var(--navy); color:var(--papier); border-color:var(--navy); }
   .knop-navy:hover { background:#24396a; }
-  .avatar { width:30px; height:30px; border-radius:50%; background:#1B2C4F; color:#F4F1EA;
-    display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:600; }
+  .knop-licht { background:transparent; border-color:rgba(255,255,255,.28); color:#FFFFFF; }
+  .knop-licht:hover { background:rgba(255,255,255,.10); }
+  .avatar { width:30px; height:30px; border-radius:50%; background:var(--goud); color:var(--navy);
+    display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700; }
 
-  /* ---- sectiebalk (alleen in beheer) ---- */
-  .secties { display:flex; align-items:center; gap:24px; background:#F0EBDF;
-    padding:9px 20px; border-bottom:1px solid #E0D8C4; font-size:12.5px; color:#3A3524; }
-  .sec { display:flex; align-items:center; gap:6px; cursor:pointer; padding-bottom:3px; margin-bottom:-11px;
-    border-bottom:2px solid transparent; }
-  .sec:hover { color:#1B2C4F; }
-  .sec.actief { color:#1B2C4F; font-weight:600; border-bottom-color:#C9A227; }
-  .sec i { font-size:15px; }
+  /* ============ HORIZONTALE MENUBALK ============ */
+  .menubar { display:flex; gap:2px; background:var(--wit); padding:0 12px;
+    border-bottom:1px solid var(--rand); flex-wrap:wrap; }
+  .mtab { display:flex; align-items:center; gap:6px; padding:10px 14px; font-size:12px;
+    color:var(--grijs); border-bottom:2px solid transparent; cursor:pointer; user-select:none;
+    font-weight:600; white-space:nowrap; }
+  .mtab:hover { color:var(--navy); }
+  .mtab.actief { color:var(--navy); border-bottom-color:var(--goud); background:#FFFFFF; margin-bottom:-1px; }
+  .mtab .ic { color:currentColor; }
 
-  /* ================= ETALAGE ================= */
-  .etalage { display:block; }
-  .hero { padding:52px 28px 40px; position:relative; overflow:hidden;
-    background:#1B2C4F; color:#F4F1EA; }
-  .hero svg { position:absolute; right:-40px; bottom:-20px; width:340px; opacity:.14; }
-  .hero .eyebrow { font-size:12px; letter-spacing:.2em; text-transform:uppercase; color:#C9A227; margin-bottom:14px; }
-  .hero h1 { font-size:32px; font-weight:600; max-width:15ch; line-height:1.14; margin-bottom:12px; }
-  .hero p { font-size:16px; color:#C6D0E0; max-width:44ch; margin-bottom:22px; }
-  .hero .knoppen { display:flex; gap:11px; flex-wrap:wrap; }
-  .knop-goud { background:#C9A227; color:#1B2C4F; font-weight:600; border-color:#C9A227; }
-  .knop-goud:hover { background:#D9B43A; }
-  .knop-open { border-color:#3A4E75; color:#F4F1EA; background:transparent; }
-  .knop-open:hover { background:#22375f; }
+  /* ============ WERKVLAK: sidebar links + hoofd rechts ============ */
+  .werk { display:flex; min-height:560px; }
+  .zij { width:220px; flex:none; background:var(--papier); border-right:1px solid var(--rand);
+    padding:14px 10px; display:flex; flex-direction:column; }
+  .zij-lbl { font-size:9.5px; color:var(--grijs); text-transform:uppercase; letter-spacing:.1em; margin:4px 0 8px 6px; font-weight:700; }
+  .zij-nav { display:flex; flex-direction:column; gap:3px; }
+  .zij-voet { margin-top:auto; padding-top:12px; }
 
-  .blok { padding:40px 28px; }
-  .kop { display:flex; align-items:baseline; gap:12px; margin-bottom:4px; }
-  .kop span { font-size:12px; letter-spacing:.18em; text-transform:uppercase; color:#C9A227; }
-  .kop h2 { font-size:22px; color:#1B2C4F; font-weight:600; }
-  .kop-sub { font-size:13px; color:#8A7F63; margin-bottom:24px; }
+  /* app-blok in de sidebar (etalage) */
+  .app-blok { display:flex; align-items:center; gap:10px; background:var(--wit); border:1px solid #E8E1D2;
+    border-radius:10px; padding:10px 11px; cursor:pointer; text-align:left; font-family:inherit;
+    transition:.14s; position:relative; width:100%; }
+  .app-blok:hover { background:#F0EBDF; }
+  .app-blok.actief { border-color:var(--goud); }
+  .app-blok.actief::before { content:""; position:absolute; left:0; top:8px; bottom:8px; width:3px;
+    background:var(--goud); border-radius:0 2px 2px 0; }
+  .app-blok .bi { width:30px; height:30px; flex:none; border-radius:8px; background:#F0EBDF;
+    display:flex; align-items:center; justify-content:center; }
+  .app-blok.actief .bi { background:var(--navy); }
+  .app-blok .bi .ic { color:var(--navy); }
+  .app-blok.actief .bi .ic { color:var(--goud); }
+  .app-blok .bn { font-size:12.5px; font-weight:600; color:var(--navy); line-height:1.2; }
+  .app-blok .bs { font-size:10px; color:var(--grijs); }
 
-  .apps { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:16px; }
-  .app { background:#FBF8F0; border:1px solid #E8E1D2; border-radius:13px; padding:20px;
-    display:flex; flex-direction:column; position:relative; overflow:hidden; }
-  .app::before { content:""; position:absolute; top:0; left:0; right:0; height:3px; background:#C9A227; }
-  .app .ik { width:40px; height:40px; border-radius:9px; background:#F0EBDF;
-    display:flex; align-items:center; justify-content:center; margin-bottom:13px; }
-  .app .ik i { font-size:21px; color:#1B2C4F; }
-  .app h3 { font-size:17px; color:#1B2C4F; margin-bottom:2px; }
-  .app .merkje { font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; color:#C9A227; margin-bottom:8px; }
-  .app p { font-size:13px; color:#5F5E5A; flex:1; margin-bottom:15px; }
-  .app .voet { display:flex; align-items:center; justify-content:space-between; gap:10px; }
-  .app .prijs { font-size:13px; color:#8A7F63; }
-  .app .prijs b { color:#1B2C4F; font-size:15px; }
+  /* beheer-navigatieknop in de sidebar */
+  .zij-nav button.navknop { text-align:left; padding:8px 10px; border-radius:7px; font-size:12.5px;
+    display:flex; align-items:center; gap:9px; background:none; border:none; cursor:pointer;
+    font-family:inherit; color:var(--inkt); width:100%; }
+  .zij-nav button.navknop:hover { background:#E4DED0; }
+  .zij-nav button.navknop.actief { background:rgba(201,162,39,.16); color:var(--navy); font-weight:600; }
+  .zij-nav button.navknop .ic { color:var(--grijs); }
+  .zij-nav button.navknop.actief .ic { color:var(--navy); }
+
+  /* app-kiezer (welke beheer-app) bovenin de sidebar */
+  .kiezer { position:relative; margin-bottom:14px; }
+  .kiezer-lbl { font-size:9.5px; color:var(--grijs); text-transform:uppercase; letter-spacing:.1em; margin:0 0 6px 6px; font-weight:700; }
+  .kiezer-knop { width:100%; display:flex; align-items:center; gap:8px; background:var(--wit);
+    border:1px solid var(--rand); border-radius:7px; padding:8px 9px; cursor:pointer; text-align:left; }
+  .kiezer-knop .ini { width:26px; height:26px; flex:none; border-radius:6px; background:var(--navy);
+    color:var(--papier); display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700; }
+  .kiezer-knop .nm { font-size:12.5px; font-weight:600; color:var(--navy); white-space:nowrap;
+    overflow:hidden; text-overflow:ellipsis; }
+  .kiezer-lijst { position:absolute; left:0; right:0; top:calc(100% + 4px); z-index:20;
+    background:var(--wit); border:1px solid var(--rand); border-radius:8px; overflow:hidden;
+    box-shadow:0 6px 20px rgba(27,44,79,.14); display:none; }
+  .kiezer-lijst.open { display:block; }
+  .kiezer-optie { display:flex; align-items:center; gap:8px; padding:9px 10px; cursor:pointer;
+    font-size:12.5px; color:var(--navy); background:none; border:none; width:100%; text-align:left; font-family:inherit; }
+  .kiezer-optie:hover { background:#F0EBDF; }
+  .kiezer-optie .ini { width:24px; height:24px; flex:none; border-radius:6px; background:var(--navy);
+    color:var(--papier); display:flex; align-items:center; justify-content:center; font-size:10.5px; font-weight:700; }
+  .kiezer-optie.actief { background:rgba(201,162,39,.16); }
+  .kiezer-knop .ti-chevron-down { transition:transform .15s; margin-left:auto; }
+  .kiezer-knop.open-knop .ti-chevron-down { transform:rotate(180deg); }
+
+  /* ============ HOOFDVLAK ============ */
+  .hoofd { flex:1; padding:20px 24px; min-width:0; overflow:auto; }
+  .hoofd-kop { display:flex; align-items:flex-start; justify-content:space-between; gap:16px; margin-bottom:16px; }
+  .hoofd-kop h1 { font-size:20px; color:var(--navy); font-weight:700; }
+  .hoofd-kop .datum { font-size:12px; color:var(--grijs); margin-top:2px; }
+
+  /* --- welkomstblok (etalage, vóór app-keuze) --- */
+  .welkom { background:var(--navy); color:var(--papier); border-radius:13px; padding:34px 30px;
+    position:relative; overflow:hidden; }
+  .welkom svg.golf { position:absolute; right:-30px; bottom:-24px; width:280px; opacity:.14; }
+  .welkom .eyebrow { font-size:11.5px; letter-spacing:.2em; text-transform:uppercase; color:var(--goud);
+    font-weight:700; margin-bottom:10px; }
+  .welkom h2 { font-size:28px; font-weight:700; line-height:1.14; margin-bottom:10px; max-width:20ch; }
+  .welkom p { font-size:15px; color:#C6D0E0; max-width:46ch; margin-bottom:8px; }
+  .welkom .hint { font-size:12.5px; color:var(--goud); margin-top:16px; display:flex; align-items:center; gap:6px; }
+
+  /* --- app-detail (etalage, na app-keuze) --- */
+  .app-detail { background:var(--wit); border:1px solid #E8E1D2; border-radius:13px; padding:28px;
+    position:relative; overflow:hidden; min-height:260px; }
+  .app-detail::before { content:""; position:absolute; top:0; left:0; right:0; height:3px; background:var(--goud); }
+  .app-detail .d-ik { width:52px; height:52px; border-radius:12px; background:#F0EBDF;
+    display:flex; align-items:center; justify-content:center; margin-bottom:16px; }
+  .app-detail .d-ik .ic { color:var(--navy); }
+  .app-detail .d-merk { font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--goud); margin-bottom:4px; font-weight:700; }
+  .app-detail h3 { font-size:24px; color:var(--navy); margin-bottom:8px; font-weight:700; }
+  .app-detail .d-kop { font-size:15px; color:var(--navy); font-weight:600; margin-bottom:12px; }
+  .app-detail .d-tekst { font-size:14px; color:#5F5E5A; line-height:1.7; margin-bottom:18px; max-width:56ch; }
+  .app-detail .d-voor { font-size:12px; color:var(--grijs); margin-bottom:22px; }
+  .app-detail .d-onder { display:flex; align-items:center; gap:22px; flex-wrap:wrap;
+    border-top:1px solid #EFEADE; padding-top:20px; }
+  .app-detail .d-prijs { font-size:13px; color:var(--grijs); }
+  .app-detail .d-prijs b { color:var(--navy); font-size:20px; }
+  .app-detail .d-prijs .per { font-size:13px; font-weight:400; color:var(--grijs); }
+  .app-detail .d-tiers { font-size:11.5px; color:var(--grijs); margin-top:3px; }
+
   .pil { font-size:10.5px; padding:3px 9px; border-radius:5px; white-space:nowrap; }
   .pil-live { background:#E1F5EE; color:#0F6E56; }
-  .pil-gratis { background:#F1EFE8; color:#5F5E5A; }
   .pil-bouw { background:#FAEEDA; color:#854F0B; }
-  .app a.open { font-size:13px; color:#1B2C4F; text-decoration:none; font-weight:600;
-    display:inline-flex; align-items:center; gap:4px; }
-  .app a.open:hover { color:#C9A227; }
 
-  .over { background:#EFE9DC; }
-  .over p { font-size:15px; color:#4A4640; max-width:56ch; }
+  /* --- over --- */
+  .over-blok { background:var(--wit); border:1px solid #E8E1D2; border-radius:13px; padding:28px; }
+  .over-blok h3 { font-size:20px; color:var(--navy); margin-bottom:10px; font-weight:700; }
+  .over-blok p { font-size:14.5px; color:#4A4640; max-width:60ch; line-height:1.7; }
 
-  .voetbalk { background:#1B2C4F; color:#A9B4C9; font-size:12.5px; padding:22px 28px;
-    display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px; }
-
-  /* ================= BEHEER ================= */
-  .beheer { display:none; }
-  .beheer-body { display:flex; min-height:520px; }
-  .zij { width:210px; flex:none; background:#F0EBDF; border-right:1px solid #E0D8C4;
-    padding:14px 10px; display:flex; flex-direction:column; transition:width .16s; }
-  .kiezer { position:relative; margin-bottom:14px; }
-  .kiezer-lbl { font-size:10px; color:#8A7F63; text-transform:uppercase; letter-spacing:.1em; margin:0 0 6px 6px; }
-  .kiezer-knop { width:100%; display:flex; align-items:center; gap:8px; background:#FBF8F0;
-    border:1px solid #D8D2C4; border-radius:7px; padding:8px 9px; cursor:pointer; text-align:left; }
-  .kiezer-knop .ini { width:26px; height:26px; flex:none; border-radius:6px; background:#1B2C4F;
-    color:#F4F1EA; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:600; }
-  .kiezer-knop .nm { font-size:12.5px; font-weight:600; color:#1B2C4F; white-space:nowrap;
-    overflow:hidden; text-overflow:ellipsis; }
-  .zij nav { display:flex; flex-direction:column; gap:1px; }
-  .zij-lbl { font-size:10px; color:#8A7F63; text-transform:uppercase; letter-spacing:.1em; margin:8px 0 4px 6px; }
-  .zij nav button { text-align:left; padding:7px 9px; border-radius:6px; font-size:12.5px;
-    display:flex; align-items:center; gap:8px; background:none; border:none; cursor:pointer;
-    font-family:inherit; color:#2A2A28; }
-  .zij nav button:hover { background:#E4DED0; }
-  .zij nav button.actief { background:rgba(201,162,39,.16); color:#1B2C4F; }
-  .zij nav button i { font-size:16px; color:#8A7F63; }
-  .zij-voet { margin-top:auto; }
-
-  .hoofd { flex:1; padding:18px 22px; min-width:0; overflow:auto; }
-  .hoofd-kop { display:flex; align-items:flex-start; justify-content:space-between; gap:16px; margin-bottom:14px; }
-  .hoofd-kop h1 { font-size:19px; color:#1B2C4F; font-weight:600; }
-  .hoofd-kop .datum { font-size:12px; color:#8A7F63; margin-top:2px; }
-
+  /* ============ BEHEER-onderdelen ============ */
   .metrics { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:10px; margin-bottom:16px; }
-  .metric { background:#FBF8F0; border:1px solid #E8E1D2; border-radius:9px; padding:11px 13px; }
-  .metric .l { font-size:11px; color:#8A7F63; }
-  .metric .n { font-size:21px; font-weight:600; color:#1B2C4F; margin-top:2px; }
+  .metric { background:var(--wit); border:1px solid #E8E1D2; border-radius:9px; padding:11px 13px; }
+  .metric .l { font-size:11px; color:var(--grijs); }
+  .metric .n { font-size:21px; font-weight:700; color:var(--navy); margin-top:2px; }
   .metric .s { font-size:10.5px; color:#A59A82; margin-top:1px; }
 
-  .paneel { background:#FBF8F0; border:1px solid #E8E1D2; border-radius:9px; padding:12px 14px; margin-bottom:16px; }
-  .paneel h2 { font-size:13px; color:#1B2C4F; margin-bottom:9px; }
+  .paneel { background:var(--wit); border:1px solid #E8E1D2; border-radius:9px; padding:12px 14px; margin-bottom:16px; }
+  .paneel h2 { font-size:13px; color:var(--navy); margin-bottom:9px; }
   .sig { display:flex; gap:8px; align-items:flex-start; font-size:12px; line-height:1.5; margin-bottom:7px; }
   .sig:last-child { margin-bottom:0; }
   .sig i { flex:none; margin-top:1px; font-size:16px; }
-  .sig.urgent i { color:#A32D2D; }
-  .sig.let_op i { color:#854F0B; }
-  .leeg { font-size:12px; color:#8A7F63; font-style:italic; }
+  .sig.urgent .ic { color:#A32D2D; }
+  .sig.let_op .ic { color:#854F0B; }
+  .leeg { font-size:12px; color:var(--grijs); font-style:italic; }
 
-  table { width:100%; border-collapse:collapse; background:#FBF8F0; border:1px solid #E8E1D2;
+  table { width:100%; border-collapse:collapse; background:var(--wit); border:1px solid #E8E1D2;
     border-radius:9px; overflow:hidden; }
   th { text-align:left; font-size:10.5px; letter-spacing:.06em; text-transform:uppercase;
-    color:#F4F1EA; background:#1B2C4F; padding:9px 11px; font-weight:600; white-space:nowrap; }
+    color:var(--papier); background:var(--navy); padding:9px 11px; font-weight:600; white-space:nowrap; }
   td { padding:9px 11px; font-size:12.5px; border-bottom:1px solid #EFEADE; vertical-align:middle; }
   tr:last-child td { border-bottom:none; }
   tr:hover td { background:#F6F2E8; }
-  .t-naam { font-weight:600; color:#1B2C4F; }
-  .t-sub { font-size:11px; color:#8A7F63; }
+  .t-naam { font-weight:600; color:var(--navy); }
+  .t-sub { font-size:11px; color:var(--grijs); }
   .p-actief { background:#E1F5EE; color:#0F6E56; }
   .p-proef { background:#F1EFE8; color:#5F5E5A; }
   .p-stop { background:#FAE3E3; color:#A32D2D; }
   .p-let { background:#FAEEDA; color:#854F0B; }
   .balk { height:5px; background:#EDE7D8; border-radius:3px; overflow:hidden; width:74px; margin-top:3px; }
-  .balk > i { display:block; height:100%; background:#C9A227; }
+  .balk > i { display:block; height:100%; background:var(--goud); }
   .balk.vol > i { background:#A32D2D; }
   .num { text-align:right; white-space:nowrap; font-variant-numeric:tabular-nums; }
 
-  /* ---- inlog ---- */
-  .inlogvak { max-width:340px; margin:40px auto; background:#FBF8F0; border:1px solid #E8E1D2;
-    border-radius:12px; padding:24px; }
-  .inlogvak h2 { font-size:16px; color:#1B2C4F; margin-bottom:4px; }
-  .inlogvak p { font-size:12px; color:#8A7F63; margin-bottom:18px; }
-  .inlogvak label { display:block; font-size:11.5px; color:#8A7F63; margin-bottom:5px; }
+  /* --- koopflow: tier-knoppen in app-detail --- */
+  .d-koop { border-top:1px solid #EFEADE; padding-top:18px; margin-top:18px; }
+  .d-koop .k-lbl { font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--grijs); font-weight:700; margin-bottom:10px; }
+  .tierkaarten { display:flex; gap:10px; flex-wrap:wrap; }
+  .tierkaart { flex:1 1 180px; max-width:240px; background:var(--papier); border:1px solid var(--rand);
+    border-radius:10px; padding:13px 14px; display:flex; flex-direction:column; gap:6px; }
+  .tierkaart .tk-naam { font-size:13px; font-weight:700; color:var(--navy); }
+  .tierkaart .tk-prijs { font-size:18px; font-weight:700; color:var(--navy); }
+  .tierkaart .tk-prijs .per { font-size:12px; font-weight:400; color:var(--grijs); }
+  .tierkaart .tk-oms { font-size:11.5px; color:var(--grijs); line-height:1.45; flex:1; }
+  .tierkaart .knop { justify-content:center; margin-top:6px; }
+  .koopfout { margin-top:12px; font-size:12px; color:#A32D2D; background:#FAE3E3;
+    border:1px solid #F0C9C9; border-radius:6px; padding:9px 11px; }
+
+  /* --- koopflow: klant-login-modal --- */
+  .k-overlay { position:fixed; inset:0; background:rgba(27,44,79,.45); z-index:60;
+    display:none; align-items:flex-start; justify-content:center; padding:40px 16px; overflow:auto; }
+  .k-overlay.open { display:flex; }
+  .k-vak { width:100%; max-width:360px; background:var(--wit); border:1px solid #E8E1D2;
+    border-radius:12px; padding:24px; position:relative; }
+  .k-vak h2 { font-size:17px; color:var(--navy); margin-bottom:4px; }
+  .k-vak .k-sub { font-size:12px; color:var(--grijs); margin-bottom:16px; }
+  .k-vak label { display:block; font-size:11.5px; color:var(--grijs); margin-bottom:5px; }
+  .k-vak input { width:100%; padding:9px 11px; font-size:13px; font-family:inherit;
+    border:1px solid var(--rand); border-radius:6px; background:#FFFDF8; color:var(--inkt); margin-bottom:13px; }
+  .k-vak input:focus { outline:none; border-color:var(--goud); }
+  .k-sluit { position:absolute; top:10px; right:10px; background:none; border:none; cursor:pointer;
+    font-size:18px; color:var(--grijs); line-height:1; padding:4px 8px; }
+  .k-sluit:hover { color:var(--navy); }
+  .k-wissel { margin-top:14px; font-size:12px; color:var(--grijs); text-align:center; }
+  .k-wissel a { color:var(--navy); font-weight:600; cursor:pointer; text-decoration:underline; }
+  .k-info { margin-top:12px; font-size:12px; color:#0F6E56; background:#E1F5EE;
+    border:1px solid #BFE5D6; border-radius:6px; padding:9px 11px; }
+
+  /* --- koopflow: banner na terugkeer van Stripe --- */
+  .betaalbanner { display:flex; align-items:flex-start; gap:10px; border-radius:10px;
+    padding:13px 15px; font-size:13px; margin-bottom:16px; line-height:1.5; }
+  .betaalbanner.goed { background:#E1F5EE; border:1px solid #BFE5D6; color:#0F6E56; }
+  .betaalbanner.slecht { background:#FAEEDA; border:1px solid #EED9AE; color:#854F0B; }
+  .betaalbanner b { display:block; margin-bottom:2px; }
+  .betaalbanner .ic { flex:none; margin-top:2px; }
+
+  /* --- inlog --- */
+  .inlogvak { max-width:340px; margin:50px auto; background:var(--wit); border:1px solid #E8E1D2;
+    border-radius:12px; padding:26px; }
+  .inlogvak h2 { font-size:17px; color:var(--navy); margin-bottom:4px; }
+  .inlogvak p { font-size:12px; color:var(--grijs); margin-bottom:18px; }
+  .inlogvak label { display:block; font-size:11.5px; color:var(--grijs); margin-bottom:5px; }
   .inlogvak input { width:100%; padding:9px 11px; font-size:13px; font-family:inherit;
-    border:1px solid #D8D2C4; border-radius:6px; background:#FFFDF8; color:#2A2A28; margin-bottom:13px; }
-  .inlogvak input:focus { outline:none; border-color:#C9A227; }
+    border:1px solid var(--rand); border-radius:6px; background:#FFFDF8; color:var(--inkt); margin-bottom:13px; }
+  .inlogvak input:focus { outline:none; border-color:var(--goud); }
   .breed { width:100%; justify-content:center; padding:10px; }
   .inlogfout { margin-top:12px; font-size:12px; color:#A32D2D; background:#FAE3E3;
     border:1px solid #F0C9C9; border-radius:6px; padding:9px 11px; }
 
-  .melding { padding:30px; text-align:center; font-size:13px; color:#8A7F63; }
+  .melding { padding:30px; text-align:center; font-size:13px; color:var(--grijs); }
   .verborgen { display:none !important; }
+
   @media (max-width:720px){
     .shell { margin:0; border-radius:0; }
-    .hero h1 { font-size:26px; }
-    .beheer-body { flex-direction:column; }
-    .zij { width:100%; border-right:none; border-bottom:1px solid #E0D8C4; }
-    .zij nav { flex-direction:row; flex-wrap:wrap; }
+    .werk { flex-direction:column; }
+    .zij { width:100%; border-right:none; border-bottom:1px solid var(--rand); }
+    .zij-nav { flex-direction:row; flex-wrap:wrap; }
+    .welkom h2 { font-size:22px; }
   }
 </style>
 </head>
@@ -193,140 +317,207 @@ window.FW_TEKST = {
 
 <div class="shell">
 
-  <!-- ============ TOPBALK (altijd zichtbaar) ============ -->
-  <div class="top">
-    <div class="merk">
-      <svg width="34" height="34" viewBox="0 0 40 40" aria-label="Fluid Waves">
-        <rect x="1" y="1" width="38" height="38" rx="8" fill="#1B2C4F"/>
-        <path d="M7 16 q3.5 -5 7 0 t7 0 t7 0" fill="none" stroke="#C9A227" stroke-width="2.2" stroke-linecap="round"/>
-        <path d="M7 22 q3.5 -5 7 0 t7 0 t7 0" fill="none" stroke="#C9A227" stroke-width="2.2" stroke-linecap="round" opacity=".7"/>
-        <path d="M7 28 q3.5 -5 7 0 t7 0 t7 0" fill="none" stroke="#C9A227" stroke-width="2.2" stroke-linecap="round" opacity=".4"/>
+  <!-- ============ TOPBALK ============ -->
+  <div class="topbar">
+    <div class="tb-merk">
+      <!-- Golfsymbool exact volgens brandbook: één sinusgolf (periode 100,
+           amplitude 10, lijndikte 8, ronde uiteinden), driemaal op y = -15,5 / 0 / +15,5.
+           Volgorde boven→onder: Signal Slate · Goud · Sea Mist. -->
+      <svg class="fw-golf" width="54" height="40" viewBox="0 5 108 59" aria-label="Fluid Waves" role="img">
+        <g fill="none" stroke-width="8" stroke-linecap="round">
+          <path d="M4,14.5 c12.5,-13.33 37.5,-13.33 50,0 c12.5,13.33 37.5,13.33 50,0" stroke="#8D96A6"/>
+          <path d="M4,30   c12.5,-13.33 37.5,-13.33 50,0 c12.5,13.33 37.5,13.33 50,0" stroke="#C9A227"/>
+          <path d="M4,45.5 c12.5,-13.33 37.5,-13.33 50,0 c12.5,13.33 37.5,13.33 50,0" stroke="#DCE3EA"/>
+        </g>
       </svg>
       <div>
         <div class="n1">Fluid Waves</div>
-        <div class="n2" id="merkOnder">read the mountain · read the vibes</div>
+        <div class="n2">The Clever App Factory</div>
       </div>
     </div>
-    <div class="top-rechts" id="topRechts">
-      <button class="knop" id="beheerKnop" onclick="naarBeheer()"><i class="ti ti-lock" aria-hidden="true"></i>Beheer</button>
+    <div class="tb-rechts" id="topRechts">
+      <button class="knop knop-licht" id="beheerKnop" onclick="naarBeheer()"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/><circle cx="12" cy="15.5" r="1"/></svg>Beheer</button>
     </div>
   </div>
 
-  <!-- ============ SECTIEBALK (alleen in beheer) ============ -->
-  <div class="secties verborgen" id="sectiebalk">
-    <div class="sec actief" data-sec="klanten" onclick="beheerSectie('klanten')"><i class="ti ti-users" aria-hidden="true"></i>Klanten</div>
-    <div class="sec" data-sec="prijzen" onclick="beheerSectie('prijzen')"><i class="ti ti-tag" aria-hidden="true"></i>Prijzen</div>
-    <div class="sec" data-sec="apps" onclick="beheerSectie('apps')"><i class="ti ti-apps" aria-hidden="true"></i>Apps</div>
+  <!-- ============ HORIZONTALE MENUBALK ============ -->
+  <div class="menubar" id="menubar">
+    <div class="mtab actief" data-tab="apps" onclick="kiesTab('apps')"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/></svg>Apps</div>
+    <div class="mtab" data-tab="over" onclick="kiesTab('over')"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></svg>Over</div>
+    <div class="mtab" data-tab="beheer" onclick="kiesTab('beheer')"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/><circle cx="12" cy="15.5" r="1"/></svg>Beheer</div>
   </div>
 
-  <!-- ============ ETALAGE ============ -->
-  <div class="etalage" id="etalage">
-    <div class="hero">
-      <svg viewBox="0 0 300 200" preserveAspectRatio="none" aria-hidden="true">
-        <path d="M0 100 q40 -40 80 0 t80 0 t80 0 t80 0" fill="none" stroke="#C9A227" stroke-width="2"/>
-        <path d="M0 130 q40 -40 80 0 t80 0 t80 0 t80 0" fill="none" stroke="#C9A227" stroke-width="1.4"/>
-        <path d="M0 160 q40 -40 80 0 t80 0 t80 0 t80 0" fill="none" stroke="#C9A227" stroke-width="1"/>
-      </svg>
-      <div class="eyebrow" id="heroEyebrow"></div>
-      <h1 id="heroTitel"></h1>
-      <p id="heroOnder"></p>
-      <div class="knoppen">
-        <a href="#apps" class="knop knop-goud">Bekijk de apps<i class="ti ti-arrow-down" aria-hidden="true"></i></a>
-        <a href="#over" class="knop knop-open">Over</a>
+  <!-- ============ WERKVLAK ============ -->
+  <div class="werk">
+
+    <!-- LINKER SIDEBAR — inhoud wisselt per tab -->
+    <aside class="zij" id="zij">
+      <!-- etalage: apps als menu -->
+      <div id="zijApps">
+        <div class="zij-lbl">Apps</div>
+        <div class="zij-nav" id="appMenu"><div class="melding">Laden…</div></div>
       </div>
-    </div>
 
-    <div class="blok" id="apps">
-      <div class="kop"><span>01</span><h2 id="appsKop"></h2></div>
-      <p class="kop-sub" id="appsOnder"></p>
-      <div class="apps" id="appLijst"><div class="melding">Apps laden…</div></div>
-    </div>
-
-    <div class="blok over" id="over">
-      <div class="kop"><span>02</span><h2 id="overKop"></h2></div>
-      <p id="overTekst"></p>
-    </div>
-
-    <div class="voetbalk">
-      <div id="voetTekst"></div>
-      <div>Wassenaar, NL</div>
-    </div>
-  </div>
-
-  <!-- ============ BEHEER ============ -->
-  <div class="beheer" id="beheer">
-
-    <!-- inlog -->
-    <div id="inlog">
-      <div class="inlogvak">
-        <h2>Beheer</h2>
-        <p>Log in om klanten, prijzen en gebruik te beheren.</p>
-        <label for="bEmail">E-mail</label>
-        <input id="bEmail" type="email" autocomplete="username" placeholder="naam@voorbeeld.nl">
-        <label for="bWw">Wachtwoord</label>
-        <input id="bWw" type="password" autocomplete="current-password" placeholder="••••••••">
-        <button class="knop knop-navy breed" id="bInlog">Inloggen</button>
-        <div id="inlogFout" class="inlogfout verborgen"></div>
-        <p style="margin-top:14px;"><a href="#" onclick="naarEtalage();return false;" style="color:#8A7F63;font-size:12px;">← terug naar de etalage</a></p>
-      </div>
-    </div>
-
-    <!-- dashboard -->
-    <div class="beheer-body verborgen" id="beheerBody">
-      <aside class="zij">
+      <!-- beheer: app-kiezer + functies -->
+      <div id="zijBeheer" class="verborgen">
         <div class="kiezer">
-          <div class="kiezer-lbl">App in beeld</div>
+          <div class="kiezer-lbl">App in beheer</div>
           <button class="kiezer-knop" id="appKnop" onclick="toggleAppKiezer(event)">
             <span class="ini" id="appIni">JR</span>
             <span class="nm" id="appNaam">Job Radar</span>
-            <i class="ti ti-chevron-down" style="font-size:15px;color:#8A7F63;margin-left:auto;" aria-hidden="true"></i>
+            <svg class="ic ti-chevron-down" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
           </button>
+          <div class="kiezer-lijst" id="appLijst"></div>
         </div>
         <div class="zij-lbl">Beheer</div>
-        <nav>
-          <button class="actief" data-v="klanten" onclick="beheerSectie('klanten')"><i class="ti ti-users" aria-hidden="true"></i>Klanten</button>
-          <button data-v="prijzen" onclick="beheerSectie('prijzen')"><i class="ti ti-tag" aria-hidden="true"></i>Prijzen</button>
-          <button data-v="apps" onclick="beheerSectie('apps')"><i class="ti ti-apps" aria-hidden="true"></i>Apps</button>
-        </nav>
+        <div class="zij-nav" id="zijNav"></div>
         <div class="zij-voet">
-          <button class="knop breed" onclick="uitloggen()"><i class="ti ti-logout" aria-hidden="true"></i>Uitloggen</button>
+          <button class="knop breed" onclick="uitloggen()"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>Uitloggen</button>
         </div>
-      </aside>
+      </div>
+    </aside>
 
-      <main class="hoofd">
+    <!-- HOOFDVLAK -->
+    <main class="hoofd">
+
+      <!-- TAB: APPS -->
+      <div id="paneelApps">
+        <div id="betaalBanner"></div>
         <div class="hoofd-kop">
           <div>
-            <h1 id="hoofdTitel">Klanten</h1>
-            <div class="datum" id="hoofdDatum"></div>
+            <h1 id="appsKop">De apps</h1>
+            <div class="datum" id="appsOnder">Make your own choice</div>
           </div>
-          <button class="knop" onclick="laadBeheer()"><i class="ti ti-refresh" aria-hidden="true"></i>Ververs</button>
         </div>
-        <div id="hoofdInhoud"><div class="melding">Laden…</div></div>
-      </main>
-    </div>
+        <div id="appDetail">
+          <!-- welkomstblok bij openen -->
+          <div class="welkom" id="welkomBlok">
+            <svg class="golf" viewBox="0 0 300 200" preserveAspectRatio="none" aria-hidden="true">
+              <path d="M0 90 q40 -40 80 0 t80 0 t80 0 t80 0" fill="none" stroke="#C9A227" stroke-width="2.4"/>
+              <path d="M0 120 q40 -40 80 0 t80 0 t80 0 t80 0" fill="none" stroke="#9BB0C9" stroke-width="1.8"/>
+              <path d="M0 150 q40 -40 80 0 t80 0 t80 0 t80 0" fill="none" stroke="#C9A227" stroke-width="1.2"/>
+            </svg>
+            <div class="eyebrow" id="welkomEyebrow"></div>
+            <h2 id="welkomTitel"></h2>
+            <p id="welkomOnder"></p>
+            <div class="hint"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 18l-6-6 6-6"/></svg>Kies links een app om te beginnen</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB: OVER -->
+      <div id="paneelOver" class="verborgen">
+        <div class="hoofd-kop"><div><h1 id="overKop">Fluid Waves</h1></div></div>
+        <div class="over-blok">
+          <h3>The Clever App Factory</h3>
+          <p id="overTekst"></p>
+        </div>
+      </div>
+
+      <!-- TAB: BEHEER -->
+      <div id="paneelBeheer" class="verborgen">
+        <!-- inlog -->
+        <div id="inlog">
+          <div class="inlogvak">
+            <h2>Beheer</h2>
+            <p>Log in om klanten, prijzen en gebruik te beheren.</p>
+            <label for="bEmail">E-mail</label>
+            <input id="bEmail" type="email" autocomplete="username" placeholder="naam@voorbeeld.nl">
+            <label for="bWw">Wachtwoord</label>
+            <input id="bWw" type="password" autocomplete="current-password" placeholder="••••••••">
+            <button class="knop knop-navy breed" id="bInlog">Inloggen</button>
+            <div id="inlogFout" class="inlogfout verborgen"></div>
+          </div>
+        </div>
+        <!-- dashboard -->
+        <div id="beheerBody" class="verborgen">
+          <div class="hoofd-kop">
+            <div>
+              <h1 id="hoofdTitel">Klanten</h1>
+              <div class="datum" id="hoofdDatum"></div>
+            </div>
+            <button class="knop" onclick="laadBeheer()"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/></svg>Ververs</button>
+          </div>
+          <div id="hoofdInhoud"><div class="melding">Laden…</div></div>
+        </div>
+      </div>
+
+    </main>
   </div>
 </div>
 
+<!-- ============ KLANT-LOGIN (koopflow) ============ -->
+<div class="k-overlay" id="kOverlay">
+  <div class="k-vak">
+    <button class="k-sluit" onclick="sluitKlantModal()" aria-label="Sluiten">&times;</button>
+    <h2 id="kTitel">Inloggen om af te rekenen</h2>
+    <p class="k-sub" id="kSub">Met je account koppel je het abonnement aan jouw omgeving.</p>
+    <label for="kEmail">E-mail</label>
+    <input id="kEmail" type="email" autocomplete="username" placeholder="naam@voorbeeld.nl">
+    <label for="kWw">Wachtwoord</label>
+    <input id="kWw" type="password" autocomplete="current-password" placeholder="••••••••">
+    <button class="knop knop-navy breed" id="kActieKnop" onclick="klantActie()">Inloggen en doorgaan</button>
+    <div id="kFout" class="inlogfout verborgen"></div>
+    <div id="kInfo" class="k-info verborgen"></div>
+    <div class="k-wissel" id="kWissel">Nog geen account? <a onclick="wisselKlantModus()">Registreren</a></div>
+  </div>
+</div>
 <script>
+// ================= INGEBOUWDE SVG-ICONEN =================
+// Zelfstandige iconen in het bestand — geen afhankelijkheid van een CDN-lettertype.
+// Elk pad tekent op een 24x24 raster, in de lijnstijl van de huisstijl.
+const ICOON_PAD = {
+  // app-iconen
+  "receipt":      '<path d="M5 3v18l2-1.2 2 1.2 2-1.2 2 1.2 2-1.2 2 1.2V3l-2 1.2-2-1.2-2 1.2-2-1.2-2 1.2z"/><path d="M9 8h6M9 12h6"/>',
+  "radar":        '<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/><path d="M12 12l6-4"/>',
+  "file-search":  '<path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7l5 5v3"/><circle cx="16" cy="17" r="2.5"/><path d="M18.5 19.5L21 22"/>',
+  "golf":         '<path d="M11 3v15"/><path d="M11 5l7 3-7 3"/><circle cx="11" cy="20" r="2"/><path d="M6 21h10"/>',
+  "playlist":     '<path d="M4 6h11M4 11h11M4 16h7"/><circle cx="18" cy="16" r="3"/><path d="M21 16V9"/>',
+  "calendar":     '<rect x="4" y="5" width="16" height="16" rx="2"/><path d="M4 9h16M8 3v4M16 3v4"/><path d="M9 14l2 2 4-4"/>',
+  "app":          '<rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/>',
+  // UI-iconen
+  "lock":         '<rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/><circle cx="12" cy="15.5" r="1"/>',
+  "info":         '<circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/>',
+  "apps":         '<rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/>',
+  "arrow-left":   '<path d="M19 12H5M11 18l-6-6 6-6"/>',
+  "chevron-down": '<path d="M6 9l6 6 6-6"/>',
+  "play":         '<path d="M7 5v14l11-7z"/>',
+  "refresh":      '<path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/>',
+  "logout":       '<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/>',
+  "users":        '<circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><path d="M16 4.5a3.2 3.2 0 0 1 0 6.5M21 20c0-2.5-1.5-4.7-3.7-5.6"/>',
+  "tag":          '<path d="M11 3H5a2 2 0 0 0-2 2v6l9 9a2 2 0 0 0 2.8 0l5-5a2 2 0 0 0 0-2.8z"/><circle cx="8" cy="8" r="1.3"/>',
+  "palette":      '<path d="M12 3a9 9 0 0 0 0 18c1.1 0 1.7-1 1.2-2-.5-1 .1-2 1.3-2H17a4 4 0 0 0 4-4c0-5-4-8-9-8z"/><circle cx="8" cy="10" r="1"/><circle cx="12" cy="7.5" r="1"/><circle cx="16" cy="10" r="1"/>',
+  "eye":          '<path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/>',
+  "download":     '<path d="M12 3v12M8 11l4 4 4-4"/><path d="M5 19h14"/>',
+  "trash":        '<path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/>',
+  "alert":        '<path d="M12 3l9 16H3z"/><path d="M12 10v4M12 17h.01"/>'
+};
+function svgIcoon(naam, klasse) {
+  const p = ICOON_PAD[naam];
+  if (!p) return "";
+  return '<svg class="ic ' + (klasse||"") + '" viewBox="0 0 24 24" fill="none" stroke="currentColor" ' +
+         'stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + p + '</svg>';
+}
+
 const T = window.FW_TEKST;
 const cfg = window.SUPABASE_CONFIG || null;
 let sb = null;
 let beheerToken = null;
-let huidigeApp = "job-radar";
+let huidigeApp = "platform";
 let laatsteData = null;
 
 // ---- teksten invullen ----
-document.getElementById("heroEyebrow").textContent = T.hero_eyebrow;
-document.getElementById("heroTitel").textContent = T.hero_titel;
-document.getElementById("heroOnder").textContent = T.hero_onder;
 document.getElementById("appsKop").textContent = T.apps_kop;
 document.getElementById("appsOnder").textContent = T.apps_onder;
 document.getElementById("overKop").textContent = T.over_kop;
 document.getElementById("overTekst").textContent = T.over_tekst;
-document.getElementById("voetTekst").textContent = T.voet;
+// welkomstblok
+document.getElementById("welkomEyebrow").textContent = T.hero_eyebrow || "Smart Apps™ in een Smart Dashboard™";
+document.getElementById("welkomTitel").textContent = T.hero_titel || "Slimme AI-toepassingen voor ondernemers";
+document.getElementById("welkomOnder").textContent = T.hero_onder || "Kies een app uit het menu om te zien wat hij doet, wat hij kost, en om hem te starten.";
 
-const ikonen = { "job-radar":"ti-radar", "tenderlead":"ti-file-search", "golf-score":"ti-golf", "live-from":"ti-playlist" };
-const euro = c => "€ " + (c/100).toFixed(0);
+const ikonen = { "smart-admin":"receipt", "job-radar":"radar", "tenderlead":"file-search", "golf-score":"golf", "live-from":"playlist", "smart-events":"calendar", "table-art":"palette" };
+const euro = c => { const v=c/100; return "€ " + (Number.isInteger(v) ? v.toFixed(0) : v.toFixed(2).replace(".",",")); };
 const euroF = b => "€ " + Number(b||0).toFixed(2).replace(".",",");
 const datumNL = d => d ? new Date(d).toLocaleDateString("nl-NL",{day:"2-digit",month:"short",year:"numeric"}) : "—";
 
@@ -347,19 +538,40 @@ function maakClient() {
   return true;
 }
 
-// ================= NAVIGATIE ETALAGE <-> BEHEER =================
-function naarBeheer() {
-  document.getElementById("etalage").classList.add("verborgen");
-  document.getElementById("beheer").style.display = "block";
-  document.getElementById("beheerKnop").classList.add("verborgen");
-  proefInlog();
+// ================= TAB-NAVIGATIE =================
+// De horizontale menubalk stuurt drie tabs: apps, over, beheer.
+// De sidebar en het hoofdvlak wisselen mee.
+let huidigeTab = "apps";
+
+function kiesTab(tab) {
+  huidigeTab = tab;
+  document.querySelectorAll(".mtab").forEach(t => t.classList.toggle("actief", t.dataset.tab === tab));
+
+  // hoofdvlak-panelen
+  document.getElementById("paneelApps").classList.toggle("verborgen", tab !== "apps");
+  document.getElementById("paneelOver").classList.toggle("verborgen", tab !== "over");
+  document.getElementById("paneelBeheer").classList.toggle("verborgen", tab !== "beheer");
+
+  // sidebar-inhoud
+  const zijApps = document.getElementById("zijApps");
+  const zijBeheer = document.getElementById("zijBeheer");
+  if (tab === "apps") {
+    zijApps.classList.remove("verborgen");
+    zijBeheer.classList.add("verborgen");
+  } else if (tab === "beheer") {
+    zijApps.classList.add("verborgen");
+    // beheer-sidebar pas tonen als er is ingelogd
+  } else { // over
+    zijApps.classList.add("verborgen");
+    zijBeheer.classList.add("verborgen");
+  }
+
+  if (tab === "beheer") proefInlog();
 }
-function naarEtalage() {
-  document.getElementById("beheer").style.display = "none";
-  document.getElementById("etalage").classList.remove("verborgen");
-  document.getElementById("sectiebalk").classList.add("verborgen");
-  document.getElementById("beheerKnop").classList.remove("verborgen");
-}
+
+// "Beheer"-knop rechtsboven doet hetzelfde als de tab.
+function naarBeheer() { kiesTab("beheer"); }
+function naarEtalage() { kiesTab("apps"); }
 
 // probeer een bestaande sessie; anders inlogscherm
 async function proefInlog() {
@@ -373,14 +585,17 @@ async function proefInlog() {
 function toonInlog() {
   document.getElementById("inlog").classList.remove("verborgen");
   document.getElementById("beheerBody").classList.add("verborgen");
-  document.getElementById("sectiebalk").classList.add("verborgen");
+  document.getElementById("zijBeheer").classList.add("verborgen");
   const e = document.getElementById("bEmail"); if (e && !e.value) e.focus();
 }
 function toonDashboard() {
   document.getElementById("inlog").classList.add("verborgen");
   document.getElementById("beheerBody").classList.remove("verborgen");
-  document.getElementById("sectiebalk").classList.remove("verborgen");
-  laadBeheer();
+  document.getElementById("zijBeheer").classList.remove("verborgen");
+  bouwAppLijst();
+  bouwSecties();
+  const a = BEHEER_APPS[huidigeApp] || BEHEER_APPS["job-radar"];
+  beheerSectie(a.standaard);
 }
 
 async function inloggen() {
@@ -407,37 +622,111 @@ async function inloggen() {
 async function uitloggen() {
   beheerToken = null;
   try { if (sb) await sb.auth.signOut(); } catch(e){}
-  naarEtalage();
+  document.getElementById("beheerBody").classList.add("verborgen");
+  document.getElementById("zijBeheer").classList.add("verborgen");
+  document.getElementById("inlog").classList.remove("verborgen");
+  kiesTab("apps");
 }
 
 // ================= ETALAGE: apps laden =================
-function kaart(app, tiers) {
-  const ik = ikonen[app.id] || "ti-app-window";
-  const merk = app.merknaam ? `<div class="merkje">${app.merknaam}</div>` : "";
-  const mijn = (tiers||[]).filter(t => t.app_id === app.id);
+let etalageApps = [];
+let etalagePrijzen = [];
+
+// prijsregel voor een app: goedkoopste betaalde tier, of gratis
+function appPrijs(app) {
+  const mijn = etalagePrijzen.filter(t => t.app_id === app.id);
   const gratis = mijn.find(t => t.prijs_cent === 0);
-  const betaald = mijn.filter(t => t.prijs_cent > 0).sort((a,b)=>a.prijs_cent-b.prijs_cent)[0];
-  let prijs = "";
-  if (betaald) {
-    const per = betaald.interval==="jaar"?"jaar":betaald.interval==="eenmalig"?"":"mnd";
-    prijs = `<span class="prijs">vanaf <b>${euro(betaald.prijs_cent)}</b>${per?"/"+per:""}</span>`;
-  } else if (gratis) prijs = `<span class="prijs"><b>Gratis</b></span>`;
-
-  const pilStatus = app.status==="live" ? '<span class="pil pil-live">live</span>'
-                  : '<span class="pil pil-bouw">binnenkort</span>';
-  const links = prijs || pilStatus;
-  const kanOpen = app.url && app.status === "live";
-  const rechts = kanOpen
-    ? `<a class="open" href="${app.url}" target="_blank" rel="noopener">Openen<i class="ti ti-arrow-right" aria-hidden="true"></i></a>`
-    : (prijs ? pilStatus : "");
-
-  return `<div class="app"><div class="ik"><i class="ti ${ik}" aria-hidden="true"></i></div>
-    <h3>${app.naam}</h3>${merk}<p>${app.omschrijving||""}</p>
-    <div class="voet">${links}${rechts}</div></div>`;
+  const betaald = mijn.filter(t => t.prijs_cent > 0).sort((a,b)=>a.prijs_cent-b.prijs_cent);
+  if (betaald.length) {
+    const b = betaald[0];
+    const per = b.interval==="jaar"?"jaar":b.interval==="eenmalig"?"":"mnd";
+    return { kort: `vanaf ${euro(b.prijs_cent)}`, groot:`<b>${euro(b.prijs_cent)}</b><span class="per">${per?`/${per}`:""} · ex btw</span>`,
+             tiers: mijn };
+  }
+  if (gratis) return { kort:"Gratis", groot:"<b>Gratis</b>", tiers: mijn };
+  return { kort: app.status==="live"?"live":"binnenkort", groot:"", tiers: [] };
 }
+
+// linkermenu opbouwen
+function bouwMenu() {
+  const menu = document.getElementById("appMenu");
+  menu.innerHTML = etalageApps.map(a => {
+    const ik = ikonen[a.id] || "ti-app-window";
+    const p = appPrijs(a);
+    return `<button class="app-blok" data-app="${a.id}" onclick="kiesApp('${a.id}')">
+      <span class="bi">${svgIcoon(ik)}</span>
+      <span><span class="bn">${a.naam}</span><br><span class="bs">${p.kort}</span></span>
+    </button>`;
+  }).join("");
+}
+
+// detail van één app rechts tonen
+function kiesApp(id) {
+  const app = etalageApps.find(a => a.id === id);
+  if (!app) return;
+  document.querySelectorAll(".app-blok").forEach(b => b.classList.toggle("actief", b.dataset.app===id));
+
+  const ik = ikonen[app.id] || "ti-app-window";
+  const uit = (window.FW_APP_UITLEG && window.FW_APP_UITLEG[app.id]) || {};
+  const p = appPrijs(app);
+  const merk = app.merknaam ? `<div class="d-merk">${app.merknaam}</div>` : "";
+
+  // tiers-overzicht: alle vormen met hun prijs
+  let tiersRegel = "";
+  if (p.tiers.length) {
+    tiersRegel = `<div class="d-tiers">` + p.tiers
+      .sort((a,b)=>a.prijs_cent-b.prijs_cent)
+      .map(t => {
+        const per = t.interval==="jaar"?"/jaar":t.interval==="eenmalig"?"":t.interval==="gratis"?"":"/mnd";
+        const prijs = t.prijs_cent===0 ? "gratis" : euro(t.prijs_cent)+per+" ex btw";
+        const scans = t.scans_per_periode ?? t.scans_totaal;
+        return `${t.naam}: ${prijs}${scans?` · ${scans} scans`:""}`;
+      }).join(" &nbsp;·&nbsp; ") + `</div>`;
+  }
+
+  const kanOpen = app.url && app.status === "live";
+  const startKnop = kanOpen
+    ? `<a href="${app.url}" target="_blank" rel="noopener" class="knop knop-navy">${svgIcoon("play")}Start deze app</a>`
+    : `<span class="pil pil-bouw">binnenkort beschikbaar</span>`;
+
+  // koopblok: betaalde tiers als kaarten met een abonneer-knop
+  const koopTiers = kanOpen
+    ? p.tiers.filter(t => t.prijs_cent > 0).sort((a,b)=>a.prijs_cent-b.prijs_cent)
+    : [];
+  const koopBlok = koopTiers.length ? `
+    <div class="d-koop">
+      <div class="k-lbl">Abonneren</div>
+      <div class="tierkaarten">${koopTiers.map(t => {
+        const per = t.interval==="jaar" ? "/jaar" : t.interval==="eenmalig" ? "" : "/mnd";
+        const scans = t.scans_per_periode ?? t.scans_totaal;
+        return `<div class="tierkaart">
+          <div class="tk-naam">${t.naam}</div>
+          <div class="tk-prijs">${euro(t.prijs_cent)}<span class="per">${per} · ex btw</span></div>
+          <div class="tk-oms">${t.omschrijving || (scans ? scans + " scans per periode" : "")}</div>
+          <button class="knop knop-navy" data-tier="${t.id}" onclick="koopTier('${t.id}', this)">Abonneer</button>
+        </div>`;
+      }).join("")}</div>
+      <div id="koopFout"></div>
+    </div>` : "";
+
+  document.getElementById("appDetail").innerHTML = `
+    <div class="app-detail">
+      <div class="d-ik">${svgIcoon(ik)}</div>
+      ${merk}<h3>${app.naam}</h3>
+      ${uit.kop ? `<div class="d-kop">${uit.kop}</div>` : ""}
+      <div class="d-tekst">${uit.tekst || app.omschrijving || ""}</div>
+      ${uit.voor ? `<div class="d-voor">${uit.voor}</div>` : ""}
+      <div class="d-onder">
+        ${p.groot ? `<div><div class="d-prijs">${p.groot}</div>${tiersRegel}</div>` : ""}
+        ${startKnop}
+      </div>
+      ${koopBlok}
+    </div>`;
+}
+
 async function laadApps() {
-  const doel = document.getElementById("appLijst");
-  if (!cfg) { doel.innerHTML='<div class="melding">Configuratie ontbreekt.</div>'; return; }
+  const menu = document.getElementById("appMenu");
+  if (!cfg) { menu.innerHTML='<div class="melding">Configuratie ontbreekt.</div>'; return; }
   try {
     const c = window.supabase.createClient(cfg.url, cfg.anonKey);
     const [apps, prijzen] = await Promise.all([
@@ -445,9 +734,12 @@ async function laadApps() {
       c.from("prijslijst").select("*")
     ]);
     if (apps.error) throw apps.error;
-    const lijst = apps.data || [];
-    doel.innerHTML = lijst.length ? lijst.map(a=>kaart(a,prijzen.data)).join("") : '<div class="melding">Nog geen apps.</div>';
-  } catch(e) { console.error(e); doel.innerHTML='<div class="melding">Apps konden niet laden.</div>'; }
+    etalageApps = apps.data || [];
+    etalagePrijzen = prijzen.data || [];
+    if (!etalageApps.length) { menu.innerHTML='<div class="melding">Nog geen apps.</div>'; return; }
+    bouwMenu();
+    // Geen app vooraf openen: het welkomstblok blijft staan tot de bezoeker kiest.
+  } catch(e) { console.error(e); menu.innerHTML='<div class="melding">Apps konden niet laden.</div>'; }
 }
 
 // ================= BEHEER: gegevens =================
@@ -463,18 +755,26 @@ async function laadBeheer() {
     if (res.status===403) { beheerToken=null; document.getElementById("hoofdInhoud").innerHTML='<div class="melding">Dit account heeft geen beheerrechten.</div>'; return; }
     if (!res.ok) { const e=await res.json().catch(()=>({})); document.getElementById("hoofdInhoud").innerHTML=`<div class="melding">Kon niet laden: ${e.error||res.status}</div>`; return; }
     laatsteData = await res.json();
-    beheerSectie(document.querySelector('.zij nav button.actief')?.dataset.v || "klanten");
+    beheerSectie(document.querySelector('#zijNav button.actief')?.dataset.v || BEHEER_APPS[huidigeApp]?.standaard || "klanten");
   } catch(e) { document.getElementById("hoofdInhoud").innerHTML=`<div class="melding">Verbinding mislukt.</div>`; }
 }
 
 function beheerSectie(naam) {
-  document.querySelectorAll('.zij nav button, .secties .sec').forEach(b=>{
-    const actief = (b.dataset.v||b.dataset.sec)===naam;
-    b.classList.toggle('actief', actief);
+  document.querySelectorAll('#zijNav button').forEach(b=>{
+    b.classList.toggle('actief', b.dataset.v===naam);
   });
-  const titels = { klanten:"Klanten", prijzen:"Prijzen en tiers", apps:"Apps" };
+  const titels = { klanten:"Klanten", prijzen:"Prijzen en tiers", apps:"Apps", tableart:"Table Art", platform:"Fluid Waves platform", smartadmin:"Smart Admin" };
   document.getElementById("hoofdTitel").textContent = titels[naam] || "Beheer";
-  if (!laatsteData) return;
+
+  // Het platformoverzicht haalt zijn eigen gegevens op via /api/platform-beheer.
+  if (naam==="platform") { toonPlatform(); return; }
+  if (naam==="smartadmin") { toonPlatformApp("smart-admin", "Smart Admin"); return; }
+
+  // TAF haalt zijn eigen gegevens op via /api/taf-beheer.
+  if (naam==="tableart") { toonTableArt(); return; }
+
+  // Job Radar-secties leunen op de gedeelde laatsteData van /api/beheer.
+  if (!laatsteData) { laadBeheer(); return; }
   if (naam==="klanten") toonKlanten(laatsteData);
   else if (naam==="prijzen") toonPrijzen(laatsteData);
   else if (naam==="apps") toonApps(laatsteData);
@@ -494,7 +794,7 @@ function toonKlanten(d) {
   </div>`;
 
   const sigBlok = `<div class="paneel"><h2>Vraagt aandacht</h2>${
-    sig.length ? sig.map(s=>`<div class="sig ${s.ernst}"><i class="ti ${s.ernst==="urgent"?"ti-alert-triangle":"ti-info-circle"}" aria-hidden="true"></i><span>${s.tekst}</span></div>`).join("")
+    sig.length ? sig.map(s=>`<div class="sig ${s.ernst}">${svgIcoon(s.ernst==="urgent"?"alert":"info")}<span>${s.tekst}</span></div>`).join("")
     : '<div class="leeg">Niets bijzonders.</div>'}</div>`;
 
   const rijen = kl.length ? kl.map(k=>{
@@ -513,7 +813,24 @@ function toonKlanten(d) {
       <td class="num">${euroF(k.kosten_maand)}<div class="t-sub">${euroF(k.kosten_totaal)} totaal</div></td></tr>`;
   }).join("") : `<tr><td colspan="5" class="melding">Nog geen klanten.</td></tr>`;
 
-  document.getElementById("hoofdInhoud").innerHTML = metrics + sigBlok +
+  // kostprijs per scan, met marge-advies dat live meerekent
+  const kp = c.kostprijs_mediaan;
+  const kostBlok = c.kostprijs_gemeten > 0 ? `<div class="paneel">
+    <h2>Kostprijs per scan <span class="t-sub" style="font-weight:400">· 30 dagen, ${c.kostprijs_gemeten} scans</span></h2>
+    <div class="metrics" style="margin-bottom:11px;">
+      <div class="metric"><div class="l">Mediaan</div><div class="n">${euroF(kp)}</div><div class="s">hierop prijzen</div></div>
+      <div class="metric"><div class="l">Gemiddeld</div><div class="n">${euroF(c.kostprijs_gemiddeld)}</div><div class="s">met uitschieters</div></div>
+      <div class="metric"><div class="l">Zware scan</div><div class="n">${euroF(c.kostprijs_p90)}</div><div class="s">10% zit hoger</div></div>
+    </div>
+    <div style="font-size:12px;line-height:1.6;color:#5F5E5A;border-top:1px solid #EFEADE;padding-top:10px;">
+      Bij ${euroF(kp)} mediaan kost 20 scans u <strong style="color:#1B2C4F;">${euroF(kp*20)}</strong>.
+      Voor 50% marge vraagt u daarvoor <strong style="color:#1B2C4F;">${euroF(kp*40)}</strong>;
+      voor 10 scans <strong style="color:#1B2C4F;">${euroF(kp*20)}</strong> bij ${euroF(kp*10)} kosten.
+    </div></div>`
+  : `<div class="paneel"><h2>Kostprijs per scan</h2>
+     <div class="leeg">Nog geen gemeten scans. Verschijnt zodra er scans zijn met kostenregistratie.</div></div>`;
+
+  document.getElementById("hoofdInhoud").innerHTML = metrics + sigBlok + kostBlok +
     `<table><thead><tr><th>Klant</th><th>Tier</th><th>Status</th><th>Tegoed</th><th class="num">Kosten</th></tr></thead><tbody>${rijen}</tbody></table>`;
 }
 
@@ -537,11 +854,449 @@ function toonApps(d) {
     : '<div class="paneel"><div class="leeg">De applijst komt hier.</div></div>';
 }
 
-function toggleAppKiezer(e){ e.stopPropagation(); /* app-kiezer volgt zodra er meer betaalde apps zijn */ }
+// ================= PLATFORMBEHEER =================
+// Alle gebruikers over alle apps: abonnement, betaalperiode en API-kosten.
+let platformData = null;
+
+// Gedeelde lader voor het platformoverzicht (haalt altijd verse cijfers op).
+async function laadPlatformData() {
+  const doel = document.getElementById("hoofdInhoud");
+  doel.innerHTML = '<div class="melding">Laden…</div>';
+  try {
+    const res = await fetch("/api/platform-beheer", {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ accessToken: beheerToken })
+    });
+    if (res.status === 401) { beheerToken = null; try { await sb.auth.signOut(); } catch(e){} toonInlog(); return false; }
+    if (res.status === 403) { doel.innerHTML = '<div class="melding">Dit account heeft geen beheerrechten.</div>'; return false; }
+    if (!res.ok) { const e = await res.json().catch(()=>({})); doel.innerHTML = `<div class="melding">Kon niet laden: ${e.error||res.status}</div>`; return false; }
+    platformData = await res.json();
+    return true;
+  } catch(e) { doel.innerHTML = '<div class="melding">Verbinding mislukt.</div>'; return false; }
+}
+
+function platformPil(k) {
+  return k.status==="betaling_mislukt" ? '<span class="pil p-stop">betaling mislukt</span>'
+    : k.status==="geen abonnement" ? '<span class="pil p-proef">proef</span>'
+    : !k.actief ? '<span class="pil p-stop">verlopen</span>'
+    : k.opgezegd ? '<span class="pil p-let">opgezegd</span>'
+    : k.betaalt ? '<span class="pil p-actief">actief</span>' : '<span class="pil p-proef">' + k.status + '</span>';
+}
+
+// Tabel met gebruikers; metApp bepaalt of de app-kolom wordt getoond.
+function platformTabel(lijst, metApp) {
+  const rijen = lijst.length ? lijst.map(k => {
+    const betaalt = k.prijs_cent > 0 && k.actief
+      ? `${euro(k.prijs_cent)}/mnd <span class="t-sub">ex btw</span>`
+      : (k.bundel_omzet_cent > 0 ? `<span class="t-sub">${euro(k.bundel_omzet_cent)} aan bundels</span>` : '<span class="t-sub">—</span>');
+    const tot = k.periode_eind ? datumNL(k.periode_eind) : "—";
+    const appKolom = metApp ? `<td>${k.app_naam}<div class="t-sub">${k.tier || "—"}</div></td>` : `<td>${k.tier || "—"}</td>`;
+    return `<tr>
+      <td><div class="t-naam">${k.naam || "Onbekend"}</div><div class="t-sub">${k.email || (k.gebruiker||"").slice(0,8)+"…"}</div></td>
+      ${appKolom}
+      <td>${platformPil(k)}</td>
+      <td>${betaalt}<div class="t-sub">tot ${tot}</div></td>
+      <td class="num">${euroF(k.kosten_maand)}<div class="t-sub">${euroF(k.kosten_totaal)} totaal</div></td>
+    </tr>`;
+  }).join("") : `<tr><td colspan="5" class="melding">Nog geen gebruikers.</td></tr>`;
+  return `<table><thead><tr><th>Gebruiker</th><th>${metApp ? "App · tier" : "Tier"}</th><th>Status</th><th>Betaalt</th><th class="num">API-kosten</th></tr></thead><tbody>${rijen}</tbody></table>`;
+}
+
+// Eén app uit het platformoverzicht (bijv. Smart Admin in de app-kiezer).
+async function toonPlatformApp(appId, appNaam) {
+  document.getElementById("hoofdDatum").textContent = appNaam;
+  if (!await laadPlatformData()) return;
+  const alle = (platformData.gebruikers || []).filter(k => k.app_id === appId);
+  const betalend = alle.filter(k => k.betaalt);
+  const mrrCent = betalend.reduce((s,k) => s + (k.interval === "maand" ? k.prijs_cent : 0), 0);
+  const kostenMaand = alle.reduce((s,k) => s + k.kosten_maand, 0);
+  document.getElementById("hoofdDatum").textContent =
+    `${alle.length} ${alle.length===1?"gebruiker":"gebruikers"} · ${appNaam}`;
+
+  const metrics = `<div class="metrics">
+    <div class="metric"><div class="l">Gebruikers</div><div class="n">${alle.length}</div><div class="s">${betalend.length} betalend · ${alle.filter(k=>k.opgezegd).length} opgezegd</div></div>
+    <div class="metric"><div class="l">Terugkerende omzet</div><div class="n">${euro(mrrCent)}</div><div class="s">per maand · ex btw</div></div>
+    <div class="metric"><div class="l">API-kosten deze maand</div><div class="n">${euroF(kostenMaand)}</div><div class="s">deze app</div></div>
+    <div class="metric"><div class="l">Marge per maand</div><div class="n">${euroF(mrrCent/100 - kostenMaand)}</div><div class="s">omzet − API-kosten</div></div>
+  </div>`;
+
+  document.getElementById("hoofdInhoud").innerHTML = metrics + platformTabel(alle, false);
+}
+
+async function toonPlatform() {
+  document.getElementById("hoofdDatum").textContent = "Alle apps · alle gebruikers";
+  if (!await laadPlatformData()) return;
+
+  const c = platformData.cijfers || {};
+  const perApp = platformData.per_app || [];
+  const g = platformData.gebruikers || [];
+  document.getElementById("hoofdDatum").textContent =
+    `${c.klanten_totaal||0} ${c.klanten_totaal===1?"gebruiker":"gebruikers"} over ${perApp.length} apps`;
+
+  const metrics = `<div class="metrics">
+    <div class="metric"><div class="l">Gebruikers</div><div class="n">${c.klanten_totaal||0}</div><div class="s">${c.betalend||0} betalend · ${c.opgezegd||0} opgezegd</div></div>
+    <div class="metric"><div class="l">Terugkerende omzet</div><div class="n">${euro(c.mrr_cent||0)}</div><div class="s">per maand · ex btw</div></div>
+    <div class="metric"><div class="l">API-kosten deze maand</div><div class="n">${euroF(c.kosten_maand_eur)}</div><div class="s">${euroF(c.kosten_totaal_eur)} totaal</div></div>
+    <div class="metric"><div class="l">Marge per maand</div><div class="n">${euroF(c.marge_maand_eur)}</div><div class="s">omzet − API-kosten</div></div>
+  </div>`;
+
+  const appRijen = perApp.map(a => `<tr>
+    <td class="t-naam">${a.app_naam}</td>
+    <td class="num">${a.klanten}</td>
+    <td class="num">${a.betalend}</td>
+    <td class="num">${euro(a.mrr_cent)}</td>
+    <td class="num">${euroF(a.kosten_maand)}</td>
+  </tr>`).join("");
+  const appBlok = perApp.length ? `<div class="paneel"><h2>Per app</h2>
+    <table><thead><tr><th>App</th><th class="num">Gebruikers</th><th class="num">Betalend</th><th class="num">Omzet/mnd</th><th class="num">API-kosten/mnd</th></tr></thead>
+    <tbody>${appRijen}</tbody></table></div>` : "";
+
+  document.getElementById("hoofdInhoud").innerHTML = metrics + appBlok + platformTabel(g, true);
+}
+
+// ===== App-kiezer links + functies per app in de bovenbalk =====
+// Alleen apps met een echt beheerdashboard.
+const BEHEER_APPS = {
+  "platform": {
+    ini: "FW", naam: "Fluid Waves platform",
+    secties: [
+      { v:"platform", label:"Gebruikers & kosten", icoon:"users" }
+    ],
+    standaard: "platform"
+  },
+  "smart-admin": {
+    ini: "SA", naam: "Smart Admin",
+    secties: [
+      { v:"smartadmin", label:"Klanten", icoon:"users" }
+    ],
+    standaard: "smartadmin"
+  },
+  "job-radar": {
+    ini: "JR", naam: "Job Radar",
+    secties: [
+      { v:"klanten", label:"Klanten", icoon:"users" },
+      { v:"prijzen", label:"Prijzen", icoon:"tag" },
+      { v:"apps",    label:"Apps",    icoon:"apps" }
+    ],
+    standaard: "klanten"
+  },
+  "table-art": {
+    ini: "TA", naam: "Table Art",
+    secties: [
+      { v:"tableart", label:"Collecties", icoon:"palette" }
+    ],
+    standaard: "tableart"
+  }
+};
+
+function bouwAppLijst() {
+  const lijst = document.getElementById("appLijst");
+  lijst.innerHTML = Object.entries(BEHEER_APPS).map(([id, a]) =>
+    `<button class="kiezer-optie${id===huidigeApp?" actief":""}" onclick="kiesBeheerApp('${id}')">
+       <span class="ini">${a.ini}</span>${a.naam}
+     </button>`).join("");
+}
+
+function toggleAppKiezer(e){
+  e.stopPropagation();
+  document.getElementById("appLijst").classList.toggle("open");
+  document.getElementById("appKnop").classList.toggle("open-knop");
+}
+// buiten de kiezer klikken sluit de lijst
+document.addEventListener("click", (e) => {
+  if (!e.target.closest(".kiezer")) {
+    document.getElementById("appLijst")?.classList.remove("open");
+    document.getElementById("appKnop")?.classList.remove("open-knop");
+  }
+});
+
+function kiesBeheerApp(id) {
+  const a = BEHEER_APPS[id]; if (!a) return;
+  huidigeApp = id;
+  document.getElementById("appIni").textContent = a.ini;
+  document.getElementById("appNaam").textContent = a.naam;
+  document.getElementById("appLijst").classList.remove("open");
+  document.getElementById("appKnop").classList.remove("open-knop");
+  bouwAppLijst();
+  bouwSecties();                       // bovenbalk + zijmenu opnieuw voor deze app
+  beheerSectie(a.standaard);           // open de eerste functie van de app
+}
+
+// De functie-knoppen (bovenbalk én zij-nav) opbouwen voor de gekozen app.
+function bouwSecties() {
+  const a = BEHEER_APPS[huidigeApp]; if (!a) return;
+  const zij = document.getElementById("zijNav");
+  if (zij) zij.innerHTML = a.secties.map(s =>
+    `<button class="navknop" data-v="${s.v}" onclick="beheerSectie('${s.v}')">${svgIcoon(s.icoon)}${s.label}</button>`
+  ).join("");
+}
 
 // ---- inlog-listeners ----
 document.getElementById("bInlog").addEventListener("click", inloggen);
 ["bEmail","bWw"].forEach(id=>document.getElementById(id).addEventListener("keydown",e=>{ if(e.key==="Enter") inloggen(); }));
+
+
+// ================= TABLE ART =================
+let tafCollecties = null;
+
+async function tafBeheer(payload) {
+  const res = await fetch("/api/taf-beheer", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ accessToken: beheerToken, ...payload })
+  });
+  if (res.status === 401) { beheerToken = null; try { await sb.auth.signOut(); } catch(e){} toonInlog(); throw new Error("niet ingelogd"); }
+  if (!res.ok) { const e = await res.json().catch(()=>({})); throw new Error(e.error || res.status); }
+  return res.json();
+}
+
+async function toonTableArt() {
+  const doel = document.getElementById("hoofdInhoud");
+  document.getElementById("hoofdDatum").textContent = "Collecties van alle bezoekers";
+  doel.innerHTML = '<div class="melding">Laden…</div>';
+  try {
+    const d = await tafBeheer({ actie: "lijst" });
+    tafCollecties = d.collecties || [];
+    document.getElementById("hoofdDatum").textContent =
+      `${d.aantal} ${d.aantal===1?"collectie":"collecties"}`;
+    if (!tafCollecties.length) { doel.innerHTML = '<div class="paneel"><div class="leeg">Nog geen collecties gemaakt.</div></div>'; return; }
+
+    doel.innerHTML = `<table><thead><tr>
+        <th>Collectie</th><th>Voor</th><th>Input</th><th>Gewijzigd</th><th></th>
+      </tr></thead><tbody>${
+      tafCollecties.map(c => {
+        const thumbs = (c.thumbnails||[]).slice(0,4).map(t =>
+          `<img src="${t}" style="width:26px;height:26px;object-fit:cover;border-radius:4px;border:1px solid #E0D8C4;margin-right:2px;">`).join("");
+        const palet = (c.palet||[]).slice(0,6).map(p =>
+          `<span style="display:inline-block;width:12px;height:12px;background:${p.hex||p};border:1px solid rgba(0,0,0,.1);"></span>`).join("");
+        return `<tr>
+          <td><div class="t-naam">${c.titel||"Naamloos"}</div><div class="t-sub">${palet}</div></td>
+          <td>${c.toepassing||"—"}</td>
+          <td>${thumbs||'<span class="t-sub">—</span>'}</td>
+          <td class="t-sub">${datumNL(c.gewijzigd)}</td>
+          <td class="num">
+            <button class="knop" onclick="tafOpen('${c.id}')">${svgIcoon("eye")}Bekijk</button>
+            <button class="knop" onclick="tafDownload('${c.id}')">${svgIcoon("download")}Zip</button>
+            <button class="knop" onclick="tafVerwijder('${c.id}')">${svgIcoon("trash")}</button>
+          </td></tr>`;
+      }).join("")
+    }</tbody></table>
+    <div id="tafDetail" style="margin-top:16px;"></div>`;
+  } catch(e) {
+    doel.innerHTML = `<div class="melding">Kon niet laden: ${e.message}</div>`;
+  }
+}
+
+async function tafOpen(id) {
+  const detail = document.getElementById("tafDetail");
+  detail.innerHTML = '<div class="melding">Collectie laden…</div>';
+  try {
+    const d = await tafBeheer({ actie: "collectie", id });
+    const c = d.collectie;
+    const pats = c.patronen || [];
+    const svg2uri = svg => "url(\"data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg).replace(/'/g,"%27").replace(/"/g,"%22") + "\")";
+    detail.innerHTML = `<div class="paneel">
+      <h2>${c.titel||"Naamloos"} <span class="t-sub" style="font-weight:400">· ${pats.length} dessins</span></h2>
+      ${c.profiel && c.profiel.samenvatting ? `<p style="font-size:12.5px;color:#5F5E5A;margin-bottom:12px;">${c.profiel.samenvatting}</p>` : ""}
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px;">
+        ${pats.map(p => `<div style="border:1px solid #E8E1D2;border-radius:8px;overflow:hidden;background:#FBF8F0;">
+          <div style="aspect-ratio:1;background-repeat:repeat;background-size:70px;${p.svg?`background-image:${svg2uri(p.svg)};`:""}"></div>
+          <div style="padding:6px 8px;font-size:11px;color:#1B2C4F;font-weight:600;">${p.naam||""}</div>
+        </div>`).join("")}
+      </div>
+    </div>`;
+  } catch(e) {
+    detail.innerHTML = `<div class="melding">Kon collectie niet laden: ${e.message}</div>`;
+  }
+}
+
+async function tafDownload(id) {
+  try {
+    const d = await tafBeheer({ actie: "collectie", id });
+    const c = d.collectie;
+    if (!window.JSZip) {
+      await new Promise((ok, mis) => {
+        const s = document.createElement("script");
+        s.src = "https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js";
+        s.onload = ok; s.onerror = () => mis(new Error("JSZip laadt niet"));
+        document.head.appendChild(s);
+      });
+    }
+    const zip = new JSZip();
+    const veilig = (c.titel||"collectie").toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"");
+    (c.patronen||[]).forEach((p, i) => {
+      if (p.svg) zip.file(`${String(i+1).padStart(2,"0")}-${(p.naam||"dessin").toLowerCase().replace(/[^a-z0-9]+/g,"-")}.svg`, p.svg);
+    });
+    zip.file("collectie.json", JSON.stringify({ titel:c.titel, profiel:c.profiel, patronen:(c.patronen||[]).map(p=>({naam:p.naam,soort:p.soort,beschrijving:p.beschrijving,herkomst:p.herkomst,palet:p.palet,toepassing:p.toepassing,schaal:p.schaal})) }, null, 2));
+    const blob = await zip.generateAsync({ type:"blob" });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob); a.download = veilig + ".zip"; a.click();
+    setTimeout(()=>URL.revokeObjectURL(a.href), 4000);
+  } catch(e) {
+    alert("Downloaden mislukt: " + e.message);
+  }
+}
+
+async function tafVerwijder(id) {
+  if (!confirm("Deze collectie verwijderen? Dit kan niet ongedaan worden gemaakt.")) return;
+  try {
+    await tafBeheer({ actie: "verwijder", id });
+    toonTableArt();
+  } catch(e) {
+    alert("Verwijderen mislukt: " + e.message);
+  }
+}
+// ================= KOOPFLOW =================
+// Klanten loggen in met een eigen sessie (los van de beheer-sessie),
+// zodat een klant-login de beheeromgeving niet overschrijft.
+let klantSb = null;
+let gekozenTier = null;      // tier die de bezoeker wil kopen, wacht op login
+let klantModus = "inloggen"; // of "registreren"
+
+function maakKlantClient() {
+  if (!cfg) return null;
+  if (!klantSb) klantSb = window.supabase.createClient(cfg.url, cfg.anonKey, {
+    auth:{ persistSession:true, autoRefreshToken:true, detectSessionInUrl:false,
+           storage:kiesOpslag(), storageKey:"fluidwaves-klant" }
+  });
+  return klantSb;
+}
+
+function toonKoopFout(tekst) {
+  const el = document.getElementById("koopFout");
+  if (el) el.innerHTML = tekst ? `<div class="koopfout">${tekst}</div>` : "";
+}
+
+// Klik op een Abonneer-knop: sessie? direct afrekenen. Anders eerst inloggen.
+async function koopTier(tierId, knop) {
+  toonKoopFout("");
+  const c = maakKlantClient();
+  if (!c) { toonKoopFout("Configuratie ontbreekt."); return; }
+  try {
+    const { data } = await c.auth.getSession();
+    if (data.session) { naarCheckout(tierId, data.session, knop); return; }
+  } catch(e){}
+  gekozenTier = tierId;
+  openKlantModal();
+}
+
+// Checkout-sessie aanvragen en doorsturen naar Stripe.
+async function naarCheckout(tierId, sessie, knop) {
+  const alle = document.querySelectorAll(".tierkaart .knop");
+  alle.forEach(b => b.disabled = true);
+  if (knop) knop.textContent = "Bezig…";
+  try {
+    const res = await fetch("/api/start-checkout", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        tier_id: tierId,
+        gebruiker: sessie.user.id,
+        email: sessie.user.email || null,
+        terug_url: location.origin + location.pathname
+      })
+    });
+    const d = await res.json().catch(() => ({}));
+    if (!res.ok || !d.url) {
+      toonKoopFout(d.error || "Kon de betaalsessie niet starten. Probeer het opnieuw.");
+      alle.forEach(b => { b.disabled = false; b.textContent = "Abonneer"; });
+      return;
+    }
+    location.href = d.url; // naar Stripe Checkout
+  } catch(e) {
+    toonKoopFout("Verbinding mislukt. Probeer het opnieuw.");
+    alle.forEach(b => { b.disabled = false; b.textContent = "Abonneer"; });
+  }
+}
+
+// ---- klant-modal ----
+function openKlantModal() {
+  klantModus = "inloggen";
+  zetKlantModus();
+  document.getElementById("kFout").classList.add("verborgen");
+  document.getElementById("kInfo").classList.add("verborgen");
+  document.getElementById("kOverlay").classList.add("open");
+  const e = document.getElementById("kEmail"); if (e && !e.value) e.focus();
+}
+function sluitKlantModal() {
+  document.getElementById("kOverlay").classList.remove("open");
+  gekozenTier = null;
+}
+function wisselKlantModus() {
+  klantModus = klantModus === "inloggen" ? "registreren" : "inloggen";
+  zetKlantModus();
+}
+function zetKlantModus() {
+  const reg = klantModus === "registreren";
+  document.getElementById("kTitel").textContent = reg ? "Account aanmaken" : "Inloggen om af te rekenen";
+  document.getElementById("kSub").textContent = reg
+    ? "Je account koppelt het abonnement aan jouw omgeving."
+    : "Met je account koppel je het abonnement aan jouw omgeving.";
+  document.getElementById("kActieKnop").textContent = reg ? "Registreren en doorgaan" : "Inloggen en doorgaan";
+  document.getElementById("kWissel").innerHTML = reg
+    ? `Al een account? <a onclick="wisselKlantModus()">Inloggen</a>`
+    : `Nog geen account? <a onclick="wisselKlantModus()">Registreren</a>`;
+  document.getElementById("kWw").autocomplete = reg ? "new-password" : "current-password";
+}
+
+async function klantActie() {
+  const knop = document.getElementById("kActieKnop");
+  const email = document.getElementById("kEmail").value.trim();
+  const ww = document.getElementById("kWw").value;
+  const fout = document.getElementById("kFout");
+  const info = document.getElementById("kInfo");
+  fout.classList.add("verborgen"); info.classList.add("verborgen");
+  if (!email || !ww) { fout.textContent = "Vul e-mail en wachtwoord in."; fout.classList.remove("verborgen"); return; }
+  const c = maakKlantClient();
+  if (!c) { fout.textContent = "Configuratie ontbreekt."; fout.classList.remove("verborgen"); return; }
+  knop.disabled = true; knop.textContent = "Bezig…";
+  try {
+    let sessie = null;
+    if (klantModus === "registreren") {
+      const { data, error } = await c.auth.signUp({ email, password: ww });
+      if (error) { fout.textContent = error.message || "Registreren mislukt."; fout.classList.remove("verborgen"); return; }
+      if (!data.session) {
+        // e-mailbevestiging vereist: eerst de mail, daarna terugkomen en inloggen
+        info.textContent = "Bijna klaar — bevestig je e-mailadres via de link in je inbox en log daarna hier in.";
+        info.classList.remove("verborgen");
+        klantModus = "inloggen"; zetKlantModus();
+        return;
+      }
+      sessie = data.session;
+    } else {
+      const { data, error } = await c.auth.signInWithPassword({ email, password: ww });
+      if (error || !data.session) {
+        fout.textContent = error?.message === "Invalid login credentials" ? "E-mail of wachtwoord klopt niet." : (error?.message || "Inloggen mislukt.");
+        fout.classList.remove("verborgen"); return;
+      }
+      sessie = data.session;
+    }
+    document.getElementById("kWw").value = "";
+    document.getElementById("kOverlay").classList.remove("open");
+    if (gekozenTier) { const t = gekozenTier; gekozenTier = null; naarCheckout(t, sessie, null); }
+  } catch(e) {
+    fout.textContent = "Er ging iets mis: " + e.message; fout.classList.remove("verborgen");
+  } finally {
+    knop.disabled = false; zetKlantModus();
+  }
+}
+["kEmail","kWw"].forEach(id => document.getElementById(id).addEventListener("keydown", e => { if (e.key === "Enter") klantActie(); }));
+document.getElementById("kOverlay").addEventListener("click", e => { if (e.target === e.currentTarget) sluitKlantModal(); });
+
+// ---- terugkeer van Stripe (?betaald=1 of ?betaald=0) ----
+(function verwerkTerugkeer() {
+  const qs = new URLSearchParams(location.search);
+  if (!qs.has("betaald")) return;
+  const gelukt = qs.get("betaald") === "1";
+  const el = document.getElementById("betaalBanner");
+  if (el) el.innerHTML = gelukt
+    ? `<div class="betaalbanner goed">${svgIcoon("info")}<span><b>Betaling gelukt — welkom!</b>
+       Je abonnement wordt binnen enkele seconden geactiveerd. Open de app en log in met het account
+       waarmee je zojuist hebt afgerekend.</span></div>`
+    : `<div class="betaalbanner slecht">${svgIcoon("alert")}<span><b>Betaling niet afgerond.</b>
+       Er is niets afgeschreven. Je kunt het opnieuw proberen wanneer je wilt.</span></div>`;
+  history.replaceState({}, "", location.pathname);
+})();
 
 // ---- start ----
 laadApps();
