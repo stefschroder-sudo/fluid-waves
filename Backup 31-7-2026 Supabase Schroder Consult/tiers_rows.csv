@@ -1,0 +1,4 @@
+id,app_id,naam,omschrijving,prijs_cent,interval,stripe_price_id,scans_per_periode,scans_totaal,mag_exporteren,bewaart_historie,mag_notificaties,toont_vindplaatsen,mag_bundels_kopen,actief,volgorde,aangemaakt_op
+job-radar-basis,job-radar,Basis,"Tien scans per maand, resultaten bewaard, export en cv-tips",1900,maand,,10,,true,true,false,false,true,true,2,2026-07-23 15:52:47.251839+00
+job-radar-pro,job-radar,Pro,"Veertig scans per maand, historie en vergelijking, notificaties en vindplaatsen",4900,maand,,40,,true,true,true,true,true,true,3,2026-07-23 15:52:47.251839+00
+job-radar-proef,job-radar,Proef,Drie scans om kennis te maken,0,gratis,,,3,false,false,false,false,false,true,1,2026-07-23 15:52:47.251839+00

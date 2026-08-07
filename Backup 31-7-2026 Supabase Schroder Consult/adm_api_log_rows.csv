@@ -1,0 +1,8 @@
+id,user_id,functie,model,input_tokens,output_tokens,kosten_usd,aangemaakt
+05201ff8-1e28-4892-a28b-c58d67ee4368,53eeb383-ebb4-409d-9ca3-1175222fad19,belastingregels ophalen,claude-sonnet-4-5,46022,1567,0.161571,2026-07-30 14:14:02.35063+00
+549c4809-4ef9-43ac-b971-05564f615bfe,53eeb383-ebb4-409d-9ca3-1175222fad19,bon uitlezen (kosten),claude-sonnet-4-5,2158,126,0.008364,2026-07-30 13:23:17.445115+00
+798bc7bb-efd0-4611-8442-400cf93c301b,53eeb383-ebb4-409d-9ca3-1175222fad19,bankoverzicht inlezen,claude-sonnet-4-5,15504,36,0.047052,2026-07-30 15:02:22.494993+00
+871b82f9-4b5b-4a3a-bf4d-964b27280d9d,53eeb383-ebb4-409d-9ca3-1175222fad19,bon uitlezen (kosten),claude-sonnet-4-5,2140,126,0.008310,2026-07-30 13:23:29.324805+00
+d9b9dd02-49df-43a3-8630-7cf3cb5bb44e,53eeb383-ebb4-409d-9ca3-1175222fad19,bankoverzicht inlezen,claude-sonnet-4-5,15504,36,0.047052,2026-07-30 14:46:23.463509+00
+da9052e2-739f-427c-a457-64c1d7669eba,53eeb383-ebb4-409d-9ca3-1175222fad19,bon uitlezen (kosten),claude-sonnet-4-5,2239,127,0.008622,2026-07-30 13:23:04.094914+00
+edeb4b1c-221b-4528-beb0-4c41675e7028,53eeb383-ebb4-409d-9ca3-1175222fad19,bon uitlezen (kosten),claude-sonnet-4-5,2289,108,0.008487,2026-07-30 13:22:49.836185+00

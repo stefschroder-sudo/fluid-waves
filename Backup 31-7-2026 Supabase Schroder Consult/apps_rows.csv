@@ -1,0 +1,6 @@
+id,naam,merknaam,omschrijving,url,status,app_sleutel,volgorde,aangemaakt_op
+golf-score,Golfscore & Tournament App,,"Scorekaart voor Stableford, strokeplay en toernooien",https://stef-in-ai.vercel.app,live,fw_d6c7d5531ddb45e327c83409f86fca05480c097ee8fb8d7b,3,2026-07-23 15:52:47.251839+00
+job-radar,Job Radar,,"Executive job-matching voor CCO-, CEO- en CFO-profielen",https://job-radar-app-sepia.vercel.app,live,fw_eb69a4b3dabc2154cdda5847e3e437dadeffdb4ba5e7236b,1,2026-07-23 15:52:47.251839+00
+live-from,Live from,,Themalijsten uit het eigen muziekarchief,,concept,fw_b68e13f7482d5de46b01470ca6fe1f618b1ec94f0abdf0a1,4,2026-07-23 15:52:47.251839+00
+table-art,Table Art Fashion,TAF,"Lees de sfeer van een gedekte tafel en ontwerp tien nieuwe dessins voor servies, tafellinnen, placemats en interieur.",https://ATELIER-TABLE-ART.vercel.app,live,,5,2026-07-26 07:28:31.6638+00
+tenderlead,TenderLead,ScanAlytics,Aanbestedingen uit officiële registers in vijf landen,https://tenderlead-app-d4ubwbn8rdzhjzhnxikzat.streamlit.app/,live,fw_b54bdf6ec17ac872d8d95ad9333a0b57d653e800177ec109,2,2026-07-23 15:52:47.251839+00

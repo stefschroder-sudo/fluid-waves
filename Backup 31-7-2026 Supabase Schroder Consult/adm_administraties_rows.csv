@@ -1,0 +1,4 @@
+id,user_id,naam,kvk,btw_nummer,aangemaakt,btw_ritme,gearchiveerd,adres,postcode,plaats,email,telefoon,iban,logo_pad,factuur_teller,factuur_teller_jaar,actueel_banksaldo,actueel_banksaldo_datum,welkom_verbergen
+7485d222-af11-4ce0-9520-b8716f9ee0b1,53eeb383-ebb4-409d-9ca3-1175222fad19,Slingers,,,2026-07-28 11:29:58.659124+00,kwartaal,false,,,,,,,,0,,,,false
+da00ae9b-2af8-4a6c-bfeb-a195e2d13d7b,53eeb383-ebb4-409d-9ca3-1175222fad19,Schroder Consult,87125897,NL004365352B09,2026-07-28 07:06:54.938374+00,kwartaal,false,Middelweg 32,2241 AR,Wassenaar,stefschroder@gmail.com,0629004446,NL88KNAB0508854210,53eeb383-ebb4-409d-9ca3-1175222fad19/logo_da00ae9b-2af8-4a6c-bfeb-a195e2d13d7b_1785347952781.png,6,2026,158.97,2026-07-30,false
+de0e7167-0851-4d98-95ac-9c498b11832d,883cf1f3-e833-47b4-9e42-f3c225656b62,Schröder Consult,,,2026-07-27 17:32:40.749383+00,kwartaal,false,,,,,,,,0,,,,false

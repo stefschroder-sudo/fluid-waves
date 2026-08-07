@@ -1,0 +1,5 @@
+id,naam,merknaam,omschrijving,url,status,volgorde
+golf-score,Golfscore & Tournament App,,"Scorekaart voor Stableford, strokeplay en toernooien",https://stef-in-ai.vercel.app,live,3
+job-radar,Job Radar,,"Executive job-matching voor CCO-, CEO- en CFO-profielen",https://job-radar-app-sepia.vercel.app,live,1
+table-art,Table Art Fashion,TAF,"Lees de sfeer van een gedekte tafel en ontwerp tien nieuwe dessins voor servies, tafellinnen, placemats en interieur.",https://ATELIER-TABLE-ART.vercel.app,live,5
+tenderlead,TenderLead,ScanAlytics,Aanbestedingen uit officiële registers in vijf landen,https://tenderlead-app-d4ubwbn8rdzhjzhnxikzat.streamlit.app/,live,2

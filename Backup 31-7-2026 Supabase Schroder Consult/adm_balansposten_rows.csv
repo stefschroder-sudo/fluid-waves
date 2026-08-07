@@ -1,0 +1,2 @@
+id,administratie_id,user_id,naam,soort,hoofdsom,rente_pct,looptijd_jaren,startdatum,aflosvorm,uitgesteld,aangemaakt
+52ea18a3-7ed6-4400-88f0-3bfceeb37d56,da00ae9b-2af8-4a6c-bfeb-a195e2d13d7b,53eeb383-ebb4-409d-9ca3-1175222fad19,Lening 1,lening,5000.00,0.00,5,,lineair,true,2026-07-30 11:37:31.851458+00

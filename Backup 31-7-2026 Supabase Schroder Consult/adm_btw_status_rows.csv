@@ -1,0 +1,5 @@
+id,administratie_id,user_id,jaar,periode_type,periode_nummer,status,bedrag,bijgewerkt
+5b0df05b-f518-4f9c-bef1-bba8694664cb,da00ae9b-2af8-4a6c-bfeb-a195e2d13d7b,53eeb383-ebb4-409d-9ca3-1175222fad19,2026,maand,6,betaald,1423.80,2026-07-28 08:15:44.628+00
+cf7a1d20-ee90-467c-8109-47bbb548e16f,da00ae9b-2af8-4a6c-bfeb-a195e2d13d7b,53eeb383-ebb4-409d-9ca3-1175222fad19,2026,kwartaal,2,betaald,623.96,2026-07-28 12:56:18.608+00
+d9e24fb0-f46d-425e-892e-9a82a3ba5a2c,da00ae9b-2af8-4a6c-bfeb-a195e2d13d7b,53eeb383-ebb4-409d-9ca3-1175222fad19,2026,kwartaal,1,betaald,1739.75,2026-07-28 10:26:27.92+00
+f72e2542-517c-4876-8cca-e67790a64509,da00ae9b-2af8-4a6c-bfeb-a195e2d13d7b,53eeb383-ebb4-409d-9ca3-1175222fad19,2026,maand,7,betaald,1701.00,2026-07-28 08:16:59.236+00

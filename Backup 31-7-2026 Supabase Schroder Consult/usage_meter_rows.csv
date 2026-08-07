@@ -1,0 +1,4 @@
+user_id,week_start,scans_used,weekly_limit,updated_at,cost_week_eur,cost_total_eur,subscription_active,subscription_status,subscription_until
+08b4ace3-37a9-4b02-87a5-1688b368bb73,2026-07-01,14,20,2026-07-23 10:42:56.216849+00,3.7821,3.7821,true,active,
+883cf1f3-e833-47b4-9e42-f3c225656b62,2026-07-06,31,50,2026-07-24 13:34:01.353379+00,8.9190,8.9190,true,active,
+950bfd06-0606-4073-9b60-7b7fb1797a73,2026-07-01,4,20,2026-07-10 08:48:45.497473+00,1.0747,1.0747,true,active,

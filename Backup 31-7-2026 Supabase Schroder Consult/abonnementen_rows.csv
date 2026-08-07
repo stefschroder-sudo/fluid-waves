@@ -1,0 +1,4 @@
+id,klant_id,app_id,tier_id,status,periode_start,periode_eind,opgezegd_op,wordt_tier_id,scans_gebruikt,stripe_subscription,aangemaakt_op,gewijzigd_op
+afda6964-4000-4baf-bbb1-fbdd237aac2d,8f1d37a1-019d-49ca-97e9-c534b1d17a60,job-radar,job-radar-pro,actief,2026-07-01 00:00:00+00,2036-07-24 10:59:34.677455+00,,,4,,2026-07-24 10:03:09.910946+00,2026-07-24 10:59:34.677455+00
+b25f420a-d52d-4021-9229-4cd06d798b96,8f28e64b-9eff-4dbf-aaa8-e053778badaa,job-radar,job-radar-pro,actief,2026-07-06 00:00:00+00,2036-07-24 10:59:34.677455+00,,,40,,2026-07-24 10:03:09.910946+00,2026-07-24 12:57:26.861252+00
+eb485713-a8ca-49fb-921b-a1985acef6ad,f94bcbb7-3c38-4f43-ad2b-211b7e005781,job-radar,job-radar-pro,actief,2026-07-01 00:00:00+00,2026-08-01 00:00:00+00,,,16,,2026-07-24 10:03:09.910946+00,2026-07-30 08:04:42.96848+00

@@ -1,0 +1,3 @@
+id,klant_id,scans_gekocht,scans_over,prijs_cent,stripe_payment,gekocht_op,vervalt_op
+582d13cb-dd12-4d89-a324-eb46cef9e135,8f28e64b-9eff-4dbf-aaa8-e053778badaa,10,10,500,pi_3Tx1yPHksPQayWq209zsPPy0,2026-07-25 09:34:29.233873+00,2027-07-25 09:34:29.233873+00
+80f52fb2-9c14-4ec0-af9d-5934434ae706,8f28e64b-9eff-4dbf-aaa8-e053778badaa,10,5,500,pi_3TwjOzHksPQayWq21tbjTZoA,2026-07-24 13:44:41.410783+00,2027-07-24 13:44:41.410783+00

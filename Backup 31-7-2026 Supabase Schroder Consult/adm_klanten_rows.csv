@@ -1,0 +1,3 @@
+id,administratie_id,user_id,naam,adres,postcode,plaats,email,aangemaakt
+30b355d5-a4db-4da1-a31d-ee75a54dd913,da00ae9b-2af8-4a6c-bfeb-a195e2d13d7b,53eeb383-ebb4-409d-9ca3-1175222fad19,Testklant BV,Middelweg 80,2241 AS,Wassenaar,stefschroder-testklant@gmail.com,2026-07-29 20:58:31.285863+00
+52a858e4-0e09-4874-9924-003559be9c52,da00ae9b-2af8-4a6c-bfeb-a195e2d13d7b,53eeb383-ebb4-409d-9ca3-1175222fad19,Nalatenschapsupport BV,Rapenburgerstraat 73-A3,1011VK,aMSTERDAM,info@nalatenschapsupport.nl,2026-07-29 19:01:57.783933+00

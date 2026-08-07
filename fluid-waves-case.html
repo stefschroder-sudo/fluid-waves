@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Van nieuwsgierigheid naar verkoopbare apps — Fluid Waves</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#1B2C4F;
+    --navy-deep:#12203C;
+    --gold:#C9A227;
+    --paper:#F4F1EA;
+    --paper-warm:#EDE8DC;
+    --slate:#5C6880;
+    --line:rgba(27,44,79,.14);
+    --display:"Bricolage Grotesque",system-ui,sans-serif;
+    --body:"Source Serif 4",Georgia,serif;
+    --mono:"JetBrains Mono",ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0;background:var(--paper);color:var(--navy);
+    font-family:var(--body);font-size:17px;line-height:1.62;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:820px;margin:0 auto;padding:0 24px}
+  a{color:var(--navy);text-decoration-color:var(--gold);text-underline-offset:3px}
+  a:focus-visible,button:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+
+  .eyebrow{
+    font-family:var(--mono);font-size:11px;letter-spacing:.18em;
+    text-transform:uppercase;color:var(--gold);font-weight:600;
+  }
+
+  /* ---------- hero ---------- */
+  .hero{padding:88px 0 64px;position:relative;overflow:hidden}
+  .hero h1{
+    font-family:var(--display);font-weight:800;font-size:clamp(34px,6.4vw,60px);
+    line-height:1.04;letter-spacing:-.022em;margin:18px 0 0;max-width:15ch;
+  }
+  .hero h1 em{font-style:normal;color:var(--gold)}
+  .lead{
+    font-size:clamp(18px,2.4vw,21px);max-width:56ch;margin:26px 0 0;color:#2C3C5E;
+  }
+  .hero-rule{
+    margin-top:44px;height:1px;background:var(--line);position:relative;
+  }
+  .hero-rule::after{
+    content:"";position:absolute;left:0;top:0;height:1px;width:88px;background:var(--gold);
+  }
+
+  /* ---------- sections ---------- */
+  section{padding:64px 0}
+  h2{
+    font-family:var(--display);font-weight:600;font-size:clamp(24px,3.4vw,32px);
+    letter-spacing:-.015em;line-height:1.14;margin:14px 0 22px;
+  }
+  h3{font-family:var(--display);font-weight:600;font-size:19px;margin:0 0 6px;letter-spacing:-.01em}
+  p{margin:0 0 18px;max-width:62ch}
+  .muted{color:var(--slate)}
+
+  /* ---------- de log (signature) ---------- */
+  .log{position:relative;padding-left:56px}
+  .wave{
+    position:absolute;left:0;top:0;width:44px;height:100%;
+    pointer-events:none;
+  }
+  .wave path{
+    fill:none;stroke:var(--gold);stroke-width:1.6;opacity:.85;
+    stroke-dasharray:2400;stroke-dashoffset:2400;
+    animation:draw 2.6s cubic-bezier(.4,0,.2,1) .2s forwards;
+  }
+  @keyframes draw{to{stroke-dashoffset:0}}
+
+  .entry{position:relative;padding:22px 0 26px;border-bottom:1px solid var(--line)}
+  .entry:last-child{border-bottom:0}
+  .entry::before{
+    content:"";position:absolute;left:-56px;top:32px;width:9px;height:9px;
+    border-radius:50%;background:var(--paper);border:1.6px solid var(--gold);
+  }
+  .entry-head{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+  .entry .idx{font-family:var(--mono);font-size:11px;color:var(--gold);font-weight:600}
+  .entry p{margin:8px 0 12px}
+  .meta{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
+  .chip{
+    font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;
+    padding:4px 9px;border:1px solid var(--line);border-radius:2px;color:var(--slate);
+  }
+  .chip.live{border-color:rgba(201,162,39,.5);color:#8A6F16;background:rgba(201,162,39,.09)}
+  .chip a{text-decoration:none;color:inherit}
+  .chip a:hover{text-decoration:underline}
+
+  /* ---------- de lijn ---------- */
+  .phases{display:grid;gap:2px;background:var(--line);border:1px solid var(--line)}
+  .phase{background:var(--paper);padding:26px 24px}
+  .phase .step{font-family:var(--mono);font-size:11px;color:var(--gold);letter-spacing:.14em;font-weight:600}
+  .phase p{margin:8px 0 0;font-size:16px}
+  @media(min-width:720px){.phases{grid-template-columns:repeat(3,1fr)}}
+
+  /* ---------- lessen (donker blok) ---------- */
+  .dark{background:var(--navy);color:var(--paper)}
+  .dark .wrap{padding-top:72px;padding-bottom:72px}
+  .dark h2{color:var(--paper)}
+  .dark .eyebrow{color:var(--gold)}
+  .lessons{list-style:none;padding:0;margin:0;counter-reset:les}
+  .lessons li{
+    padding:22px 0;border-top:1px solid rgba(244,241,234,.16);
+    display:grid;gap:4px 20px;
+  }
+  .lessons li:last-child{border-bottom:1px solid rgba(244,241,234,.16)}
+  .lessons .k{font-family:var(--display);font-weight:600;font-size:18px;color:#fff}
+  .lessons .v{color:rgba(244,241,234,.78);font-size:16px;max-width:60ch}
+  @media(min-width:720px){
+    .lessons li{grid-template-columns:minmax(0,1fr) minmax(0,1.45fr);align-items:baseline}
+  }
+
+  /* ---------- hoe begin je ---------- */
+  .lanes{display:grid;gap:34px;margin-top:10px}
+  @media(min-width:820px){.lanes{grid-template-columns:1fr 1fr;gap:44px}}
+  .lane{border-top:2px solid var(--gold);padding-top:18px}
+  .lane .where{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);font-weight:600}
+  .lane h3{margin:8px 0 8px}
+  .lane p{font-size:16px}
+  .prompt{
+    font-family:var(--mono);font-size:13px;line-height:1.6;
+    background:var(--paper-warm);border-left:2px solid var(--gold);
+    padding:16px 18px;margin:14px 0 10px;color:#2C3C5E;
+  }
+  .prompt .who{display:block;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin-bottom:8px}
+  .returns{list-style:none;padding:0;margin:12px 0 0}
+  .returns li{
+    font-size:15.5px;padding:7px 0 7px 20px;position:relative;color:#2C3C5E;border-bottom:1px solid var(--line);
+  }
+  .returns li:last-child{border-bottom:0}
+  .returns li::before{content:"–";position:absolute;left:0;color:var(--gold);font-weight:600}
+
+  .steps{list-style:none;padding:0;margin:26px 0 0;counter-reset:s}
+  .steps li{
+    counter-increment:s;position:relative;padding:18px 0 18px 52px;border-top:1px solid var(--line);
+  }
+  .steps li:last-child{border-bottom:1px solid var(--line)}
+  .steps li::before{
+    content:counter(s,decimal-leading-zero);position:absolute;left:0;top:20px;
+    font-family:var(--mono);font-size:12px;color:var(--gold);font-weight:600;
+  }
+  .steps .k{font-family:var(--display);font-weight:600;font-size:17px;display:block;margin-bottom:3px}
+  .steps .v{font-size:16px;color:#2C3C5E;max-width:60ch;display:block}
+
+  /* ---------- stack ---------- */
+  .stack{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px}
+  .stack .chip{font-size:11px;padding:6px 12px}
+
+  /* ---------- voor wie ---------- */
+  .cols{display:grid;gap:28px;margin-top:8px}
+  .cols .col{border-top:2px solid var(--gold);padding-top:16px}
+  .cols p{font-size:16px;margin:0}
+  @media(min-width:720px){.cols{grid-template-columns:repeat(3,1fr);gap:32px}}
+
+  /* ---------- slot ---------- */
+  .close{background:var(--paper-warm);border-top:1px solid var(--line)}
+  .close .wrap{padding-top:64px;padding-bottom:80px}
+  .cta{
+    display:inline-block;margin-top:10px;padding:13px 26px;background:var(--navy);color:var(--paper);
+    font-family:var(--display);font-weight:600;font-size:15px;text-decoration:none;border-radius:2px;
+    transition:background .18s ease;
+  }
+  .cta:hover{background:var(--navy-deep)}
+
+  .reveal{opacity:0;transform:translateY(14px);transition:opacity .6s ease,transform .6s ease}
+  .reveal.in{opacity:1;transform:none}
+
+  @media(prefers-reduced-motion:reduce){
+    *{animation:none!important;transition:none!important}
+    .reveal{opacity:1;transform:none}
+    html{scroll-behavior:auto}
+    .wave path{stroke-dashoffset:0}
+  }
+  @media(max-width:640px){
+    .log{padding-left:30px}
+    .entry::before{left:-30px}
+    .wave{width:22px}
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <span class="eyebrow">Fluid Waves · Case</span>
+    <h1>Ik wilde weten wat AI écht kan <em>oplossen</em>. Dus ben ik gaan bouwen.</h1>
+    <p class="lead">Sinds mei bouw ik apps. Niet als proefje, maar door tot en met inlog, abonnement en betaling. Dit is de log: wat ik bouwde, in welke volgorde, en wat elke stap me leerde.</p>
+    <div class="hero-rule"></div>
+  </div>
+</header>
+
+<section>
+  <div class="wrap reveal">
+    <span class="eyebrow">Waarom</span>
+    <h2>Dertig jaar commercie levert één ding op dat je niet uit een cursus haalt: je weet welk probleem geld kost.</h2>
+    <p>FMCG, wijn, retail, familiebedrijf, scale-up — steeds dezelfde patronen. Aanbestedingen die je te laat ziet. Een vacature die langs je heen gaat. Administratie die uren opeet zonder iets op te leveren. Ik wist precies waar de pijn zat; wat ontbrak was de hefboom om er zelf iets aan te doen.</p>
+    <p>Die kwam met AI. Niet als toverdoos, maar als bouwmateriaal. Onder alles wat hier staat ligt dezelfde reflex: <strong>signaal uit ruis halen</strong> — patronen zien voordat een ander ze ziet, en dat vervolgens automatiseren.</p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap reveal">
+    <span class="eyebrow">De log</span>
+    <h2>Acht bouwsels, in volgorde van ontstaan.</h2>
+
+    <div class="log">
+      <svg class="wave" viewBox="0 0 44 1600" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M22 0 C 4 100, 40 200, 22 300 C 4 400, 40 500, 22 600 C 4 700, 40 800, 22 900 C 4 1000, 40 1100, 22 1200 C 4 1300, 40 1400, 22 1500 L 22 1600"/>
+      </svg>
+
+      <article class="entry">
+        <div class="entry-head"><span class="idx">01</span><h3>Executive job search agent</h3></div>
+        <p>Het begin: een Python-agent die zelfstandig vacatures op directieniveau afstruint en filtert. Ruw, maar het bewees het punt — een taak die weken kostte, draaide nu 's nachts.</p>
+        <div class="meta"><span class="chip">Python</span><span class="chip">Agent</span></div>
+      </article>
+
+      <article class="entry">
+        <div class="entry-head"><span class="idx">02</span><h3>Tender Scout</h3></div>
+        <p>Aanbestedingen zoeken over vier landen heen, uitsluitend op live bronnen: TenderNed, Contracts Finder, Find a Tender en TED. Geen verzonnen resultaten — dat werd meteen het harde uitgangspunt.</p>
+        <div class="meta"><span class="chip">Streamlit</span><span class="chip">Live API's</span><span class="chip">NL · UK · BE · DE</span></div>
+      </article>
+
+      <article class="entry">
+        <div class="entry-head"><span class="idx">03</span><h3>TenderLead</h3></div>
+        <p>Van zoeken naar voorspellen. Een eigen database met gunningsdata: wie won wat, voor hoeveel, in welke sector. Daarmee kun je de vraag omdraaien — niet "welke tenders passen bij dit bedrijf", maar "welke bedrijven passen bij deze tender".</p>
+        <div class="meta"><span class="chip">Streamlit</span><span class="chip">Supabase</span><span class="chip">Eigen datamoat</span></div>
+      </article>
+
+      <article class="entry">
+        <div class="entry-head"><span class="idx">04</span><h3>Job Radar</h3></div>
+        <p>De app leest je cv en stelt op basis daarvan je zoekcriteria voor. Die scherp je zelf aan, zodat de resultaten directer aansluiten op wat je werkelijk zoekt. De anti-hallucinatiemodule zit er net als in TenderLead ingebakken: geen verzonnen vacatures, alleen vindplaatsen die bestaan.</p>
+        <div class="meta"><span class="chip live">Live</span><span class="chip">PWA</span><span class="chip">Supabase</span><span class="chip">Anti-hallucinatie</span><span class="chip">Abonnementen</span></div>
+      </article>
+
+      <article class="entry">
+        <div class="entry-head"><span class="idx">05</span><h3>TAF — Table Art Fashion</h3></div>
+        <p>De buitenbeen in de reeks, en nog in aanbouw. Je voert foto's in als inspiratie; de app ontwikkelt daaruit nieuwe designs. Waar de andere apps signaal uit data halen, haalt deze vorm uit beeld.</p>
+        <div class="meta"><span class="chip">In aanbouw</span><span class="chip">Beeld naar design</span></div>
+      </article>
+
+      <article class="entry">
+        <div class="entry-head"><span class="idx">06</span><h3>Golf Score App</h3></div>
+        <p>Een app voor mezelf en mijn flight, en juist daarom streng: baanratings per negen holes, foursomes en greensomes, een toernooimodule met onafhankelijke flights, scorekaarten als pdf. Rekenfouten zijn hier direct zichtbaar — dus is elke berekening deterministisch en getest.</p>
+        <div class="meta"><span class="chip live">Live</span><span class="chip">PWA</span><span class="chip">Offline</span><span class="chip">2.621 tests</span></div>
+      </article>
+
+      <article class="entry">
+        <div class="entry-head"><span class="idx">07</span><h3>Smart Admin</h3></div>
+        <p>Administratie voor zzp'ers: inkomsten, uitgaven, btw-aangifte en facturen. Btw wordt per factuurregel gekozen, niet per factuur — want uren en materiaal vallen zelden onder hetzelfde tarief. AI mag hier hooguit iets voorstellen; invullen doet de ondernemer.</p>
+        <div class="meta"><span class="chip">HTML</span><span class="chip">Supabase</span><span class="chip">Facturen &amp; btw</span></div>
+      </article>
+
+      <article class="entry">
+        <div class="entry-head"><span class="idx">08</span><h3>Het Fluid Waves-platform</h3></div>
+        <p>De etalage en het beheer in één omgeving: één account, één betaalstroom, alle apps eronder. Wat als losse projecten begon, is nu een portfolio met een voordeur.</p>
+        <div class="meta"><span class="chip live">Live</span><span class="chip">Vercel</span><span class="chip">Supabase</span><span class="chip">Stripe</span></div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap reveal">
+    <span class="eyebrow">De lijn</span>
+    <h2>Drie fases, en elke keer een bewuste verhuizing.</h2>
+    <div class="phases">
+      <div class="phase">
+        <span class="step">FASE 01</span>
+        <h3>Streamlit</h3>
+        <p>Snelste weg van idee naar werkend dashboard. Ideaal om te bewijzen dat de data klopt en de logica deugt — en om er zelf mee te werken.</p>
+      </div>
+      <div class="phase">
+        <span class="step">FASE 02</span>
+        <h3>PWA</h3>
+        <p>Zodra iemand anders het moet gebruiken, wil je een icoon op het startscherm, offline werken en updates die vanzelf binnenkomen. Geen appstore nodig.</p>
+      </div>
+      <div class="phase">
+        <span class="step">FASE 03</span>
+        <h3>HTML + Supabase</h3>
+        <p>Voor betalende gebruikers: eigen accounts, rechten per gebruiker, betalingen. Volledige controle over vormgeving en snelheid.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap reveal">
+    <span class="eyebrow">Hoe begin je</span>
+    <h2>Je begint met één opdracht. De rest is een gesprek.</h2>
+    <p>De vraag die ik het vaakst krijg: waar begin je nou? Het antwoord is minder spannend dan mensen hopen. Je beschrijft in gewone taal wie de app gebruikt, wat die persoon eraan heeft, en waar de gegevens vandaan komen. Niet hóé het gebouwd moet worden — dat is precies het deel dat je uit handen geeft.</p>
+
+    <div class="lanes">
+      <div class="lane">
+        <span class="where">Spoor A</span>
+        <h3>In de chat</h3>
+        <p>Voor het begin, en voor alles wat in één bestand past. Je ziet het resultaat naast het gesprek staan en stuurt al pratend bij.</p>
+        <div class="prompt">
+          <span class="who">Voorbeeldopdracht</span>
+          "Bouw een voorraadapp voor een wijnhandel. Per fles: naam, jaar, inkoopprijs, aantal, plek in het magazijn. Ik wil kunnen zoeken en in één oogopslag zien wat bijna op is. Eén pagina, moet op mijn telefoon werken."
+        </div>
+        <p class="muted" style="font-size:15px">Je krijgt een werkende versie terug die je meteen opent en uitprobeert. Bevalt iets niet, dan zeg je dat — "zoekbalk bovenaan, en toon de voorraad als staafje" — en er komt een nieuwe versie.</p>
+      </div>
+
+      <div class="lane">
+        <span class="where">Spoor B</span>
+        <h3>In Claude Code</h3>
+        <p>Zodra een project uit meerdere bestanden bestaat. Het werkt rechtstreeks in je projectmap op je eigen computer, met je versiebeheer ernaast.</p>
+        <div class="prompt">
+          <span class="who">Voorbeeldopdracht</span>
+          "Lees dit project door en vertel me eerst hoe het in elkaar zit. Daarna: voeg een knop toe die de huidige lijst als Excel wegschrijft. Verander verder niets."
+        </div>
+        <p class="muted" style="font-size:15px">Je krijgt eerst een voorstel: wat er gaat gebeuren en welke bestanden eraan geraakt worden. Pas na jouw akkoord wordt het doorgevoerd. <a href="https://docs.claude.com/en/docs/claude-code/overview">Zo werkt Claude Code</a>.</p>
+      </div>
+    </div>
+
+    <h2 style="margin-top:56px">Het stappenplan dat ik elke keer aanhoud</h2>
+    <ol class="steps">
+      <li>
+        <span class="k">Schrijf eerst de gebruiker op, niet de functies</span>
+        <span class="v">Eén zin: wie is het, wat wil die persoon voor elkaar krijgen, en waaraan zie je dat het gelukt is. Zonder die zin bouw je een verzameling knoppen.</span>
+      </li>
+      <li>
+        <span class="k">Bewijs dat de data klopt</span>
+        <span class="v">Voordat er iets moois op het scherm staat: haal echte gegevens binnen en controleer een handvol met de hand. Deugt de bron niet, dan is al het werk erbovenop verspild.</span>
+      </li>
+      <li>
+        <span class="k">Bouw het lelijk en werkend</span>
+        <span class="v">Alleen de kern, in één bestand of één dashboard. Gebruik het zelf een week. Je merkt binnen twee dagen wat je écht mist — en dat is zelden wat je vooraf had bedacht.</span>
+      </li>
+      <li>
+        <span class="k">Zet inlog en opslag erop vóór het mooi wordt</span>
+        <span class="v">Accounts, rechten en een echte database achteraf inbouwen kost meer dan ze meteen meenemen. Doe dit voordat de eerste gebruiker meekijkt.</span>
+      </li>
+      <li>
+        <span class="k">Pas dan vormgeving en abonnement</span>
+        <span class="v">Huisstijl, betaling en abonnementsniveaus zijn de laatste laag. Ze zijn snel gemaakt zodra alles eronder klopt — en onmogelijk zolang dat niet zo is.</span>
+      </li>
+      <li>
+        <span class="k">Wijzig één ding tegelijk</span>
+        <span class="v">Grote opdrachten leveren grote verrassingen op. Kleine stappen met steeds een controlemoment houden je in de stoel van de opdrachtgever.</span>
+      </li>
+    </ol>
+    <p class="muted" style="margin-top:26px;font-size:15.5px">Het bouwen is niet het moeilijke deel. Het moeilijke deel is weten welk probleem het waard is om op te lossen, en streng blijven op wat er waar moet zijn voordat je het aan een klant durft te laten zien.</p>
+  </div>
+</section>
+
+<section class="dark">
+  <div class="wrap reveal">
+    <span class="eyebrow">Wat het me leerde</span>
+    <h2>Vijf dingen die ik niet uit een tutorial had gehaald.</h2>
+    <ul class="lessons">
+      <li>
+        <span class="k">Opslag in de browser is geen opslag</span>
+        <span class="v">Gegevens die alleen in de browser staan, verdwijnen zodra iemand van apparaat wisselt of privacy-instellingen aanscherpt. Elk nieuw veld moet drie keer kloppen: weggeschreven, teruggelezen, en geaccepteerd door de database.</span>
+      </li>
+      <li>
+        <span class="k">Bron boven antwoord</span>
+        <span class="v">Een cijfer zonder herkomst is onbruikbaar in een zakelijke beslissing. Elke uitkomst verwijst terug naar de publicatie, de factuur of de regel waar hij vandaan komt.</span>
+      </li>
+      <li>
+        <span class="k">Rekenen doet de code, niet het model</span>
+        <span class="v">AI is uitstekend in interpreteren en samenvatten. Bedragen, handicaps en btw laat je berekenen door code die elke keer hetzelfde antwoord geeft.</span>
+      </li>
+      <li>
+        <span class="k">De mens keurt goed</span>
+        <span class="v">Een verkeerd btw-tarief op een verzonden factuur is een probleem voor de ondernemer én zijn klant. Het systeem mag voorstellen doen met uitleg; vaststellen doet de gebruiker.</span>
+      </li>
+      <li>
+        <span class="k">Bouw meteen voor de betalende gebruiker</span>
+        <span class="v">Inloggen, rechten en abonnementen achteraf inbouwen kost meer dan ze vanaf dag één meenemen. Dat is het verschil tussen een demo en een product.</span>
+      </li>
+    </ul>
+  </div>
+</section>
+
+<section>
+  <div class="wrap reveal">
+    <span class="eyebrow">Onder de motorkap</span>
+    <h2>Klein gereedschap, serieus gebruikt.</h2>
+    <p class="muted">Versiebeheer, publicatie, database en betalingen — alles standaard en vervangbaar, zodat er geen enkele app afhangt van iets wat ik zelf in stand moet houden.</p>
+    <div class="stack">
+      <span class="chip">GitHub</span><span class="chip">Vercel</span><span class="chip">Supabase</span>
+      <span class="chip">Stripe</span><span class="chip">Python</span><span class="chip">Streamlit</span>
+      <span class="chip">PWA / Service worker</span><span class="chip">Claude</span>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap reveal">
+    <span class="eyebrow">Voor wie dit relevant is</span>
+    <h2>Drie manieren om hiernaar te kijken.</h2>
+    <div class="cols">
+      <div class="col">
+        <h3>Ondernemers in het mkb</h3>
+        <p>Deze apps lossen echte kosten op: gemiste aanbestedingen, verloren administratieuren. Klein beginnen kan, mits het meteen betrouwbaar is.</p>
+      </div>
+      <div class="col">
+        <h3>Mede-bouwers</h3>
+        <p>De volgorde hierboven is de kortste route die ik ken: eerst bewijzen dat de data klopt, dan pas mooi maken, en account plus betaling niet uitstellen.</p>
+      </div>
+      <div class="col">
+        <h3>Opdrachtgevers</h3>
+        <p>Commerciële ervaring plus de vaardigheid om zelf te bouwen betekent kortere lijnen: van signaal naar werkend prototype zonder tussenlaag.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="close">
+  <div class="wrap reveal">
+    <span class="eyebrow">Verder praten</span>
+    <h2>De log gaat door.</h2>
+    <p>Wat hier staat is de stand van nu. Er komen apps bij, en de bestaande worden scherper. Heb je een probleem waarvan je vermoedt dat het geautomatiseerd kan worden — of wil je weten hoe een van deze apps voor jou zou werken?</p>
+    <a class="cta" href="mailto:">Neem contact op</a>
+  </div>
+</section>
+
+<script>
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); }
+    });
+  },{threshold:.12});
+  document.querySelectorAll('.reveal').forEach(function(el){ io.observe(el); });
+</script>
+</body>
+</html>
