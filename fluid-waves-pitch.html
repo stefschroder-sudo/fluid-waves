@@ -1,0 +1,642 @@
+<!DOCTYPE html><html lang="nl"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fluid Waves — Investeerderspresentatie</title>
+<style>
+  :root{
+    --navy:#1B2C4F; --navy2:#2A4372; --goud:#C9A227; --goud2:#854F0B;
+    --papier:#F4F1EA; --wit:#FBF8F0; --rand:#E0D8C4; --rand-licht:#E8E1D2;
+    --inkt:#2A2A28; --grijs:#8A7F63; --grijs2:#5F5E5A; --groen:#0F6E56; --rood:#A32D2D;
+    --grijsblauw:#6B7A8F;
+  }
+  *{ box-sizing:border-box; margin:0; padding:0; }
+  html,body{ height:100%; }
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:var(--navy); color:var(--inkt);
+    display:flex; align-items:center; justify-content:center;
+    overflow:hidden; -webkit-font-smoothing:antialiased;
+  }
+  #deck{ width:100vw; height:100vh; position:relative; }
+  .slide{
+    position:absolute; inset:0; opacity:0; pointer-events:none;
+    transition:opacity .4s ease; display:flex; flex-direction:column;
+    padding:5vh 6vw; overflow:auto;
+  }
+  .slide.on{ opacity:1; pointer-events:auto; }
+  .slide.paper{ background:var(--papier); }
+  .slide.cream{ background:var(--wit); }
+  .slide.dark{ background:var(--navy);
+    background-image:radial-gradient(circle at 80% 15%, rgba(201,162,39,.10), transparent 45%); }
+
+  .eyebrow{ font-size:12px; letter-spacing:.16em; text-transform:uppercase; color:var(--goud); font-weight:800; margin-bottom:14px; }
+  h1{ font-size:clamp(22px,3vw,36px); color:var(--navy); font-weight:800; line-height:1.15; letter-spacing:-.01em; }
+  .dark h1{ color:#fff; }
+  h2{ font-size:clamp(22px,3vw,36px); color:var(--navy); font-weight:800; line-height:1.15; margin-bottom:6px; }
+  .dark h2{ color:#fff; }
+  .lead{ font-size:clamp(15px,1.7vw,20px); color:var(--grijs2); line-height:1.5; max-width:60ch; margin-top:12px; }
+  .dark .lead{ color:rgba(255,255,255,.8); }
+  .goldrule{ width:54px; height:4px; background:var(--goud); border-radius:3px; margin:0 0 20px; }
+
+  .center{ align-items:center; justify-content:center; text-align:center; }
+  .center .lead{ margin-left:auto; margin-right:auto; }
+  .center .goldrule{ margin-left:auto; margin-right:auto; }
+
+  .grid{ display:grid; gap:18px; margin-top:26px; }
+  .g3{ grid-template-columns:repeat(3,1fr); }
+  .g2{ grid-template-columns:repeat(2,1fr); }
+  .g4{ grid-template-columns:repeat(4,1fr); }
+
+  .card{ background:var(--wit); border:1px solid var(--rand); border-radius:14px; padding:20px; }
+  .dark .card{ background:rgba(255,255,255,.05); border-color:rgba(255,255,255,.14); }
+  .card h3{ font-size:16px; color:var(--navy); font-weight:700; margin-bottom:6px; }
+  .dark .card h3{ color:#fff; }
+  .card p{ font-size:13.5px; color:var(--grijs2); line-height:1.5; }
+  .dark .card p{ color:rgba(255,255,255,.72); }
+
+  .card ul.bullets{ list-style:none; margin:10px 0 0; padding:0; }
+  .card ul.bullets li{ position:relative; padding-left:20px; margin-bottom:9px; font-size:13.5px; color:var(--grijs2); line-height:1.5; }
+  .card ul.bullets li::before{ content:"–"; position:absolute; left:2px; top:0; color:var(--goud); font-weight:800; }
+  .card .subhead{ font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--goud); font-weight:800; margin-bottom:10px; }
+  .grid.g2.eq{ align-items:stretch; }
+  .grid.g2.eq .card{ display:flex; flex-direction:column; }
+  .card .push-bottom{ margin-top:auto; padding-top:14px; }
+  .card .belofte{ margin-top:12px; padding-top:12px; border-top:1px solid var(--rand); font-size:13.5px; line-height:1.5; color:var(--navy); font-weight:600; }
+  .card .belofte b{ color:var(--goud); font-weight:800; }
+
+  .kv{ font-size:34px; font-weight:800; color:var(--goud); line-height:1; margin-bottom:6px; }
+
+  /* Brand lockup */
+  .brand{ display:flex; align-items:center; gap:14px; }
+  .brand .wave{ width:52px; height:52px; }
+  .brand .bn{ font-size:22px; font-weight:800; color:#fff; letter-spacing:.01em; }
+  .brand .bt{ font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--goud); font-weight:700; }
+
+  /* Architecture stack */
+  .stack{ display:flex; flex-direction:column; gap:14px; margin-top:24px; max-width:900px; }
+  .layer{ border-radius:14px; padding:18px 22px; display:flex; align-items:center; gap:18px; border:1px solid; }
+  .layer .lnum{ width:34px; height:34px; border-radius:9px; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:15px; flex-shrink:0; }
+  .layer .ltxt h3{ font-size:17px; font-weight:800; margin-bottom:3px; }
+  .layer .ltxt p{ font-size:13px; line-height:1.45; }
+  .layer.l1{ background:var(--wit); border-color:var(--rand); }
+  .layer.l1 .lnum{ background:var(--goud); color:#fff; }
+  .layer.l1 h3{ color:var(--navy); } .layer.l1 p{ color:var(--grijs2); }
+  .layer.l2{ background:#EEF1F5; border-color:#D5DCE5; }
+  .layer.l2 .lnum{ background:var(--grijsblauw); color:#fff; }
+  .layer.l2 h3{ color:var(--navy); } .layer.l2 p{ color:var(--grijs2); }
+  .layer.l3{ background:var(--navy); border-color:var(--navy2); }
+  .layer.l3 .lnum{ background:var(--goud); color:var(--navy); }
+  .layer.l3 h3{ color:#fff; } .layer.l3 p{ color:rgba(255,255,255,.78); }
+  .arrow{ text-align:center; color:var(--grijs); font-size:18px; line-height:.4; }
+
+  /* Mockup frame */
+  .mock{ background:#fff; border:1px solid var(--rand); border-radius:14px; overflow:hidden; box-shadow:0 18px 50px rgba(27,44,79,.22); }
+  .mock .bar{ background:var(--navy); padding:9px 14px; display:flex; align-items:center; gap:7px; }
+  .mock .dot{ width:9px; height:9px; border-radius:50%; background:rgba(255,255,255,.35); }
+  .mock .url{ margin-left:10px; font-size:11px; color:rgba(255,255,255,.7); background:rgba(255,255,255,.1); padding:3px 10px; border-radius:6px; }
+  .mock .body{ padding:18px; background:var(--papier); }
+
+  .apptile{ background:var(--wit); border:1px solid var(--rand); border-radius:12px; padding:14px; position:relative; overflow:hidden; }
+  .apptile .ic{ width:34px; height:34px; border-radius:9px; background:var(--navy); display:flex; align-items:center; justify-content:center; margin-bottom:9px; }
+  .apptile .ic svg{ width:19px; height:19px; stroke:var(--goud); fill:none; stroke-width:1.9; }
+  .apptile h4{ font-size:13.5px; color:var(--navy); font-weight:700; margin-bottom:3px; }
+  .apptile p{ font-size:11px; color:var(--grijs); line-height:1.4; }
+  .apptile .price{ font-size:11px; color:var(--goud); font-weight:700; margin-top:7px; }
+  .apptile.soon{ opacity:.72; border-style:dashed; }
+  .apptile.soon .ic{ background:var(--rand); } .apptile.soon .ic svg{ stroke:var(--grijs); }
+  .badge{ position:absolute; top:9px; right:9px; font-size:8.5px; font-weight:800; text-transform:uppercase; letter-spacing:.05em; background:var(--goud); color:#fff; padding:2px 7px; border-radius:20px; }
+  .badge.gray{ background:var(--grijs); }
+
+  /* Dashboard mock rows */
+  .dashrow{ display:flex; align-items:center; justify-content:space-between; padding:8px 12px; border-top:1px solid var(--rand-licht); font-size:11.5px; }
+  .dashrow:first-child{ border-top:none; }
+  .pill{ font-size:9px; font-weight:800; padding:2px 8px; border-radius:20px; }
+  .pill.g{ background:#E7F0EC; color:var(--groen); } .pill.a{ background:#FBF1E0; color:var(--goud2); }
+  .kpi-mini{ background:var(--navy); border-radius:10px; padding:11px 13px; }
+  .kpi-mini .l{ font-size:8.5px; text-transform:uppercase; letter-spacing:.05em; color:var(--goud); font-weight:700; }
+  .kpi-mini .v{ font-size:19px; font-weight:800; color:#fff; margin-top:3px; }
+
+  /* nav */
+  #nav{ position:fixed; bottom:20px; left:50%; transform:translateX(-50%); display:flex; align-items:center; gap:14px; z-index:50;
+    background:rgba(27,44,79,.85); backdrop-filter:blur(8px); padding:9px 16px; border-radius:40px; border:1px solid rgba(201,162,39,.4); }
+  #nav button{ background:none; border:none; color:#fff; cursor:pointer; font-size:18px; padding:2px 6px; line-height:1; opacity:.85; }
+  #nav button:hover{ opacity:1; }
+  #dots{ display:flex; gap:6px; }
+  .ndot{ width:7px; height:7px; border-radius:50%; background:rgba(255,255,255,.35); cursor:pointer; transition:.2s; }
+  .ndot.on{ background:var(--goud); transform:scale(1.3); }
+  #counter{ color:rgba(255,255,255,.75); font-size:11px; font-variant-numeric:tabular-nums; min-width:38px; text-align:center; }
+
+  .foot{ margin-top:auto; padding-top:18px; font-size:11px; color:var(--grijs); }
+
+  /* golfje op elke pagina */
+  .slide::after{
+    content:""; position:absolute; right:26px; bottom:20px; width:46px; height:26px;
+    background:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="-4 -29.5 108 59"><g fill="none" stroke-width="8" stroke-linecap="round"><path d="M0,0 c12.5,-13.33 37.5,-13.33 50,0 c12.5,13.33 37.5,13.33 50,0" stroke="%238D96A6" transform="translate(0,-15.5)"/><path d="M0,0 c12.5,-13.33 37.5,-13.33 50,0 c12.5,13.33 37.5,13.33 50,0" stroke="%23C7A230"/><path d="M0,0 c12.5,-13.33 37.5,-13.33 50,0 c12.5,13.33 37.5,13.33 50,0" stroke="%23DCE3EA" transform="translate(0,15.5)"/></g></svg>') no-repeat center/contain;
+    pointer-events:none;
+  }
+  .dark .foot{ color:rgba(255,255,255,.5); }
+  .tag{ display:inline-block; font-size:11px; font-weight:700; color:var(--goud); border:1px solid var(--goud); border-radius:20px; padding:4px 12px; margin-bottom:16px; }
+
+  @media (max-width:760px){
+    .g3,.g4{ grid-template-columns:1fr 1fr; } .g2{ grid-template-columns:1fr; }
+    .slide{ padding:4vh 6vw 10vh; }
+  }
+</style>
+</head>
+<body>
+<div id="deck">
+
+  <section class="slide dark center on">
+    <svg class="wave" width="76" height="76" viewBox="0 0 40 40" style="margin-bottom:22px;">
+      <path d="M4 25 Q11 18 20 25 T36 25" fill="none" stroke="#C9A227" stroke-width="2.4" stroke-linecap="round"></path>
+      <path d="M4 30 Q11 23 20 30 T36 30" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" opacity=".85"></path>
+      <path d="M4 20 Q11 13 20 20 T36 20" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" opacity=".5"></path>
+    </svg>
+    <h1 style="font-size:clamp(28px,4.6vw,54px); line-height:1.08;">Fluid Waves</h1>
+    <div style="font-size:15px; letter-spacing:.22em; text-transform:uppercase; color:var(--goud); font-weight:700; margin-top:14px;">The Smart Dashboard&trade;</div>
+    <p class="lead" style="margin-top:20px;">Slimme AI-toepassingen<span style="color:var(--goud); font-weight:700;">*</span> voor ondernemers.<br>Smart Apps™ in een Smart Dashboard™.</p>
+    <div class="foot">Investeerderspresentatie · fluid-waves.nl · vertrouwelijk</div>
+  </section>
+
+  <section class="slide paper">
+    <div class="eyebrow">Het probleem · de kans</div>
+    <div class="goldrule"></div>
+    <h1>AI is overal — behalve bij<br>de kleine ondernemer</h1>
+    <p class="lead">Nederland telt circa 2,4 miljoen mkb-bedrijven, waarvan 1,2 miljoen zzp'ers. Grote bedrijven omarmen AI in rap tempo; MKB-bedrijven en kleine ondernemers blijven daarin achter — geen tijd, te kostbaar of nog even niet. Fluid Waves begrijpt dat en lost dit op.</p>
+    <div class="grid g3 eq">
+      <div class="card"><div class="subhead">(H)erkenning</div><p>Fluid Waves herkent en erkent de praktische problemen van de kleinere bedrijven. Onze ervaring en inzicht leveren de expertise om je hiermee te helpen. Binnen jouw budget.</p></div>
+      <div class="card"><div class="subhead">Te duur &amp; te technisch</div><p>Een AI-oplossing op maat gaat geld opleveren. En het kan heel overzichtelijk zonder technische kennis worden ingezet. Dat is een belofte.</p></div>
+      <div class="card"><div class="subhead">Te versnipperd</div><p>Losse tools zonder samenhang herkennen wij niet. We zorgen niet alleen voor grip op data, maar door ons Smart Dashboard™ ook voor inzicht in kosten en opbrengsten. Modulair, dus schaalbaar geld verdienen!</p></div>
+    </div>
+    <div style="max-width:1080px; margin-top:14px; display:grid; grid-template-columns:repeat(3,1fr); gap:10px;">
+      <div style="background:var(--wit); border:1px solid var(--rand); border-radius:10px; padding:9px 12px; font-size:11px; color:var(--grijs2); line-height:1.45;">AI-gebruik microbedrijven <b style="color:var(--navy);">verdubbeld: 6,8% → 13,8%</b> (2023–2025); bij 10–249 wp al 29,8% — de markt kantelt nú.</div>
+      <div style="background:var(--wit); border:1px solid var(--rand); border-radius:10px; padding:9px 12px; font-size:11px; color:var(--grijs2); line-height:1.45;"><b style="color:var(--navy);">71,6%</b> van de microbedrijven die AI overwogen maar niet gebruikten, noemt <b style="color:var(--navy);">gebrek aan ervaring</b> als drempel.</div>
+      <div style="background:var(--wit); border:1px solid var(--rand); border-radius:10px; padding:9px 12px; font-size:11px; color:var(--grijs2); line-height:1.45;">Direct adresseerbare kernmarkt: <b style="color:var(--navy);">150.000–250.000</b> “zelfdoeners” — nog vrijwel onbediend met simpele AI-tools.</div>
+    </div>
+    <div style="max-width:1080px; margin-top:12px; background:var(--navy); border-radius:12px; padding:14px 20px; color:#fff;">
+      <div style="font-size:13px; line-height:1.55;"><b style="color:var(--goud);">Waarom nu:</b> AI is volwassen én betaalbaar geworden. De techniek is er; wat ontbreekt is de vertaling naar concrete, betaalbare toepassingen voor de kleine ondernemer. Precies het gat dat Fluid Waves vult.</div>
+    </div>
+    <div class="foot">Bronnen: CBS — Dossier ZZP (2026) · AI-gebruik door microbedrijven (2026) · ICT-gebruik kleine bedrijven (2025) · eigen marktonderzoek, aug. 2026.</div>
+  </section>
+
+  
+
+  <section class="slide cream">
+    <div class="eyebrow">Wat doet Fluid Waves?</div>
+    <div class="goldrule"></div>
+    <h1>Twee Proposities</h1>
+    <div style="font-size:clamp(15px,1.9vw,21px); color:var(--navy2); font-weight:700; letter-spacing:.01em; margin-top:6px;">2 motoren <span style="color:var(--goud2); font-style:italic;">· perpetuum mobile</span></div>
+    <div class="grid g2 eq">
+      <div class="card">
+        <div style="font-size:12px; color:var(--navy2); font-weight:800; letter-spacing:.08em; margin-bottom:8px;">Motor 1</div>
+        <div class="subhead">Gerichte AI Support</div>
+        <p>Fluid Waves biedt support aan ondernemers om gezamenlijk (in fases) de mogelijkheden van gerichte AI-toepassingen te inventariseren. Na een analyse van die inventarisatie maken we een bouwplan voor de eerste fase van een Smart Dashboard™ waarin de AI-gedreven toepassing (de App) wordt opgenomen. Het Smart Dashboard werkt modulair. Meerdere toepassingen kunnen in volgende fases worden toegevoegd, inclusief een beheertool waarmee alle kosten en opbrengsten direct zichtbaar worden gemaakt.</p>
+        <p class="belofte push-bottom"><b>Het resultaat:</b> jouw eigen processen slimmer en lichter ingericht — een toepassing die past bij hoe jij je organisatie en operatie wilt optimaliseren.</p>
+      </div>
+      <div class="card">
+        <div style="font-size:12px; color:var(--navy2); font-weight:800; letter-spacing:.08em; margin-bottom:8px;">Motor 2</div>
+        <div class="subhead">Smart apps by Fluid Waves</div>
+        <p>Fluid Waves bouwt eigen — commerciële — apps die zowel specialistische als generieke taken kunnen uitvoeren. Deze apps worden aangeboden met verschillende abonnementsvormen en API-service naar gebruik.</p>
+        <p>Ook kunnen deze apps worden aangeboden in een Smart Dashboard™ — voor eigen gebruik of commercieel als reseller, waarmee we voor onze klanten een verdienmodel toevoegen! Geschikte apps hiervoor zijn o.a. Smart Invoice™, Smart Admin™, Job Radar™ en Smart Events™ — en er volgen er meer.</p>
+        <p class="belofte push-bottom"><b>Het resultaat:</b> voor een concrete taak meteen een slimme, bewezen toepassing — direct inzetbaar, zonder ontwikkeltraject.</p>
+      </div>
+    </div>
+    <div style="display:flex; align-items:stretch; justify-content:center; gap:10px; margin:22px 0 4px; flex-wrap:wrap; max-width:1000px;">
+      <div style="flex:1; min-width:148px; background:var(--navy); border-radius:12px; padding:14px 16px; text-align:center; color:#fff;">
+        <div style="font-size:9px; letter-spacing:.14em; text-transform:uppercase; color:var(--goud); font-weight:800;">Motor 1</div>
+        <div style="font-size:15px; font-weight:800; margin-top:3px;">Gerichte AI Support</div>
+        <div style="font-size:10.5px; color:rgba(255,255,255,.7); margin-top:2px;">consultancy &amp; maatwerk</div>
+        <div style="font-size:10px; color:var(--goud); font-weight:800; margin-top:5px;">€ uurtje-factuurtje → projectprijs</div>
+      </div>
+      <div style="display:flex; align-items:center; justify-content:center; min-width:48px;">
+        <div style="font-size:22px; font-weight:800; color:var(--goud); line-height:1;">↔</div>
+      </div>
+      <div style="flex:1; min-width:148px; background:var(--navy); border-radius:12px; padding:14px 16px; text-align:center; color:#fff;">
+        <div style="font-size:9px; letter-spacing:.14em; text-transform:uppercase; color:var(--goud); font-weight:800;">Motor 2</div>
+        <div style="font-size:15px; font-weight:800; margin-top:3px;">Smart apps</div>
+        <div style="font-size:10.5px; color:rgba(255,255,255,.7); margin-top:2px;">commerciële producten</div>
+        <div style="font-size:10px; color:var(--goud); font-weight:800; margin-top:5px;">€ abonnementen → MRR/ARR</div>
+      </div>
+      <div style="display:flex; align-items:center; justify-content:center; min-width:48px;">
+        <div style="font-size:22px; font-weight:800; color:var(--goud); line-height:1;">↔</div>
+      </div>
+      <div style="flex:1.15; min-width:165px; background:var(--wit); border:2px solid var(--goud); border-radius:12px; padding:14px 16px; text-align:center;">
+        <div style="font-size:9px; letter-spacing:.14em; text-transform:uppercase; color:var(--goud2); font-weight:800;">Het podium</div>
+        <div style="font-size:15px; font-weight:800; margin-top:3px; color:var(--navy);">Smart Dashboard™</div>
+        <div style="font-size:10.5px; color:var(--grijs2); margin-top:2px;">etalage &amp; beheer</div>
+      </div>
+    </div>
+    <div style="max-width:1000px; margin:0;">
+      <svg viewBox="0 0 1000 58" width="100%" style="display:block; overflow:visible;">
+        <defs><marker id="fw-ah" markerWidth="13" markerHeight="13" refX="6.5" refY="6.5" orient="auto"><path d="M2,2 L11,6.5 L2,11" fill="none" stroke="#C9A227" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></marker></defs>
+        <path d="M137 44 H841" fill="none" stroke="#C9A227" stroke-width="2" stroke-dasharray="6 5"></path>
+        <path d="M137 44 V13" fill="none" stroke="#C9A227" stroke-width="2" stroke-dasharray="6 5" marker-end="url(#fw-ah)"></path>
+        <path d="M489 44 V13" fill="none" stroke="#C9A227" stroke-width="2" stroke-dasharray="6 5" marker-end="url(#fw-ah)"></path>
+        <path d="M841 44 V13" fill="none" stroke="#C9A227" stroke-width="2" stroke-dasharray="6 5" marker-end="url(#fw-ah)"></path>
+        <rect x="245" y="35" width="200" height="18" fill="#FBF8F0"></rect>
+        <text x="345" y="48" text-anchor="middle" fill="#854F0B" style="font:800 10.5px -apple-system,'Segoe UI',system-ui,sans-serif; letter-spacing:1.3px;">MET RESELLING OPPORTUNITIES</text>
+      </svg>
+    </div>
+    <p style="font-size:12.5px; color:var(--grijs2); line-height:1.5; max-width:70ch; margin:10px 0 0; font-style:italic;"><span style="color:var(--goud); font-style:normal; font-weight:800;">*</span> Met een <em>toepassing</em> bedoelen we steeds een AI-gedreven toepassing — een App die een concrete taak slimmer maakt.</p>
+  </section><section class="slide paper">
+    <div class="eyebrow">Hoe het werkt</div>
+    <div style="font-size:13px; color:var(--navy2); font-weight:600; letter-spacing:.02em; margin:-8px 0 4px;">van vraag naar toepassing</div>
+    <div class="goldrule"></div>
+    <h1>Jouw smart apps in je eigen<br>Smart Dashboard™</h1>
+    <p class="lead">Fluid Waves™ analyseert samen met de ondernemer welke AI-toepassing nodig is om tijdrovende taken met AI te structureren en te reorganiseren. De apps die daarvoor nodig zijn, bouwen wij in een Smart Dashboard™ waarmee je het volledige management en beheer van de toepassingen heel eenvoudig onder controle houdt en de kosten zichtbaar maakt.</p>
+    <div style="max-width:1000px; margin:24px auto 0; border:1px solid var(--rand); border-radius:14px; overflow:hidden; box-shadow:0 18px 44px rgba(27,44,79,.18); background:var(--papier);">
+      <div style="background:var(--wit); padding:13px 18px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid var(--rand);">
+        <div style="display:flex; align-items:center; gap:10px;">
+          <div style="width:34px; height:34px; border-radius:9px; background:var(--navy); display:flex; align-items:center; justify-content:center;">
+            <svg width="20" height="20" viewBox="0 0 40 40"><path d="M4 25 Q11 18 20 25 T36 25" fill="none" stroke="#C9A227" stroke-width="2.6" stroke-linecap="round"></path><path d="M4 30 Q11 23 20 30 T36 30" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round"></path></svg>
+          </div>
+          <div><div style="font-size:15px; font-weight:800; color:var(--navy);">Smart Dashboard</div><div style="font-size:8px; letter-spacing:.12em; text-transform:uppercase; color:var(--goud); font-weight:700;">Fluid Waves • The Clever App Studio</div></div>
+        </div>
+        <div style="display:flex; align-items:center; gap:10px;">
+          <div style="width:120px; height:26px; border-radius:13px; background:var(--navy);"></div>
+          <div style="width:26px; height:26px; border-radius:50%; background:var(--goud);"></div>
+        </div>
+      </div>
+      <div style="background:var(--navy); padding:9px 18px; display:flex; gap:16px; align-items:center;">
+        <div style="width:56px; height:6px; border-radius:3px; background:var(--goud);"></div>
+        <div style="width:70px; height:6px; border-radius:3px; background:rgba(255,255,255,.28);"></div>
+        <div style="width:58px; height:6px; border-radius:3px; background:rgba(255,255,255,.28);"></div>
+        <div style="width:82px; height:6px; border-radius:3px; background:rgba(255,255,255,.28);"></div>
+        <div style="width:46px; height:6px; border-radius:3px; background:rgba(255,255,255,.28);"></div>
+        <div style="width:64px; height:6px; border-radius:3px; background:rgba(255,255,255,.28);"></div>
+      </div>
+      <div style="display:flex; align-items:stretch;">
+        <div style="width:184px; flex-shrink:0; padding:16px 14px; border-right:1px solid var(--rand);">
+          <div style="font-size:8.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--grijs); font-weight:800; margin-bottom:8px;">Smart Apps</div>
+          <div style="background:var(--wit); border:1px solid var(--rand); border-radius:10px; padding:9px; display:flex; gap:8px; align-items:center; margin-bottom:16px;">
+            <div style="width:22px; height:22px; border-radius:6px; background:var(--navy); flex-shrink:0;"></div>
+            <div style="flex:1;"><div style="height:6px; width:80%; border-radius:3px; background:var(--rand);"></div><div style="height:5px; width:55%; border-radius:3px; background:var(--rand); margin-top:5px;"></div></div>
+          </div>
+          <div style="font-size:8.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--grijs); font-weight:800; margin-bottom:8px;">Beheer</div>
+          <div style="background:var(--navy); height:26px; border-radius:7px;"></div>
+          <div style="height:6px; width:70%; border-radius:3px; background:var(--rand); margin:11px 0;"></div>
+          <div style="height:6px; width:55%; border-radius:3px; background:var(--rand); margin:11px 0;"></div>
+          <div style="height:6px; width:78%; border-radius:3px; background:var(--rand); margin:11px 0;"></div>
+          <div style="font-size:8.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--grijs); font-weight:800; margin:16px 0 8px;">Portfolio</div>
+          <div style="height:6px; width:60%; border-radius:3px; background:var(--rand); margin:11px 0;"></div>
+          <div style="height:6px; width:50%; border-radius:3px; background:var(--rand); margin:11px 0;"></div>
+          <div style="height:6px; width:64%; border-radius:3px; background:var(--rand); margin:11px 0;"></div>
+        </div>
+        <div style="flex:1; padding:16px; min-width:0;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+            <div style="flex:1;"><div style="height:10px; width:36%; border-radius:4px; background:var(--navy);"></div><div style="height:6px; width:52%; border-radius:3px; background:var(--rand); margin-top:6px;"></div></div>
+            <div style="width:110px; height:28px; border-radius:8px; background:var(--navy);"></div>
+          </div>
+          <div style="background:var(--wit); border:1px solid var(--rand); border-left:3px solid var(--goud); border-radius:8px; padding:12px 14px; display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+            <div style="height:7px; width:34%; border-radius:3px; background:var(--rand);"></div>
+            <div style="height:6px; width:14%; border-radius:3px; background:var(--rand);"></div>
+          </div>
+          <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-bottom:12px;">
+      <div style="background:var(--wit); border:1px solid var(--rand); border-radius:10px; padding:12px;"><div style="height:6px; width:60%; border-radius:3px; background:var(--rand); margin-bottom:12px;"></div><div style="height:22px; width:72%; border-radius:6px; background:var(--navy);"></div></div>
+      <div style="background:var(--wit); border:1px solid var(--rand); border-radius:10px; padding:12px;"><div style="height:6px; width:60%; border-radius:3px; background:var(--rand); margin-bottom:12px;"></div><div style="height:22px; width:72%; border-radius:6px; background:var(--navy);"></div></div>
+      <div style="background:var(--wit); border:1px solid var(--rand); border-radius:10px; padding:12px;"><div style="height:6px; width:60%; border-radius:3px; background:var(--rand); margin-bottom:12px;"></div><div style="height:22px; width:72%; border-radius:6px; background:var(--navy);"></div></div>
+      <div style="background:var(--wit); border:1px solid var(--rand); border-radius:10px; padding:12px;"><div style="height:6px; width:60%; border-radius:3px; background:var(--rand); margin-bottom:12px;"></div><div style="height:22px; width:72%; border-radius:6px; background:var(--goud);"></div></div>
+          </div>
+          <div style="display:grid; grid-template-columns:1.5fr 1fr; gap:12px;">
+            <div style="background:var(--wit); border:1px solid var(--rand); border-radius:10px; padding:14px;">
+              <div style="display:flex; gap:10px; margin-bottom:6px;"><div style="height:8px; width:30%; border-radius:4px; background:var(--navy);"></div><div style="height:8px; width:16%; border-radius:4px; background:var(--rand);"></div></div>
+        <div style="display:flex; align-items:center; gap:10px; padding:9px 0; border-top:1px solid var(--rand-licht);"><div style="width:26px; height:26px; border-radius:7px; background:var(--rand); flex-shrink:0;"></div><div style="flex:1;"><div style="height:7px; width:48%; border-radius:3px; background:var(--navy); opacity:.55;"></div><div style="height:6px; width:30%; border-radius:3px; background:var(--rand); margin-top:6px;"></div></div><div style="width:74px; height:16px; border-radius:20px; background:#E7F0EC;"></div></div>
+        <div style="display:flex; align-items:center; gap:10px; padding:9px 0; border-top:1px solid var(--rand-licht);"><div style="width:26px; height:26px; border-radius:7px; background:var(--rand); flex-shrink:0;"></div><div style="flex:1;"><div style="height:7px; width:48%; border-radius:3px; background:var(--navy); opacity:.55;"></div><div style="height:6px; width:30%; border-radius:3px; background:var(--rand); margin-top:6px;"></div></div><div style="width:74px; height:16px; border-radius:20px; background:#FBF1E0;"></div></div>
+        <div style="display:flex; align-items:center; gap:10px; padding:9px 0; border-top:1px solid var(--rand-licht);"><div style="width:26px; height:26px; border-radius:7px; background:var(--rand); flex-shrink:0;"></div><div style="flex:1;"><div style="height:7px; width:48%; border-radius:3px; background:var(--navy); opacity:.55;"></div><div style="height:6px; width:30%; border-radius:3px; background:var(--rand); margin-top:6px;"></div></div><div style="width:74px; height:16px; border-radius:20px; background:#E7EDF5;"></div></div>
+        <div style="display:flex; align-items:center; gap:10px; padding:9px 0; border-top:1px solid var(--rand-licht);"><div style="width:26px; height:26px; border-radius:7px; background:var(--rand); flex-shrink:0;"></div><div style="flex:1;"><div style="height:7px; width:48%; border-radius:3px; background:var(--navy); opacity:.55;"></div><div style="height:6px; width:30%; border-radius:3px; background:var(--rand); margin-top:6px;"></div></div><div style="width:74px; height:16px; border-radius:20px; background:#EDE9DF;"></div></div>
+            </div>
+            <div>
+              <div style="background:var(--wit); border:1px solid var(--rand); border-radius:10px; padding:14px; margin-bottom:12px;">
+                <div style="height:7px; width:55%; border-radius:3px; background:var(--navy); opacity:.5; margin-bottom:12px;"></div>
+                <div style="height:6px; width:90%; border-radius:3px; background:var(--rand); margin:9px 0;"></div>
+                <div style="height:6px; width:80%; border-radius:3px; background:var(--rand); margin:9px 0;"></div>
+                <div style="height:6px; width:88%; border-radius:3px; background:var(--rand); margin:9px 0;"></div>
+                <div style="height:6px; width:72%; border-radius:3px; background:var(--rand); margin:9px 0;"></div>
+              </div>
+              <div style="background:var(--navy); border-radius:10px; padding:16px;">
+                <div style="height:8px; width:60%; border-radius:3px; background:rgba(255,255,255,.55);"></div>
+                <div style="height:7px; width:44%; border-radius:3px; background:rgba(255,255,255,.3); margin-top:10px;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div style="text-align:center; font-size:12px; color:var(--grijs2); margin-top:12px; letter-spacing:.02em;">Smart Dashboard™ · voorbeeldweergave · teksten geanonimiseerd</div>
+  </section>
+
+  
+
+  <section class="slide cream">
+    <div class="eyebrow">Actueel portfolio</div>
+    <div class="goldrule"></div>
+    <h2>Alle apps, hun propositie en verdienmodel</h2>
+    <p class="lead" style="margin-bottom:6px;">Zo veel mogelijkheden…</p>
+    <div class="grid g2" style="max-width:1040px; gap:18px; align-items:start; margin-top:16px;">
+
+      <div class="card">
+        <div class="subhead" style="margin-bottom:2px;">Motor 1 · Smart Dashboard-apps</div>
+        <p style="font-size:11px; color:var(--grijs); margin-bottom:6px;">Zakelijke tools — abonnement, en inzetbaar in een maatwerk-dashboard.</p>
+
+        <div style="padding:9px 0;">
+          <div style="display:flex; justify-content:space-between; align-items:baseline; gap:8px;"><span style="font-weight:800; color:var(--navy); font-size:14px;">Smart Invoice <span style="font-size:8.5px; font-weight:800; color:var(--goud); letter-spacing:.04em;">· VERKOOPKLAAR · INSTAP</span></span><span style="font-size:10.5px; font-weight:800; color:var(--goud); white-space:nowrap;">Abonnement · €9,95/mnd</span></div>
+          <p style="font-size:11.5px; color:var(--grijs2); line-height:1.4; margin-top:3px;">Instap-app: simpel factureren &amp; bonnetjes, met omzet- en kostenscan via de camera op je mobiel. <b style="color:var(--goud2);">Doel: upsell naar Smart Admin</b> — zelfde login, zelfde data. Ook inbegrepen als mobiele tool bij Smart Admin.</p>
+        </div>
+        <div style="padding:9px 0; border-top:1px solid var(--rand);">
+          <div style="display:flex; justify-content:space-between; align-items:baseline; gap:8px;"><span style="font-weight:800; color:var(--navy); font-size:14px;">Smart Admin <span style="font-size:8.5px; font-weight:800; color:var(--goud); letter-spacing:.04em;">· VERKOOPKLAAR</span></span><span style="font-size:10.5px; font-weight:800; color:var(--goud); white-space:nowrap;">Abonnement · €19,95/mnd</span></div>
+          <p style="font-size:11.5px; color:var(--grijs2); line-height:1.4; margin-top:3px;">Administratie, facturen &amp; btw met AI-bonherkenning — je boekhouding op orde in één uurtje per week. Sticky, vaste prijs. Proefperiode van 2 maanden voor €10,- per maand. In de Smart Admin-app zit Smart Invoice ingebouwd, met de extra functie dat alles wat je op mobiel hebt gescand direct in jouw verzamelmappen op je desktop verschijnt. Met één vinkje keur je het goed, waarna het in de admin wordt ingeboekt. Zo makkelijk!</p>
+        </div>
+        <div style="padding:9px 0; border-top:1px solid var(--rand);">
+          <div style="display:flex; justify-content:space-between; align-items:baseline; gap:8px;"><span style="font-weight:800; color:var(--navy); font-size:14px;">Job Radar <span style="font-size:8.5px; font-weight:800; color:var(--goud); letter-spacing:.04em;">· LIVE</span></span><span style="font-size:10.5px; font-weight:800; color:var(--goud); white-space:nowrap;">Abonnement · €25/mnd</span></div>
+          <p style="font-size:11.5px; color:var(--grijs2); line-height:1.4; margin-top:3px;">Executive job-matching: vindt en scoort geverifieerde senior functies (CCO/CEO/CFO). Zoekcriteria vastgesteld uit jouw ingelezen CV, met eigen aanvulling. Criteria scherp stellen ter voorkoming van AI-hallucinaties. Abonnement met scan-tegoed + mogelijkheid scans bij te kopen. Gericht banen vinden i.p.v. eindeloos wervingssites bezoeken.</p>
+        </div>
+        <div style="padding:9px 0; border-top:1px solid var(--rand);">
+          <div style="display:flex; justify-content:space-between; align-items:baseline; gap:8px;"><span style="font-weight:800; color:var(--navy); font-size:14px;">TenderLead <span style="font-size:8.5px; font-weight:800; color:var(--goud); letter-spacing:.04em;">· LIVE</span></span><span style="font-size:10.5px; font-weight:800; color:var(--goud); white-space:nowrap;">Op aanvraag</span></div>
+          <p style="font-size:11.5px; color:var(--grijs2); line-height:1.4; margin-top:3px;">Vindt — per marktsector — gevalideerde bedrijven in 5 EU-landen met bewezen expertise in de uitvoering van geselecteerde tenders. Of andersom: vindt de juiste tenders voor geselecteerde bedrijven.</p>
+        </div>
+        <div style="padding:9px 0; border-top:1px solid var(--rand);">
+          <div style="display:flex; justify-content:space-between; align-items:baseline; gap:8px;"><span style="font-weight:800; color:var(--navy); font-size:14px;">Smart Events <span style="font-size:8.5px; font-weight:800; color:var(--goud); letter-spacing:.04em;">· LIVE</span></span><span style="font-size:10.5px; font-weight:800; color:var(--goud); white-space:nowrap;">Freemium → abonnement</span></div>
+          <p style="font-size:11.5px; color:var(--grijs2); line-height:1.4; margin-top:3px;">Deelbare evenementpagina's: programma, aanmeldingen, kosten &amp; Tikkie, export naar Excel/PDF — met eigen beheer per organisator. Unieke app voor de organisatie van familie-uitjes, personeels- en groepsevenementen.</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="subhead" style="margin-bottom:2px;">Motor 2 · Losstaande smart apps</div>
+        <p style="font-size:11px; color:var(--grijs); margin-bottom:6px;">Zelfstandige producten — gratis, goedkoop abonnement of eenmalig.</p>
+
+        <div style="padding:9px 0;">
+          <div style="display:flex; justify-content:space-between; align-items:baseline; gap:8px;"><span style="font-weight:800; color:var(--navy); font-size:14px;">Golfscore &amp; Tournament <span style="font-size:8.5px; font-weight:800; color:var(--goud); letter-spacing:.04em;">· LIVE</span></span><span style="font-size:10.5px; font-weight:800; color:var(--goud); white-space:nowrap;">Gratis → abonnement/eenmalig</span></div>
+          <p style="font-size:11.5px; color:var(--grijs2); line-height:1.4; margin-top:3px;">Complete scorekaart (Stableford, strokeplay, Scramble…) met toernooimodule en WHS-handicap — werkt offline op de baan. Kan exclusief per golfclub worden ingericht (resale).</p>
+        </div>
+        <div style="padding:9px 0; border-top:1px solid var(--rand);">
+          <div style="display:flex; justify-content:space-between; align-items:baseline; gap:8px;"><span style="font-weight:800; color:var(--navy); font-size:14px;">Table Art Fashion <span style="font-size:8.5px; font-weight:800; color:var(--goud); letter-spacing:.04em;">· LIVE</span></span><span style="font-size:10.5px; font-weight:800; color:var(--goud); white-space:nowrap;">Op aanvraag</span></div>
+          <p style="font-size:11.5px; color:var(--grijs2); line-height:1.4; margin-top:3px;"><b>Exclusief.</b></p>
+        </div>
+        <div style="padding:9px 0; border-top:1px solid var(--rand);">
+          <div style="display:flex; justify-content:space-between; align-items:baseline; gap:8px;"><span style="font-weight:800; color:var(--navy); font-size:14px;">Live From <span style="font-size:8.5px; font-weight:800; color:var(--grijsblauw); letter-spacing:.04em;">· UNDER CONSTRUCTION</span></span><span style="font-size:10.5px; font-weight:800; color:var(--goud); white-space:nowrap;">Prijs op aanvraag</span></div>
+          <p style="font-size:11.5px; color:var(--grijs2); line-height:1.4; margin-top:3px;">Een unieke app voor ca. 1.600 abonnees die een online samengestelde muziekbibliotheek (van een artiest) voor nog meer muziekliefhebbers toegankelijk maakt.</p>
+        </div>
+        <div style="padding:9px 0; border-top:1px solid var(--rand);">
+          <div style="display:flex; justify-content:space-between; align-items:baseline; gap:8px;"><span style="font-weight:800; color:var(--navy); font-size:14px;">Komende apps <span style="font-size:8.5px; font-weight:800; color:var(--grijsblauw); letter-spacing:.04em;">· PIJPLIJN</span></span><span style="font-size:10.5px; font-weight:800; color:var(--goud); white-space:nowrap;">Model per app</span></div>
+          <p style="font-size:11.5px; color:var(--grijs2); line-height:1.4; margin-top:3px;">Diverse apps die voortkomen uit klantcontacten zitten in de planning. Volg Fluid Waves voor meer info: www.fluid-waves.nl</p>
+        </div>
+        <div style="margin-top:12px; background:var(--wit); border:1px solid var(--rand); border-radius:10px; padding:11px 13px;">
+          <p style="font-size:11.5px; color:var(--navy); line-height:1.45;"><b style="color:var(--goud2);">Variabele kosten voor gebruik:</b> alle API-gebruikskosten worden per app bijgehouden en bij overschrijding van het toegewezen bedrag gefactureerd.</p>
+        </div>
+      </div>
+
+    </div>
+    <div style="max-width:1040px; margin-top:14px; background:var(--navy); border-radius:12px; padding:14px 20px; color:#fff;">
+      <div style="font-size:12.5px; line-height:1.5;"><b style="color:var(--goud);">Fluid Waves = het Smart Dashboard met beheermodule</b> brengt beide motoren samen als hoofdproduct — en laat communicerende verdienmodellen ontstaan: abonnement, eenmalig, uurtje-factuurtje én een reseller-module.</div>
+    </div>
+    <div style="text-align:center; margin-top:12px; font-size:12px; font-weight:700; color:var(--goud2);">PS: alle genoemde prijzen zijn excl. btw.</div>
+  </section>
+
+  
+
+  <section class="slide paper">
+    <div class="eyebrow">Praktijkvoorbeeld · van vraag naar toepassing</div>
+    <div class="goldrule"></div>
+    <h2>Een voorbeeld: van vraag naar toepassing</h2>
+    <p class="lead" style="margin-bottom:8px;">Op de vraag van een ondernemer om een app te bouwen die leads genereert, bouwden wij een gerichte toepassing: een AI-gedreven app die via diverse criteria en kwalificaties gericht zoekt naar klanten voor deze onderneming. Heel gericht en op basis van inzicht. Het resultaat is eigenlijk verbluffend en de vraag blijft of deze app nog uniek is? We gaan hierover graag in gesprek.</p>
+    <div style="max-width:1000px; margin:10px 0 4px; background:var(--navy); border-radius:12px; padding:14px 20px; color:#fff;">
+      <div style="font-size:13px; line-height:1.55;">Deze <b style="color:var(--goud);">Smart App™</b> is ingebouwd in een <b style="color:var(--goud);">Smart Dashboard™</b> dat alle gewerkte uren en kosten van medewerkers registreert, afgezet tegen de opbrengst die de leads genereren — een verdienmodel dat de kosten overstijgt en het langetermijnresultaat aanzienlijk verbetert, met minder belasting van personeel.</div>
+    </div>
+    <div class="mock" style="max-width:1000px; margin-top:14px;">
+      <div class="bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="url">smart-dashboard · resultaat leadgeneratie</span></div>
+      <div class="body">
+        <div class="grid g4" style="margin-top:0; gap:10px;">
+          <div class="kpi-mini"><div class="l">Kosten / mnd</div><div class="v">€ 8.400</div></div>
+          <div class="kpi-mini"><div class="l">Opbrengst / mnd</div><div class="v">€ 21.600</div></div>
+          <div class="kpi-mini"><div class="l">Marge</div><div class="v">61%</div></div>
+          <div class="kpi-mini"><div class="l">Recurring income</div><div class="v">€ 4.900</div></div>
+        </div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:14px;">
+          <div style="background:var(--wit); border:1px solid var(--rand); border-radius:10px; padding:6px 4px;">
+            <div style="font-size:10px; font-weight:800; color:var(--goud); text-transform:uppercase; letter-spacing:.05em; padding:6px 12px;">Inzet &amp; kosten</div>
+            <div class="dashrow"><span>Gewerkte uren medewerkers</span><span>320 u</span><span class="pill a">€ 6.400</span></div>
+            <div class="dashrow"><span>AI- &amp; platformkosten</span><span>—</span><span class="pill a">€ 2.000</span></div>
+          </div>
+          <div style="background:var(--wit); border:1px solid var(--rand); border-radius:10px; padding:6px 4px;">
+            <div style="font-size:10px; font-weight:800; color:var(--goud); text-transform:uppercase; letter-spacing:.05em; padding:6px 12px;">Opbrengst uit leads</div>
+            <div class="dashrow"><span>Gekwalificeerde leads</span><span>142</span><span class="pill g">→ 18 klanten</span></div>
+            <div class="dashrow"><span>Omzet uit nieuwe klanten</span><span>—</span><span class="pill g">€ 21.600</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div style="text-align:center; font-size:12px; color:var(--grijs2); margin-top:12px;">Voorbeeldweergave · cijfers illustratief — het Smart Dashboard™ zet uren en kosten af tegen de opbrengst van de gegenereerde leads.</div>
+  </section>
+
+  
+
+  <section class="slide cream">
+    <div class="eyebrow">Verdienmodel</div>
+    <div class="goldrule"></div>
+    <h1>Communicerende verdienmodellen</h1>
+    <p class="lead" style="margin-bottom:6px;">De twee motoren delen één platform en voeden elkaar. Vier inkomstenstromen, verbonden door het Smart Dashboard™.</p>
+    <div class="grid g4" style="max-width:1000px; margin-top:18px;">
+      <div class="card"><div class="subhead">Abonnementen</div><p>Terugkerende omzet uit de apps (Motor 1 &amp; 2). Vaste maandprijs, hoge marge dankzij lage AI-kosten. Vanaf €19,95/mnd.</p></div>
+      <div class="card"><div class="subhead">Eenmalig</div><p>Eenmalige aankoop van apps die nauwelijks of geen API-verbruikskosten hebben. Apps die het leven versimpelen en stimuleren. Zoals een designerstool of een evenementen-organisatiemodule voor familie-, bedrijfs- of personeelsfeesten.</p></div>
+      <div class="card"><div class="subhead">Advies &amp; maatwerk</div><p>Uurtje-factuurtje → projectprijs: Smart Dashboards op maat bouwen. Financiert de bouw nú én valideert elke app.</p></div>
+      <div class="card"><div class="subhead">Reseller-module</div><p>Partners verkopen apps en dashboards door — per gebruiker. Extra, schaalbare inkomsten naast de directe verkoop.</p></div>
+    </div>
+    <div style="max-width:1000px; margin-top:16px; background:var(--navy); border-radius:12px; padding:16px 20px; color:#fff;">
+      <div style="font-size:13px; line-height:1.55;"><b style="color:var(--goud);">Er is verbinding:</b> advies levert inkomsten én bewezen apps → apps worden producten (Motor 1 &amp; 2) → het Smart Dashboard™ bindt ze samen en wordt zélf een product → de reseller-module vergroot het bereik → elke nieuwe app verrijkt de fabriek.</div>
+    </div>
+  </section>
+
+  <section class="slide dark">
+    <div class="eyebrow">Unit-economics</div>
+    <div class="goldrule"></div>
+    <h1>Hoge marge, terugkerende omzet</h1>
+    <p class="lead">Het model is licht: lage variabele kosten per klant, terugkerende omzet, en elke nieuwe app verhoogt de waarde per klant zonder de kostenstructuur te veranderen.</p>
+    <div class="grid g3" style="max-width:960px; margin-top:22px;">
+      <div class="card"><div class="kv">€20/mnd</div><p>gemiddelde abonnementsprijs per app (instap €9,95 conform marktonderzoek; Smart Admin €19,95; Job Radar €25).</p></div>
+      <div class="card"><div class="kv">~90%+</div><p>brutomarge op een eigen abonnement: AI- en hostingkosten per klant blijven laag en dalen naarmate de fabriek groeit.</p></div>
+      <div class="card"><div class="kv">Laag</div><p>klantacquisitie via de eigen etalage, resellers en organische kanalen — elke app is óók een instroompunt.</p></div>
+    </div>
+    <div style="max-width:960px; margin-top:18px; background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.16); border-radius:12px; padding:14px 20px;">
+      <div style="font-size:13px; line-height:1.55; color:rgba(255,255,255,.85);"><b style="color:var(--goud);">De brug naar de groeivisie:</b> op een eigen abonnement is de brutomarge ~90%; in de groeivisie (volgende slide) rekenen we bewust voorzichtig met 60% over de héle mix — inclusief reseller-marge, advieswerk en betaalkosten.</div>
+    </div>
+    <div class="foot">Gemiddelden per klant · bedragen ex btw · instaptarief conform eigen marktonderzoek, aug. 2026.</div>
+  </section>
+
+  <section class="slide paper">
+    <div class="eyebrow">Groeivisie</div>
+    <div class="goldrule"></div>
+    <h1>De groeivisie</h1>
+    <p class="lead" style="margin-top:6px; margin-bottom:4px;">De cijfers op de vorige slide zijn heel voorzichtig realistisch. Het mag iets meer zijn — en dat is de ambitie. Gedurende jaar 1 richten we ons op groei door volume-verkopen van apps naar een omvangrijke markt: kleine ondernemers en zzp'ers.</p>
+    <div style="max-width:1080px; margin-top:10px; display:grid; grid-template-columns:repeat(4,1fr); gap:10px;">
+      <div style="background:var(--wit); border:1px solid var(--rand); border-radius:10px; padding:9px 12px; font-size:11px; color:var(--grijs2); line-height:1.45;"><b style="color:var(--navy);">2,4 mln</b> mkb-bedrijven in NL, waarvan <b style="color:var(--navy);">1,2 mln</b> zzp'ers (hoofdbaan).</div>
+      <div style="background:var(--wit); border:1px solid var(--rand); border-radius:10px; padding:9px 12px; font-size:11px; color:var(--grijs2); line-height:1.45;">AI-gebruik microbedrijven: <b style="color:var(--navy);">6,8% → 13,8%</b> (2023–2025); 25,9% zet AI in voor administratie.</div>
+      <div style="background:var(--wit); border:1px solid var(--rand); border-radius:10px; padding:9px 12px; font-size:11px; color:var(--grijs2); line-height:1.45;">Kernmarkt “zelfdoeners” voor een simpele administratie-app: <b style="color:var(--navy);">150.000–250.000</b> ondernemers.</div>
+      <div style="background:var(--wit); border:1.5px solid var(--goud); border-radius:10px; padding:9px 12px; font-size:11px; color:var(--grijs2); line-height:1.45;"><b style="color:var(--goud2);">Doelstelling:</b> <b style="color:var(--navy);">±2%</b> marktaandeel in jaar 2 (4.000 klanten), daarna door naar <b style="color:var(--navy);">4–7%</b> (±10.000).</div>
+    </div>
+    <div class="grid g3" style="max-width:1080px; gap:14px; align-items:stretch; margin-top:12px;">
+      <div class="card" style="padding:14px 16px;">
+        <div class="subhead" style="margin-bottom:8px;">Jaar 1 · het fundament · solo</div>
+        <div style="display:flex; justify-content:space-between; gap:10px; font-size:12px; color:var(--grijs2); padding:4px 0;"><span>250 abonnementen × gem. €20/mnd</span><b style="color:var(--navy); white-space:nowrap;">€ 60.000</b></div>
+        <div style="display:flex; justify-content:space-between; gap:10px; font-size:12px; color:var(--grijs2); padding:4px 0; border-top:1px solid var(--rand-licht);"><span>5 Smart Dashboard™-klanten · 2 wkn p.k. · 400 uur × €100</span><b style="color:var(--navy); white-space:nowrap;">€ 40.000</b></div>
+        <div style="display:flex; justify-content:space-between; gap:10px; font-size:12px; color:var(--grijs2); padding:4px 0; border-top:1px solid var(--rand-licht);"><span>Door dashboard-klanten gegenereerd: 10 abonnementen × 7,5 mnd × €250</span><b style="color:var(--navy); white-space:nowrap;">€ 18.750</b></div>
+        <div style="display:flex; justify-content:space-between; gap:10px; font-size:12.5px; padding:6px 0 4px; border-top:1.5px solid var(--rand); margin-top:2px;"><b style="color:var(--navy);">Totale omzet</b><b style="color:var(--navy); white-space:nowrap;">€ 118.750</b></div>
+        <div style="display:flex; justify-content:space-between; gap:10px; font-size:12px; color:var(--grijs2); padding:4px 0;"><span>Marge 60% = €71.250 · onkosten −€30.000</span><b style="color:var(--navy); white-space:nowrap;">€ 41.250</b></div>
+        <div style="font-size:11.5px; color:var(--goud2); font-weight:700; margin-top:6px;">Vóór belasting. Niet genoeg — dus komt er een volume-app bij.</div>
+      </div>
+      <div class="card" style="padding:14px 16px;">
+        <div class="subhead" style="margin-bottom:8px;">Jaar 2 · de versnelling</div>
+        <div style="display:flex; justify-content:space-between; gap:10px; font-size:12px; color:var(--grijs2); padding:4px 0;"><span>Vaste omzet groeit ×1,5</span><b style="color:var(--navy); white-space:nowrap;">€ 178.125</b></div>
+        <div style="display:flex; justify-content:space-between; gap:10px; font-size:12px; color:var(--grijs2); padding:4px 0; border-top:1px solid var(--rand-licht);"><span>Volume-app: 4.000 klanten × €15/mnd</span><b style="color:var(--navy); white-space:nowrap;">€ 720.000</b></div>
+        <div style="display:flex; justify-content:space-between; gap:10px; font-size:12.5px; padding:6px 0 4px; border-top:1.5px solid var(--rand); margin-top:2px;"><b style="color:var(--navy);">Totale omzet</b><b style="color:var(--navy); white-space:nowrap;">± € 900.000</b></div>
+        <div style="display:flex; justify-content:space-between; gap:10px; font-size:12px; color:var(--grijs2); padding:4px 0;"><span>Bruto marge 60%</span><b style="color:var(--navy); white-space:nowrap;">± € 540.000</b></div>
+        <div style="display:flex; justify-content:space-between; gap:10px; font-size:12px; color:var(--grijs2); padding:4px 0; border-top:1px solid var(--rand-licht);"><span>Team: 3 FTE × gem. €75.000</span><b style="color:var(--navy); white-space:nowrap;">− € 225.000</b></div>
+        <div style="display:flex; justify-content:space-between; gap:10px; font-size:12px; color:var(--grijs2); padding:4px 0; border-top:1px solid var(--rand-licht);"><span>Huur &amp; bedrijfskosten: €3.500/mnd</span><b style="color:var(--navy); white-space:nowrap;">− € 42.000</b></div>
+        <div style="display:flex; justify-content:space-between; gap:10px; font-size:12.5px; padding:6px 0 4px; border-top:1.5px solid var(--rand); margin-top:2px;"><b style="color:var(--navy);">Resultaat vóór belasting</b><b style="color:var(--navy); white-space:nowrap;">± € 273.000</b></div>
+        <div style="font-size:11.5px; color:var(--goud2); font-weight:700; margin-top:6px;">Dat red je niet meer alleen: vanaf jaar 2 een team van 3 FTE.</div>
+      </div>
+      <div class="card" style="padding:14px 16px; border-color:var(--goud);">
+        <div class="subhead" style="margin-bottom:8px;">Jaar 3 · de schaal</div>
+        <div style="display:flex; justify-content:space-between; gap:10px; font-size:12px; color:var(--grijs2); padding:4px 0;"><span>Omzet groeit ×2,5</span><b style="color:var(--navy); white-space:nowrap;">± € 2.250.000</b></div>
+        <div style="display:flex; justify-content:space-between; gap:10px; font-size:12px; color:var(--grijs2); padding:4px 0; border-top:1px solid var(--rand-licht);"><span>Bruto marge 60%</span><b style="color:var(--navy); white-space:nowrap;">€ 1.350.000</b></div>
+        <div style="display:flex; justify-content:space-between; gap:10px; font-size:12px; color:var(--grijs2); padding:4px 0; border-top:1px solid var(--rand-licht);"><span>Team: 3,5 FTE × gem. €75.000</span><b style="color:var(--navy); white-space:nowrap;">− € 262.500</b></div>
+        <div style="display:flex; justify-content:space-between; gap:10px; font-size:12px; color:var(--grijs2); padding:4px 0; border-top:1px solid var(--rand-licht);"><span>Huur &amp; bedrijfskosten: €3.500/mnd</span><b style="color:var(--navy); white-space:nowrap;">− € 42.000</b></div>
+        <div style="display:flex; justify-content:space-between; gap:10px; font-size:12.5px; padding:6px 0 4px; border-top:1.5px solid var(--rand); margin-top:2px;"><b style="color:var(--navy);">Resultaat vóór belasting</b><b style="color:var(--navy); white-space:nowrap;">± € 1.045.500</b></div>
+        <div style="font-size:11.5px; color:var(--goud2); font-weight:700; margin-top:6px;">Het perpetuum mobile draait — met een team van 3,5 FTE.</div>
+      </div>
+    </div>
+    <div style="max-width:1020px; margin-top:12px; background:var(--navy); border-radius:12px; padding:12px 18px; color:#fff;">
+      <div style="font-size:12.5px; line-height:1.5;"><b style="color:var(--goud);">De schakel:</b> volume-verkoop van een simpele administratie-app — <b>Smart Invoice</b>, opschaalbaar naar Smart Admin — via o.a. een resellerconstructie: 1.000 klanten na jaar 1 (±0,5% van de kernmarkt) × €15/mnd = +€180.000 op jaarbasis, door naar 4.000 in jaar 2 (±2%). Daarnaast lichtere Smart Dashboard™-projecten op uurtje-factuurtje-basis.</div>
+    </div>
+    <div style="max-width:1020px; margin-top:14px;">
+      <div style="display:flex; gap:16px; align-items:center; margin-bottom:8px; font-size:11px; color:var(--grijs2);">
+        <span style="display:inline-flex; align-items:center; gap:6px;"><span style="width:11px; height:11px; border-radius:3px; background:var(--navy); display:inline-block;"></span>Vaste omzet (abonnementen + advies)</span>
+        <span style="display:inline-flex; align-items:center; gap:6px;"><span style="width:11px; height:11px; border-radius:3px; background:var(--goud); border:1px solid var(--goud2); display:inline-block;"></span>Volume-app via resellers</span>
+      </div>
+      <div style="display:flex; align-items:center; gap:10px; margin-bottom:8px;">
+        <div style="width:46px; font-size:11.5px; font-weight:800; color:var(--navy);">Jaar 1</div>
+        <div style="flex:1; display:flex; align-items:center; gap:8px;">
+          <div style="width:5.3%; min-width:30px; height:24px; background:var(--navy); border-radius:0 4px 4px 0;"></div>
+          <span style="font-size:11.5px; color:var(--grijs2);"><b style="color:var(--navy);">€118.750</b> · resultaat €41.250 vóór belasting</span>
+        </div>
+      </div>
+      <div style="display:flex; align-items:center; gap:10px; margin-bottom:8px;">
+        <div style="width:46px; font-size:11.5px; font-weight:800; color:var(--navy);">Jaar 2</div>
+        <div style="flex:1; display:flex; align-items:center; gap:8px;">
+          <div style="width:7.9%; min-width:36px; height:24px; background:var(--navy);"></div>
+          <div style="width:2px; height:24px; background:var(--papier);"></div>
+          <div style="width:32%; height:24px; background:var(--goud); border:1px solid var(--goud2); border-radius:0 4px 4px 0;"></div>
+          <span style="font-size:11.5px; color:var(--grijs2);"><b style="color:var(--navy);">±€900.000</b> · resultaat ±€273.000 vóór belasting</span>
+        </div>
+      </div>
+      <div style="display:flex; align-items:center; gap:10px;">
+        <div style="width:46px; font-size:11.5px; font-weight:800; color:var(--navy);">Jaar 3</div>
+        <div style="flex:1; display:flex; align-items:center;">
+          <div style="width:19.8%; min-width:80px; height:24px; background:var(--navy); display:flex; align-items:center; justify-content:center;"><span style="font-size:10.5px; font-weight:800; color:#fff;">±€450.000</span></div>
+          <div style="width:2px; height:24px; background:var(--papier);"></div>
+          <div style="flex:1; height:24px; background:var(--goud); border:1px solid var(--goud2); border-radius:0 4px 4px 0; display:flex; align-items:center; justify-content:center;"><span style="font-size:10.5px; font-weight:800; color:var(--navy);">±€1.800.000 · totaal ±€2,25 mln · resultaat ±€1.045.500 vóór belasting</span></div>
+        </div>
+      </div>
+      <div style="font-size:10.5px; color:var(--grijs); margin-top:10px;">Ambitie-scenario · bedragen ex btw · geen prognose. Bronnen: CBS — Dossier ZZP (2026), AI-gebruik door microbedrijven (2026), ICT-gebruik kleine bedrijven (2025) · prijzen Moneybird / Jortt / Tellow / e-Boekhouden.nl · eigen marktonderzoek, aug. 2026.</div>
+    </div>
+  </section>
+
+  <section class="slide cream">
+    <div class="eyebrow">Team</div>
+    <div class="goldrule"></div>
+    <h2>Een oprichter met een visie…</h2>
+    <div style="font-size:15px; font-weight:800; font-style:italic; color:var(--goud2); margin-top:2px;">…en een droom…</div>
+    <div class="grid g2" style="max-width:980px; align-items:stretch; margin-top:18px;">
+      <div class="card">
+        <div class="subhead">Stef Schröder · oprichter</div>
+        <p>Lange, internationale ervaring in commercieel leiderschap — FMCG, Wine &amp; Food en Tech (CCO/CEO) — en 18 jaar eigen ondernemer.</p>
+        <p style="margin-top:8px;">De wens én het talent om die ervaring na diverse zzp-opdrachten weer als onafhankelijk ondernemer in te zetten, hebben geleid tot Fluid Waves. Zélf nog een keer een onderneming bouwen — makkelijker dan solliciteren op je zestigste.</p>
+      </div>
+      <div class="card" style="border-color:var(--goud);">
+        <div class="subhead">Zo groeit het team mee</div>
+        <ul class="bullets">
+          <li><b>Jaar 1:</b> livegang en de eerste volume-klanten — met 1 extra medewerker, zzp'er of stagiair (20 u/wk) die meebouwt.</li>
+          <li><b>Jaar 2:</b> het team groeit naar 3 FTE — ontwikkeling, marketing &amp; sales.</li>
+          <li><b>Jaar 3:</b> 3,5 FTE — het perpetuum mobile draait op schaal.</li>
+        </ul>
+      </div>
+    </div>
+    <div style="max-width:980px; margin-top:16px; background:var(--navy); border-radius:12px; padding:14px 20px; color:#fff;">
+      <div style="font-size:13px; line-height:1.55;"><b style="color:var(--goud);">Founder-market fit:</b> Fluid Waves is gebouwd door de ondernemer die het bedient — internationale ervaring, commerciële leiding én eigen ondernemerschap, nu vertaald naar AI-toepassingen die hij zélf bedenkt, bouwt en verkoopt.</div>
+    </div>
+  </section>
+
+  <section class="slide paper">
+    <div class="tag" style="align-self:flex-start;">De vraag</div>
+    <h1>We zoeken een partner die met ons meebouwt</h1>
+    <div style="font-size:13.5px; color:var(--grijs2); font-weight:700; margin-top:6px;">voor een startinvestering van €300.000,– tot max. €500.000,–</div>
+    <p class="lead" style="margin-top:10px;">Om Fluid Waves van verkoopklaar naar schaal te brengen. Met een schaalbare ARR, een hoge marge en een duidelijk plan.</p>
+    <div class="grid g4" style="max-width:1040px; margin-top:18px;">
+      <div class="card"><div class="subhead">Apps live</div><p>De apps verkoopklaar maken en de livegang organiseren — druk op de knop — met Smart Invoice en Smart Admin voorop. TenderLead als pilot; uurtje-factuurtje Smart Dashboard™-klanten als projecten.</p></div>
+      <div class="card"><div class="subhead">Leadgeneratie</div><p>We bouwen onze eigen Smart LEAD Machine™-app. Die zetten we in via LinkedIn en Instagram — gericht op administratiekantoren en accountants, mkb'ers en zzp'ers. En we benaderen ons eigen netwerk.</p></div>
+      <div class="card"><div class="subhead">Team</div><p>De basis staat, de infrastructuur is er. Back-upsystemen en SLA's moeten worden gerealiseerd. Er is ruimte en noodzaak voor 1 extra medewerker, zzp'er of stagiair — 20 uur per week in jaar 1.</p></div>
+      <div class="card"><div class="subhead">Infra en bouwplannen</div><p>Eigen domeinen aanwezig: fluid-waves.nl (en .com) én fluidwaves.nl. Betaalsystemen moeten live — daarna opschalen met de resultaten van de eigen LEAD MACHINE.</p></div>
+    </div>
+    <div style="max-width:1040px; margin-top:16px; background:var(--navy); border-radius:12px; padding:14px 20px; color:#fff;">
+      <div style="font-size:13px; line-height:1.55;"><b style="color:var(--goud);">Vorm van de investering:</b> laten we elkaar eerst leren kennen. Aandelen of een converteerbare lening — het is allemaal bespreekbaar. Belangrijker is een Partner te vinden, met hoofdletter P, die schaalbaar bij ons past en meebouwt.</div>
+    </div>
+    <div style="max-width:1040px; text-align:center; margin-top:18px; font-size:clamp(18px,2.2vw,26px); font-weight:800; color:var(--goud2);">Doe je mee?</div>
+  </section>
+
+  <section class="slide dark center">
+    <div class="tag">Tot slot</div>
+    <h1 style="font-size:clamp(19px,2.4vw,28px); font-weight:700;">Investeer in het Smart Dashboard™,<br>niet in één app.</h1>
+    <p class="lead" style="margin-top:26px;">Fluid Waves is een startend — en al werkend — platform waarin gerichte AI-toepassingen samenkomen in een gebruikers- en beheerderstool. Als gereedschap voor ondernemers om praktische organisatie-, operatie- en datavraagstukken op te lossen. Wij bouwen deze tools op basis van eigen ervaring en inzichten en door te luisteren naar ondernemers.</p>
+    <p class="lead" style="margin-top:16px;">Wij zoeken partners om hierin te investeren en met ons mee te bouwen.</p>
+    <div class="brand" style="margin-top:34px; justify-content:center;">
+      <svg class="wave" width="44" height="44" viewBox="0 0 40 40"><path d="M4 25 Q11 18 20 25 T36 25" fill="none" stroke="#C9A227" stroke-width="2.4" stroke-linecap="round"></path><path d="M4 30 Q11 23 20 30 T36 30" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"></path></svg>
+      <div style="text-align:left;"><div class="bn">Fluid Waves</div><div class="bt">THE SMART DASHBOARD™ · FLUID-WAVES.NL</div></div>
+    </div>
+    <div class="foot">Vertrouwelijk · voor bespreking met investeerders</div>
+  </section>
+
+  </div>
+
+<div id="nav">
+  <button id="prev" aria-label="Vorige">‹</button>
+  <div id="dots"></div>
+  <span id="counter"></span>
+  <button id="next" aria-label="Volgende">›</button>
+</div>
+
+<script>
+(function(){
+  var slides = Array.prototype.slice.call(document.querySelectorAll('.slide'));
+  var dotsWrap = document.getElementById('dots');
+  var counter = document.getElementById('counter');
+  var cur = 0;
+  slides.forEach(function(_, i){
+    var d = document.createElement('div'); d.className = 'ndot' + (i===0?' on':'');
+    d.onclick = function(){ go(i); }; dotsWrap.appendChild(d);
+  });
+  var dots = Array.prototype.slice.call(dotsWrap.children);
+  function render(){
+    slides.forEach(function(s,i){ s.classList.toggle('on', i===cur); });
+    dots.forEach(function(d,i){ d.classList.toggle('on', i===cur); });
+    counter.textContent = (cur+1) + ' / ' + slides.length;
+  }
+  function go(i){ cur = Math.max(0, Math.min(slides.length-1, i)); render(); }
+  document.getElementById('next').onclick = function(){ go(cur+1); };
+  document.getElementById('prev').onclick = function(){ go(cur-1); };
+  document.addEventListener('keydown', function(e){
+    if(e.key==='ArrowRight'||e.key===' '||e.key==='PageDown'){ e.preventDefault(); go(cur+1); }
+    if(e.key==='ArrowLeft'||e.key==='PageUp'){ e.preventDefault(); go(cur-1); }
+    if(e.key==='Home'){ go(0); } if(e.key==='End'){ go(slides.length-1); }
+  });
+  // swipe op mobiel
+  var x0=null;
+  document.addEventListener('touchstart', function(e){ x0 = e.touches[0].clientX; }, {passive:true});
+  document.addEventListener('touchend', function(e){
+    if(x0===null) return; var dx = e.changedTouches[0].clientX - x0;
+    if(Math.abs(dx)>50){ go(cur + (dx<0?1:-1)); } x0=null;
+  }, {passive:true});
+  render();
+})();
+</script>
+
+
+</body></html>
